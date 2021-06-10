@@ -3,46 +3,51 @@ __title__ = "Select TitleBlocks"
 __author__ = "Erik Frits"
 __helpurl__ = ""
 __highlight__ = 'updated'
-__doc__ = """Version = 1.0
+__doc__ = """Version = 1.2
 Date    = 08.12.2020
 _____________________________________________________________________
 Description:
+
 Select title blocks on selected sheets.
 _____________________________________________________________________
 How-to:
+
 - Select sheets in ProjectBrowser menu
 - Click the button
 _____________________________________________________________________
-Prerequisite:
-- Select sheets
-_____________________________________________________________________
 Last update:
-- (20.04.2021) Refactored
+- [10.06.2021] - 1.2 RELEASE
+- [10.06.2021] - Refactired
 _____________________________________________________________________
 To-do:
-- [ISSUE] - Selection valid only for a single change
+- [BUG] - Selection valid only for a single change in titleblocks.
+- [TO-DO] - add __helpurl__ for blog post
 _____________________________________________________________________
 """
 
-# IMPORTS
-from Autodesk.Revit.DB import FilteredElementCollector
+#____________________________________________________________________ IMPORTS
 import clr
 clr.AddReference("System")
 from System.Collections.Generic import List
+from Autodesk.Revit.DB import (FilteredElementCollector,
+                               ElementId,
+                               ViewSheet,
+                               BuiltInCategory)
 
-# VARIABLES
+#____________________________________________________________________ VARIABLES
 doc = __revit__.ActiveUIDocument.Document
 uidoc = __revit__.ActiveUIDocument
 
-# MAIN
+#____________________________________________________________________ MAIN
 if __name__ == '__main__':
     # GET TITLEBLOCKS AND SELECTION
-    all_TitleBlocks = FilteredElementCollector(doc).OfCategory(DB.BuiltInCategory.OST_TitleBlocks).WhereElementIsNotElementType().ToElements()
+    all_TitleBlocks = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_TitleBlocks).WhereElementIsNotElementType().ToElements()
     selected_elements = uidoc.Selection.GetElementIds()
 
-    # GET TITLE BLOCKS
+    # CONTAINER
     title_blocks = []
 
+    # LOOP THROUGH SELECTED ELEMENTS
     for element_id in selected_elements:
         element = doc.GetElement(element_id)
 
@@ -58,9 +63,3 @@ if __name__ == '__main__':
     # SET SELECTION IF TITLE BLOCKS FOUND
     if title_blocks:
         uidoc.Selection.SetElementIds(List[ElementId](title_blocks))
-
-
-
-
-
-

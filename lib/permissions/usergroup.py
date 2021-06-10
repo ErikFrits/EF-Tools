@@ -25,44 +25,32 @@ To-do:
 -
 _____________________________________________________________________
 """
-from permissions.usergroup
 
 # IMPORTS
 import sys, os
 app = __revit__.Application
 
 # LIST OF ADMINS
+#todo external config file? so other users can create their own lists
 admins = [
     "RLP_Jakob Steiner",
     "ErikFrits",
 ]
 
 # LIST OF DEVELOPERS
+#todo external config file? so other users can create their own lists
 devs = ["ErikFrits", ]
 
 def dev_only():
     """This will stop an execution of the script if username is not in the list of developers."""
     if app.Username not in devs:
         print("USER: {}".format(app.Username))
-        print("This script can only be executed by assigned developers. \nPlease contact your developer or update the list of developers in lib/permissions/user_group.py file.")
+        print("This script can only be executed by assigned developers. \nPlease contact your developer or update the list of developers in lib/Permissions/user_group.py file.")
         sys.exit()
-
-
 
 def admins_only():
     """This will stop an execution of the script if username is not in the list of admins."""
     if app.Username not in admins:
         print("USER: {}".format(app.Username))
-        print("This script can only be executed by admins.")
-        print("This script can only be executed by assigned admins. \nPlease contact your developer or update the list of developers in lib/permissions/user_group.py file.")
+        print("This script can only be executed by assigned admins. \nPlease contact your developer or update the list of developers in lib/Permissions/user_group.py file.")
         sys.exit()
-
-
-
-def check_project_name(project_name):
-    #TODO Make another file for specific project scripts.
-    if not project_name in doc.Title:
-        print("This script is intended only for a project with '{}' in its name".format(project_name))
-        sys.exit()
-
-

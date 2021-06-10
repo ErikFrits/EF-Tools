@@ -1,66 +1,61 @@
 # -*- coding: utf-8 -*-
-__title__ = "Select TitleBlocks"
+__title__ = "Template"
 __author__ = "Erik Frits"
-__helpurl__ = ""
-__highlight__ = 'updated'
+__helpurl__ = "www.erikfrits.com/blog"
+# __highlight__ = 'updated'
+# __context__ = ['Sheets', 'Views']
+
 __doc__ = """Version = 1.0
-Date    = 08.12.2020
+Date    = 10.06.2021
 _____________________________________________________________________
 Description:
-Select title blocks on selected sheets.
+
+Here will be a description of the add-in.
 _____________________________________________________________________
 How-to:
-- Select sheets in ProjectBrowser menu
-- Click the button
+
+Here will be a guide on how to use the tool.
 _____________________________________________________________________
 Prerequisite:
-- Select sheets
+
+All requirements and things to be changed in the script should be described here.
 _____________________________________________________________________
 Last update:
-- (20.04.2021) Refactored
+- [13.04.2021] - v1.0 
 _____________________________________________________________________
 To-do:
-- [ISSUE] - Selection valid only for a single change
-_____________________________________________________________________
-"""
+- [BUG]     - Resolve a bug.
+- [TO-DO]   - Make something
+- [FEATURE] - Add a new Feature 
+_____________________________________________________________________"""
+
 
 # IMPORTS
-from Autodesk.Revit.DB import FilteredElementCollector
+from Autodesk.Revit.DB import *
+
+# SYSTEM IMPORTS
 import clr
 clr.AddReference("System")
 from System.Collections.Generic import List
 
-# VARIABLES
-doc = __revit__.ActiveUIDocument.Document
-uidoc = __revit__.ActiveUIDocument
+
+# USER GROUP (optional)
+# from Permissions import usergroup
+# usergroup.dev_only()
+# usergroup.admins_only()
+
+
+
+
+# GLOBAL VARIABLES
+uidoc   = __revit__.ActiveUIDocument
+app     = __revit__.Application
+doc     = __revit__.ActiveUIDocument.Document
+
 
 # MAIN
 if __name__ == '__main__':
-    # GET TITLEBLOCKS AND SELECTION
-    all_TitleBlocks = FilteredElementCollector(doc).OfCategory(DB.BuiltInCategory.OST_TitleBlocks).WhereElementIsNotElementType().ToElements()
-    selected_elements = uidoc.Selection.GetElementIds()
-
-    # GET TITLE BLOCKS
-    title_blocks = []
-
-    for element_id in selected_elements:
-        element = doc.GetElement(element_id)
-
-        # FILTER ONLY ViewSheet
-        if type(element)!= ViewSheet:
-            continue
-
-        # FIND TITLE BLOCK ON SHEET
-        for title_block in all_TitleBlocks:
-            if title_block.OwnerViewId == sheet_id:
-                title_blocks.append(title_block.Id)
-
-    # SET SELECTION IF TITLE BLOCKS FOUND
-    if title_blocks:
-        uidoc.Selection.SetElementIds(List[ElementId](title_blocks))
-
-
-
-
-
-
+    t = Transaction(doc,__title__)
+    t.Start()
+    # CODE HERE
+    t.Commit()
