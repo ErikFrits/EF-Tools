@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__title__   = "B/W/G \nBackground"
+__title__   = "B/W/G Background"
 __author__ = "Erik Frits"
 __helpurl__ = ""
 __doc__ = """Version = 1.0
