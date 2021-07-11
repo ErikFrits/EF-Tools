@@ -45,8 +45,6 @@ from System.Collections.Generic import List
 # usergroup.admins_only()
 
 
-
-
 # GLOBAL VARIABLES
 uidoc   = __revit__.ActiveUIDocument
 app     = __revit__.Application
