@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-__title__ = "Select TitleBlocks"
+__title__ = "Select DWGs on sheets"
 __author__ = "Erik Frits"
 __helpurl__ = ""
-__highlight__ = 'updated'
-__doc__ = """Version = 1.2
-Date    = 08.12.2020
+__context__ = 'Sheets'
+__doc__ = """Version = 1.0
+Date    = 07.07.2021
 _____________________________________________________________________
 Description:
 
-Select title blocks on selected sheets.
+Select DWG on selected sheets.
 _____________________________________________________________________
 How-to:
 
@@ -16,12 +16,10 @@ How-to:
 - Click the button
 _____________________________________________________________________
 Last update:
-- [10.06.2021] - 1.2 RELEASE
-- [10.06.2021] - Refactired
+- [07.07.2021] - 1.0 RELEASE
 _____________________________________________________________________
 To-do:
-- [BUG] - Selection valid only for a single change in titleblocks.
-- [TO-DO] - add __helpurl__ for blog post
+-
 _____________________________________________________________________
 """
 
@@ -32,20 +30,22 @@ from System.Collections.Generic import List
 from Autodesk.Revit.DB import (FilteredElementCollector,
                                ElementId,
                                ViewSheet,
-                               BuiltInCategory)
+                               BuiltInCategory,
+                               ImportInstance)
 
 #____________________________________________________________________ VARIABLES
 doc = __revit__.ActiveUIDocument.Document
 uidoc = __revit__.ActiveUIDocument
 
+
 #____________________________________________________________________ MAIN
 if __name__ == '__main__':
     # GET TITLEBLOCKS AND SELECTION
-    all_TitleBlocks = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_TitleBlocks).WhereElementIsNotElementType().ToElements()
+    all_ImportInstances = FilteredElementCollector(doc).OfClass(ImportInstance).WhereElementIsNotElementType().ToElements()
     selected_elements = uidoc.Selection.GetElementIds()
 
     # CONTAINER
-    title_blocks = []
+    import_instances = []
 
     # LOOP THROUGH SELECTED ELEMENTS
     for element_id in selected_elements:
@@ -56,10 +56,10 @@ if __name__ == '__main__':
             continue
 
         # FIND TITLE BLOCK ON SHEET
-        for title_block in all_TitleBlocks:
-            if title_block.OwnerViewId == sheet_id:
-                title_blocks.append(title_block.Id)
+        for import_instance in all_ImportInstances:
+            if import_instance.OwnerViewId == element_id:
+                import_instances.append(import_instance.Id)
 
     # SET SELECTION IF TITLE BLOCKS FOUND
-    if title_blocks:
-        uidoc.Selection.SetElementIds(List[ElementId](title_blocks))
+    if import_instances:
+        uidoc.Selection.SetElementIds(List[ElementId](import_instances))
