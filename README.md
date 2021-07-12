@@ -2,9 +2,13 @@
 This Git is work in progress. I have to refactor multiple tools and make sure they are ready to be used by everyone. 
 Some tools will need personal adjusting to make sure it works for each company. 
 
+### 📦 Revit Version 📦
+These tools were developed on Revit 2019-2021.  
+So in case you are using different version of Revit and having any issues,  
+please let me know so I could adjust them to work on other versions too.
 
 ## 🚧WIP🚧 : 🎉 Release v1.0 🎉
-This is the list of working tools I have that needs to be refactored before I release them for all.  
+This is the list of tools I want to refactor before I release them for all.  
 Once I reach the state of the repo I am happy to be called V1.0 I will talk to pyRevit moderators to 
 add it to the list of extensions.  
 
@@ -14,6 +18,7 @@ Contact me if you need help with this step.
 
 
 ### 📜 List of tools
+
 - [ ] Sheets
     - [x] Sheets: Add specific revision
     - [x] Sheets: Create multiple
@@ -25,10 +30,12 @@ Contact me if you need help with this step.
         - [ ] Attached groups: Show on selected Views
         - [ ] Attached groups: Duplicate 
         - [ ] Attached groups: Find and Replace 
+        
 - [ ] Views
     - [x] Duplicate views
     - [ ] Group/Hide revision clouds
     - [x] Views: Find and Replace
+    
 - [ ] Maintenance
     - [ ] Purge: LinePatterns
     - [ ] Purge: ViewFilters
@@ -36,28 +43,32 @@ Contact me if you need help with this step.
     - [ ] Warnings: Does not intersect
     - [ ] Warnings: Does not intersect
     - [ ] Warnings: Does not intersect
+    
 - [ ] Wall Match
     - [ ] Wall: Top
     - [ ] Wall: Both
     - [ ] Wall: Bottom
+    
 - [ ] Selection
     - [x] Super select in view (SS)
     - [x] Super select in model (SA)
     - [ ] Selection
         - [x] Select Title Blocks on sheets
         - [x] Select DWG on sheets
+        
 - [ ] UI
     - [x] B/W/G 
     - [x] List all levels
+    
 - [ ] Rooms
     - [ ] Rooms to Floors
     - [ ] Rooms to Regions
     - [ ] Rooms SUM* (might be too office specific)
+    
 - [ ] Backup
     - [ ] Save/Relink all DWGs
     - [ ] Save/Relink all JPGs
     - [x] Open selected DWG
-
 
 - [ ] Other Tools 
     - [ ] Sheets: Allign viewports
