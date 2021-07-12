@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="Views: Find and Replace"
-    Height="110" Width="400"
+    Height="110" Width="450"
     WindowStartupLocation="CenterScreen"
     HorizontalAlignment="Center"
     ShowInTaskbar="True"
@@ -115,51 +115,55 @@
         </Grid>
         <!--HEADER END-->
 
-
-
-
-
-
         <StackPanel Grid.Row="1"
-                    VerticalAlignment="Top"
+                    VerticalAlignment="Center"
                     Margin="5">
 
-            <!--DWG PATH-->
-            <DockPanel Margin="5">
-                <TextBlock Text="Selected DWG path: "
-                           Foreground="{StaticResource text_white}"
-                           FontWeight="Medium"
-                           FontSize="12"/>
-                <TextBlock x:Name="dwg_path"
-                           Text="test/folder/Test.dwg"
-                           Foreground="{StaticResource text_white}"/>
-            </DockPanel>
 
             <!--BUTTONS-->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel 
+               
+                Orientation="Horizontal" HorizontalAlignment="Center">
 
                 <!--BUTTON_1-->
-                <Button Content="Open DWG File"
-                        Click="button_open_dwg"
+                <Button Content="Duplicate"
+                        Click="button_duplicate"
                         Height="30"
-                        Width="120"
+                        Width="130"
                         Margin="5"
                         />
                 <!--BUTTON_2-->
-                <Button Content="Open DWG Folder"
-                        Click="button_open_folder"
+                <Button Content="Duplicate with detailing"
+                        Click="button_duplicate_detailing"
                         Height="30"
-                        Width="120"
+                        Width="130"
                         Margin="5"
                         />
                 <!--BUTTON_3-->
-                <Button x:Name="button_copy_clipboard"
-                        Content="Copy to Clipborad"
-                        Click="button_copy_clipboard"
+                <Button
+                        Content="Duplicate as dependant"
+                        Click="button_duplicate_dependant"
                         Height="30"
-                        Width="120"
+                        Width="130"
                         Margin="5"/>
             </StackPanel>
+            <DockPanel HorizontalAlignment="Left">
+                <TextBlock 
+                    Margin="160,0,0,0"
+                    Text="Number of copies:"
+                           Foreground="{StaticResource text_white}"
+                           Width="100"/>
+                
+                <TextBox x:Name="duplicate_count"
+                         Width="25"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center"
+                         
+                         Background="{StaticResource header_background}"
+                         Foreground="{StaticResource text_white}"
+                         Text="1"
+                         />
+            </DockPanel>
         </StackPanel>
     </Grid>
 </Window>
