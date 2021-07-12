@@ -2,7 +2,6 @@
 __title__ = "DWG: open selected"
 __author__ = "Erik Frits"
 __helpurl__ = "https://www.erikfrits.com/blog/open-selected-dwg/"
-__highlight__ = 'new'
 __doc__ = """Version = 1.0
 Date    = 12.04.2021
 _____________________________________________________________________
