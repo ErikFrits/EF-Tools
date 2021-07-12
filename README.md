@@ -15,20 +15,20 @@ Contact me if you need help with this step.
 
 ### 📜 List of tools
 - [ ] Sheets
-    - [ ] Sheets: Add specific revision
-    - [ ] Sheets: Create multiple
-    - [ ] Place views on new sheets
-    - [ ] Sheets: Duplicate
-    - [ ] Sheets: Find and Replace
+    - [x] Sheets: Add specific revision
+    - [x] Sheets: Create multiple
+    - [x] Place views on new sheets
+    - [x] Sheets: Duplicate
+    - [x] Sheets: Find and Replace
     - [ ] Sheets: Revision History
     - [ ] Attached Groups
         - [ ] Attached groups: Show on selected Views
         - [ ] Attached groups: Duplicate 
         - [ ] Attached groups: Find and Replace 
 - [ ] Views
-    - [ ] Duplicate views
+    - [x] Duplicate views
     - [ ] Group/Hide revision clouds
-    - [ ] Views: Find and Replace
+    - [x] Views: Find and Replace
 - [ ] Maintenance
     - [ ] Purge: LinePatterns
     - [ ] Purge: ViewFilters
@@ -41,12 +41,14 @@ Contact me if you need help with this step.
     - [ ] Wall: Both
     - [ ] Wall: Bottom
 - [ ] Selection
-    - [ ] Select Title Blocks
-    - [ ] Super select in view (SS)
-    - [ ] Super select in model (SA)
+    - [x] Super select in view (SS)
+    - [x] Super select in model (SA)
+    - [ ] Selection
+        - [x] Select Title Blocks on sheets
+        - [x] Select DWG on sheets
 - [ ] UI
-    - [ ] B/W/G 
-    - [ ] List all levels
+    - [x] B/W/G 
+    - [x] List all levels
 - [ ] Rooms
     - [ ] Rooms to Floors
     - [ ] Rooms to Regions
@@ -54,10 +56,10 @@ Contact me if you need help with this step.
 - [ ] Backup
     - [ ] Save/Relink all DWGs
     - [ ] Save/Relink all JPGs
-    - [ ] Open selected DWG
+    - [x] Open selected DWG
 
 
-- [ ] Tools needs to be refactored
+- [ ] Other Tools 
     - [ ] Sheets: Allign viewports
     - [ ] Purge: all areas
     - [ ] Rooms: Flat Renumbering
@@ -65,6 +67,7 @@ Contact me if you need help with this step.
     - [ ] Naming: Wall Types 
     - [ ] Delete 0 dimensions
     - [ ] Parking: Renumber with spline
+    - [ ] Apartments groups: Renumber with spline 
 
 
 ### [🌐 My personal blog ](www.erikfrits.com/blog "Erik Frits - Blog") 
