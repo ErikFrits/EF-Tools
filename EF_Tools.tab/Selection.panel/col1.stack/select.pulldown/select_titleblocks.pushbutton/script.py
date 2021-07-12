@@ -2,7 +2,6 @@
 __title__ = "Select TitleBlocks"
 __author__ = "Erik Frits"
 __helpurl__ = ""
-__highlight__ = 'updated'
 __doc__ = """Version = 1.2
 Date    = 08.12.2020
 _____________________________________________________________________
