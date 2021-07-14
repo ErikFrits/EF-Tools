@@ -4,5 +4,6 @@ layout:
   - Selection
   - Walls
   - UI
+  - Elements
   - DWG
   - test
