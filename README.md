@@ -25,15 +25,16 @@ Contact me if you need help with this step.
     - [x] Place views on new sheets
     - [x] Sheets: Duplicate
     - [x] Sheets: Find and Replace
-    - [ ] Sheets: Revision History
-    - [ ] Attached Groups
-        - [ ] Attached groups: Show on selected Views
-        - [ ] Attached groups: Duplicate 
-        - [ ] Attached groups: Find and Replace 
+    - [ ] Sheets: Revision History (WIP)
+    
+- [ ] Attached Groups
+    - [ ] Attached groups: Show on selected Views
+    - [ ] Attached groups: Duplicate 
+    - [ ] Attached groups: Find and Replace 
         
 - [ ] Views
     - [x] Duplicate views
-    - [ ] Group/Hide revision clouds
+    - [ ] Group/Hide revision clouds (WIP)
     - [x] Views: Find and Replace
     
 - [ ] Maintenance
@@ -49,17 +50,20 @@ Contact me if you need help with this step.
     - [ ] Wall: Both
     - [ ] Wall: Bottom
     
-- [ ] Selection
+- [x] Selection
     - [x] Super select in view (SS)
     - [x] Super select in model (SA)
-    - [ ] Selection
+    - [x] Selection
         - [x] Select Title Blocks on sheets
         - [x] Select DWG on sheets
+        - [x] "Select similar categories (in model)
+        - [x] "Select similar categories (in view)
         
-- [ ] UI
+- [x] UI
     - [x] B/W/G 
     - [x] List all levels
-    
+           
+
 - [ ] Rooms
     - [ ] Rooms to Floors
     - [ ] Rooms to Regions
@@ -69,7 +73,10 @@ Contact me if you need help with this step.
     - [ ] Save/Relink all DWGs
     - [ ] Save/Relink all JPGs
     - [x] Open selected DWG
-
+    
+- [x] Elements
+    - [x] Text: Transform 
+    
 - [ ] Other Tools 
     - [ ] Sheets: Allign viewports
     - [ ] Purge: all areas
