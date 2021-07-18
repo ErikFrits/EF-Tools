@@ -19,13 +19,13 @@ Contact me if you need help with this step.
 
 ### 📜 List of tools
 
-- [ ] Sheets
+- [x] Sheets
     - [x] Sheets: Add specific revision
     - [x] Sheets: Create multiple
     - [x] Place views on new sheets
     - [x] Sheets: Duplicate
     - [x] Sheets: Find and Replace
-    - [ ] Sheets: Revision History (WIP)
+    - [x] Sheets: Revision History (WIP)
     
 - [ ] Attached Groups
     - [ ] Attached groups: Show on selected Views
@@ -45,10 +45,11 @@ Contact me if you need help with this step.
     - [ ] Warnings: Does not intersect
     - [ ] Warnings: Does not intersect
     
-- [ ] Wall Match
-    - [ ] Wall: Top
-    - [ ] Wall: Both
-    - [ ] Wall: Bottom
+- [x] Elements
+    - [x] Wall Match: Top Constraints
+    - [x] Wall Match: Both Constraints
+    - [x] Wall Match: Bottom Constraints
+    - [x] Text: Transform 
     
 - [x] Selection
     - [x] Super select in view (SS)
@@ -63,7 +64,6 @@ Contact me if you need help with this step.
     - [x] B/W/G 
     - [x] List all levels
            
-
 - [ ] Rooms
     - [ ] Rooms to Floors
     - [ ] Rooms to Regions
@@ -73,10 +73,7 @@ Contact me if you need help with this step.
     - [ ] Save/Relink all DWGs
     - [ ] Save/Relink all JPGs
     - [x] Open selected DWG
-    
-- [x] Elements
-    - [x] Text: Transform 
-    
+        
 - [ ] Other Tools 
     - [ ] Sheets: Allign viewports
     - [ ] Purge: all areas
