@@ -1,6 +1,7 @@
 from Autodesk.Revit.DB import (FilteredElementCollector,
                                BuiltInCategory,
-                               BuiltInParameter)
+                               BuiltInParameter,
+                               ViewSheet)
 from pyrevit.forms import SelectFromList
 from pyrevit import forms
 
@@ -9,10 +10,10 @@ import sys
 
 uidoc = __revit__.ActiveUIDocument
 doc = __revit__.ActiveUIDocument.Document
+from Autodesk.Revit.UI.Selection import ISelectionFilter, ObjectType
 
 
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FUNCTIONS
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET ELEMENTS
 
 def get_selected_elements():
     """Property that retrieves selected views or promt user to select some from the dialog box."""
@@ -27,6 +28,14 @@ def get_selected_elements():
         forms.alert("No elements  were selected.\nPlease, try again.", exitscript=True)
     return selected_elements
 
+
+
+
+
+
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET VIEWS
+
 def get_selected_views(exit_if_none = False):
     """Function to get selected views.
     :return: list of selected views."""
@@ -38,9 +47,33 @@ def get_selected_views(exit_if_none = False):
 
     #>>>>>>>>>> EXIT IF NONE SELECTED
     if not selected_views and exit_if_none:
-        forms.alert("No views were selected", exitscript=True)
+        forms.alert("No views were selected. Please try again.", exitscript=True)
 
     return selected_views
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET SHEETS
+def get_selected_sheets(exit_if_none = False):
+    """Function to get selected views.
+    return list of selected views."""
+    #>>>>>>>>>> GET SELECTED ELEMENTS
+    UI_selected = uidoc.Selection.GetElementIds()
+
+    #>>>>>>>>>> FILTER SELECTION
+    selected_sheets = [doc.GetElement(sheet_id) for sheet_id in UI_selected if type(doc.GetElement(sheet_id)) == ViewSheet ]
+
+    #>>>>>>>>>> EXIT IF NONE SELECTED
+    if not selected_sheets and exit_if_none:
+        forms.alert("No sheets were selected. Please try again.", exitscript=True)
+
+    return selected_sheets
+
+
+
+
+
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SELECT TITLEBLOCK
+
 
 def select_title_block():
     """Function to let user select a title block."""
@@ -60,3 +93,31 @@ def select_title_block():
 
     selected_title_block = unique_title_blocks[selected_option]
     return selected_title_block
+
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PICK WALL
+
+#>>>>>>>>> LIMIT SELECTION
+class CustomISelectionFilter(ISelectionFilter):
+    """Filter user selection to certain element."""
+    def __init__(self, nom_categorie):
+        self.nom_categorie = nom_categorie
+
+    def AllowElement(self, e):
+        if str(e.Category.Id) == str(self.nom_categorie):
+        #if e.Category.Name == "Walls"
+            return True
+        else:
+            return False
+    def AllowReference(self, ref, point):
+        return true
+
+#>>>>>>>>>> PICK WALL
+def pick_wall():
+    """Function to promt user to select a wall element."""
+    wall_id = uidoc.Selection.PickObject(ObjectType.Element, CustomISelectionFilter("-2000011"), "Select a Wall")    # -2000011 <- Id of OST_Walls
+    wall = doc.GetElement(wall_id)
+    return wall
+
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
