@@ -3,8 +3,8 @@ __title__ = "Template"
 __author__ = "Erik Frits"
 __helpurl__ = "www.erikfrits.com/blog"
 # __highlight__ = 'updated'
-# __context__ = ['Sheets', 'Views']
-
+# __context__ = ['Sheets', 'Views'] #https://www.notion.so/Bundle-Context-630fa1f3611f4ee0aa15d290275e7ef3
+# __context__ = [ "selection", "active-section-view"] #https://www.notion.so/Bundle-Context-630fa1f3611f4ee0aa15d290275e7ef3
 __doc__ = """Version = 1.0
 Date    = 10.06.2021
 _____________________________________________________________________
@@ -28,6 +28,11 @@ To-do:
 - [TO-DO]   - Make something
 - [FEATURE] - Add a new Feature 
 _____________________________________________________________________"""
+__extra__ = """
+Here will be additional links to various resources that could be helpful to any script.
+pyrevit forms Input: https://www.notion.so/Effective-Input-ea95e95282a24ba9b154ef88f4f8d056#1ceb9050946245cf8b25698f2e992682
+
+"""
 
 
 # IMPORTS

@@ -1,7 +1,11 @@
 from Autodesk.Revit.DB import (FilteredElementCollector,
                                BuiltInCategory,
                                BuiltInParameter,
-                               ViewSheet)
+                               ViewSheet,
+                               Element,
+                               FilledRegionType)
+
+from Autodesk.Revit.DB.Architecture import Room
 from pyrevit.forms import SelectFromList
 from pyrevit import forms
 
@@ -28,6 +32,22 @@ def get_selected_elements():
         forms.alert("No elements  were selected.\nPlease, try again.", exitscript=True)
     return selected_elements
 
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET ROOMS
+def get_selected_rooms(exit_if_none = False):
+    """Function to get selected views.
+    :return: list of selected views."""
+    #>>>>>>>>>> GET SELECTED ELEMENTS
+    UI_selected = uidoc.Selection.GetElementIds()
+
+    #>>>>>>>>>> FILTER SELECTION
+    selected_rooms = [doc.GetElement(view_id) for view_id in UI_selected if type(doc.GetElement(view_id)) == Room]
+
+    #>>>>>>>>>> EXIT IF NONE SELECTED
+    if not selected_rooms and exit_if_none:
+        forms.alert("No views were selected. Please try again.", exitscript=True)
+
+    return selected_rooms
 
 
 
@@ -121,3 +141,14 @@ def pick_wall():
 
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET ROOMS
+def select_region_type():
+    all_filled_regions = FilteredElementCollector(doc).OfClass(FilledRegionType)
+    dict_filled_regions = {Element.Name.GetValue(fr):fr for fr in all_filled_regions}
+
+    #>>>>>>>>>> PROMT USER TO SELECT FilledRegion TYPE
+    selection           = forms.SelectFromList.show(dict_filled_regions.keys(),title="Select FilledRegion Type", button_name='Select')
+    if not selection:     forms.alert("FilledRegion Type was not chosen. Please try again.", title='Select FilledRegion Type', exitscript=True)
+    return dict_filled_regions[selection]
