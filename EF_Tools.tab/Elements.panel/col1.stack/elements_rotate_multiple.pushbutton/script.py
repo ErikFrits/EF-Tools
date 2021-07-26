@@ -16,19 +16,21 @@ How-to:
 -> Rotate
 _____________________________________________________________________
 Last update:
+
 - [18.07.2021] 1.0 RELEASE
 - [18.07.2021] GUI created
 _____________________________________________________________________
 To-do:
-- GUI for TitleBlock Selection
-- Restrict textfield to integers only
-_____________________________________________________________________
-Rotate function is based on afunction taken from Jeremy Tammik's blog
+
+- Rotate text in section views 
+    (P.S. line has to be modified. 
+    currently set for Z axis)
+
 _____________________________________________________________________
 """
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IMPORTS
-from Autodesk.Revit.DB import (Line, XYZ, ElementTransformUtils)
+from Autodesk.Revit.DB import (Line, XYZ, ElementTransformUtils, TextNote, AnnotationSymbol)
 from pyrevit import forms, revit
 import math
 
@@ -48,20 +50,16 @@ uidoc = __revit__.ActiveUIDocument
 app = __revit__.Application
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FUNCTIONS
-def rotateSelectedElement(elem, degrees_to_rotate):
-    """Function to rotate given element around its center axis.
-    Function is based on an article found on Jeremy Tammik's blog - https://thebuildingcoder.typepad.com/blog/2018/12/rotate-picked-element-around-bounding-box-centre-in-python.html"""
-    #>>>>>>>>>> RADIANS
-    converted_value = float(degrees_to_rotate) * (math.pi / 180.0)
-    #>>>>>>>>>> BOUNDING BOX
-    el_bb        = elem.get_BoundingBox(doc.ActiveView)
-    el_bb_center = (el_bb.Max + el_bb.Min) / 2
-    #>>>>>>>>>> VECTOR FROM BB CENTER
-    p1     = XYZ(el_bb_center[0], el_bb_center[1], 0)
-    p2     = XYZ(el_bb_center[0], el_bb_center[1], 1)
-    myLine = Line.CreateBound(p1, p2)
+def rotate_element(elem, degrees_to_rotate):
+    #>>>>>>>>>> GET CENTER POINT
+    bounding_box = elem.get_BoundingBox(doc.ActiveView)
+    point = (bounding_box.Min + bounding_box.Max) / 2
+
+    #>>>>>>>>>> AXIS LINE
+    axis_line = Line.CreateBound(point, point + XYZ.BasisZ ) #fixme will not rotate 2D in secitons
+
     #>>>>>>>>>> ROTATE
-    ElementTransformUtils.RotateElement(doc, elem.Id, myLine, converted_value)
+    ElementTransformUtils.RotateElement(doc, elem.Id, axis_line, math.radians(degrees_to_rotate))
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GUI
 class MyWindow(forms.WPFWindow):
@@ -104,7 +102,7 @@ class MyWindow(forms.WPFWindow):
         # >>>>>>>>>> ROTATE ELEMENTS
         with revit.Transaction(__title__):
             for element in self.selected_elements:
-                try:    rotateSelectedElement(element, self.degrees)
+                try:    rotate_element(element, self.degrees)
                 except: print("Could not rotate element - {}".format(element.Id))
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN
