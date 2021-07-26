@@ -25,7 +25,7 @@ Contact me if you need help with this step.
     - [x] Place views on new sheets
     - [x] Sheets: Duplicate
     - [x] Sheets: Find and Replace
-    - [x] Sheets: Revision History (WIP)
+    - [x] Sheets: Revision History
     
 - [ ] Attached Groups
     - [ ] Attached groups: Show on selected Views
@@ -46,10 +46,12 @@ Contact me if you need help with this step.
     - [ ] Warnings: Does not intersect
     
 - [x] Elements
+    - [x] Elements: Rotate
+    - [x] Regions: Change LineStyle
+    - [x] Text: Transform 
     - [x] Wall Match: Top Constraints
     - [x] Wall Match: Both Constraints
     - [x] Wall Match: Bottom Constraints
-    - [x] Text: Transform 
     
 - [x] Selection
     - [x] Super select in view (SS)
@@ -66,10 +68,10 @@ Contact me if you need help with this step.
            
 - [ ] Rooms
     - [ ] Rooms to Floors
-    - [ ] Rooms to Regions
+    - [x] Rooms to Regions
     - [ ] Rooms SUM* (might be too office specific)
     
-- [ ] Backup
+- [ ] DWG
     - [ ] Save/Relink all DWGs
     - [ ] Save/Relink all JPGs
     - [x] Open selected DWG
