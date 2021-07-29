@@ -32,17 +32,15 @@ Contact me if you need help with this step.
     - [ ] Attached groups: Duplicate 
     - [ ] Attached groups: Find and Replace 
         
-- [ ] Views
+- [x] Views
     - [x] Duplicate views
-    - [ ] Group/Hide revision clouds (WIP)
+    - [x] Group/Hide revision clouds (WIP)
     - [x] Views: Find and Replace
     
 - [ ] Maintenance
     - [ ] Purge: LinePatterns
     - [ ] Purge: ViewFilters
     - [ ] Warnings: Enable leader
-    - [ ] Warnings: Does not intersect
-    - [ ] Warnings: Does not intersect
     - [ ] Warnings: Does not intersect
     
 - [x] Elements
@@ -59,20 +57,20 @@ Contact me if you need help with this step.
     - [x] Selection
         - [x] Select Title Blocks on sheets
         - [x] Select DWG on sheets
-        - [x] "Select similar categories (in model)
-        - [x] "Select similar categories (in view)
-        
+        - [x] Select similar categories (in model)
+        - [x] Select similar categories (in view)
+        - [ ] Select elements of selected groups
 - [x] UI
     - [x] B/W/G 
     - [x] List all levels
            
 - [ ] Rooms
-    - [ ] Rooms to Floors
+    - [x] Rooms to Floors
     - [x] Rooms to Regions
     - [ ] Rooms SUM* (might be too office specific)
     
 - [ ] DWG
-    - [ ] Save/Relink all DWGs
+    - [ ] Save/Relink all DWGs **>WIP<**
     - [ ] Save/Relink all JPGs
     - [x] Open selected DWG
         
