@@ -26,7 +26,7 @@ from pyrevit import forms, revit
 from Autodesk.Revit.DB import  FilledRegion
 
 #>>>>>>>>>> CUSTOM IMPORTS
-from Snippets.selection import get_selected_elements
+from Snippets._selection import get_selected_elements
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VARIABLES
 doc   = __revit__.ActiveUIDocument.Document

@@ -30,7 +30,7 @@ Author: Erik Frits
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IMPORTS
 import sys
 from pyrevit import revit, forms
-from Snippets.selection import get_selected_rooms, select_floor_type
+from Snippets._selection import get_selected_rooms, select_floor_type
 from Autodesk.Revit.DB import (BuiltInParameter,
                                SpatialElementBoundaryOptions,
                                FilteredElementCollector,

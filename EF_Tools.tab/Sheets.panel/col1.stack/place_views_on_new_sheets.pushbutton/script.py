@@ -46,7 +46,7 @@ from Autodesk.Revit.DB import (BuiltInParameter,
                                XYZ)
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CUSTOM IMPORTS
-from Snippets.selection import get_selected_views, select_title_block
+from Snippets._selection import get_selected_views, select_title_block
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VARIABLES
 doc     = __revit__.ActiveUIDocument.Document

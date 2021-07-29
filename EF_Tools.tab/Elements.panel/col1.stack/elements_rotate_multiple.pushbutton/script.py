@@ -35,7 +35,7 @@ from pyrevit import forms, revit
 import math
 
 #>>>>>>>>>> CUSTOM
-from Snippets.selection import get_selected_elements
+from Snippets._selection import get_selected_elements
 
 #>>>>>>>>>> .NET IMPORTS
 from clr import AddReference

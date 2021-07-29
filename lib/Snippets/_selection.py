@@ -9,7 +9,7 @@ from Autodesk.Revit.DB.Architecture import Room
 from pyrevit.forms import SelectFromList
 from pyrevit import forms
 
-from Snippets.variables import ALL_VIEW_TYPES
+from Snippets._variables import ALL_VIEW_TYPES
 import sys
 
 uidoc = __revit__.ActiveUIDocument

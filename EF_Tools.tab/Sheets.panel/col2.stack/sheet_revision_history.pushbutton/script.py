@@ -49,8 +49,8 @@ from xlsxwriter.workbook import Workbook, Worksheet
 from Autodesk.Revit.DB import ( FilteredElementCollector,
                                 BuiltInCategory,
                                 BuiltInParameter)
-from Snippets.selection import get_selected_sheets
-from Snippets.views import get_sheet_from_view
+from Snippets._selection import get_selected_sheets
+from Snippets._views import get_sheet_from_view
 
 #>>>>>>>>>> .NET IMPORTS
 import clr

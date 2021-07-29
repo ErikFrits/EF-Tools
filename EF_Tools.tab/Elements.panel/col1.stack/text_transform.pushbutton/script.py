@@ -35,7 +35,7 @@ from System.Windows.Window      import DragMove
 from System.Windows.Input       import MouseButtonState
 import wpf
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CUSTOM IMPORTS
-from Snippets.selection import get_selected_elements
+from Snippets._selection import get_selected_elements
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VARIABLES
 doc = __revit__.ActiveUIDocument.Document

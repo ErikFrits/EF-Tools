@@ -28,7 +28,7 @@ _____________________________________________________________________
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IMPORTS
 from pyrevit import forms, revit
 from Autodesk.Revit.DB import (BuiltInParameter)
-from Snippets.selection import pick_wall
+from Snippets._selection import pick_wall
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VARIABLES
 doc   = __revit__.ActiveUIDocument.Document
