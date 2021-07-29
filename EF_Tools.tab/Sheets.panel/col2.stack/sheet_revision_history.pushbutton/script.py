@@ -118,6 +118,9 @@ class Revisions_on_sheet():
 
             dependant_views = all_dependant_views.values()
 
+            print(views_on_sheet)
+            print(primary_views)
+            print(dependant_views)
             #>>>>>>>>>> COMBINE ALL VIEWS
             all_views = views_on_sheet + primary_views + dependant_views
             all_view_ids = [view.Id for view in all_views]
@@ -139,7 +142,7 @@ class Revisions_on_sheet():
         #>>>>>>>>>> ADDITIONAL REVISIONS - FROM ALL RELATED SHEETS
         if self.include_primary_and_dependant:
             views       = [doc.GetElement(view_id) for view_id in self.view_ids]
-            all_sheets  = [get_sheet_from_view(view) for view in views if get_sheet_from_view(view)]
+            all_sheets  = [get_sheet_from_view(view) for view in views if get_sheet_from_view(view)] + [self.sheet]
             sheets      = list({sheet.SheetNumber : sheet for sheet in all_sheets}.values())
 
             #>>>>>>>>>> LOOP THROUGH SHEETS
