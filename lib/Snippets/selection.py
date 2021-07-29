@@ -143,7 +143,7 @@ def pick_wall():
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET ROOMS
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET RegionType
 def select_region_type():
     all_filled_regions = FilteredElementCollector(doc).OfClass(FilledRegionType)
     dict_filled_regions = {Element.Name.GetValue(fr):fr for fr in all_filled_regions}
@@ -152,3 +152,16 @@ def select_region_type():
     selection           = forms.SelectFromList.show(dict_filled_regions.keys(),title="Select FilledRegion Type", button_name='Select')
     if not selection:     forms.alert("FilledRegion Type was not chosen. Please try again.", title='Select FilledRegion Type', exitscript=True)
     return dict_filled_regions[selection]
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET FloorType
+def select_floor_type():
+    all_floor_types = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsElementType().ToElements()
+    dict_floor_types = {Element.Name.GetValue(fr):fr for fr in all_floor_types}
+
+
+    #>>>>>>>>>> PROMT USER TO SELECT FilledRegion TYPE
+    selection           = forms.SelectFromList.show(dict_floor_types.keys(),title="Select Floor Type", button_name='Select')
+    if not selection:     forms.alert("Floor Type was not chosen. Please try again.", title='Select Floor Type', exitscript=True)
+    return dict_floor_types[selection]
+
+
