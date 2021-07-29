@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __title__  = "Rooms to Regions"
 __author__ = "Erik Frits"
-__doc__ = """Version = 1.2
+__doc__ = """Version = 1.0
 Date    = 08.02.2021
 _____________________________________________________________________
 Description:
@@ -17,15 +17,16 @@ How-to:
 -> Select rooms
 -> Run the script
 -> If no rooms selected it ask to select all rooms in an active view.
+-> Select RegionType
 _____________________________________________________________________
 Last update:
 
 - [26.07.2021] - 1.0 RELEASE
+- [26.07.2021] - Refactored
+- [26.07.2021] - Select all rooms if None selected
+- [26.07.2021] - Solved issue with multiple boundaries
 _____________________________________________________________________
-To-do:
-
-- 
-_____________________________________________________________________
+Author: Erik Frits
 """
 
 
@@ -65,6 +66,10 @@ class RoomToRegion:
         self.name = room.get_Parameter(BuiltInParameter.ROOM_NAME).AsString()
         self.room_boundaries = self.room.GetBoundarySegments(SpatialElementBoundaryOptions())
 
+        if not self.area:
+            return
+
+
         #>>>>>>>>>> CREATE REGION
         region = self.create_Regions()
 
@@ -74,7 +79,6 @@ class RoomToRegion:
     @property
     def curve_loop_list(self):
         """Function to create a list of CurveLoop from given room boundaries."""
-        if not self.area: return
 
         curveLoopList = []
         for roomBoundary in self.room_boundaries:
