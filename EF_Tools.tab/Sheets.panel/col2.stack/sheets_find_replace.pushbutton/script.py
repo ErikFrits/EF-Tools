@@ -2,7 +2,6 @@
 
 __title__ = "Sheet: Find and Replace"  # Name of the button displayed in Revit
 __author__ = "Erik Frits"
-__context__ = 'Sheets'
 __doc__ = """Version = 1.0
 Date    = 28.07.2020
 _____________________________________________________________________

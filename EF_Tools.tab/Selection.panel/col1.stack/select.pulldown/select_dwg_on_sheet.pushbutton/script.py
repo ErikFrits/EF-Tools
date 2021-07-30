@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 __title__ = "Select DWGs on sheets"
 __author__ = "Erik Frits"
-__helpurl__ = ""
-__context__ = 'Sheets'
 __doc__ = """Version = 1.0
 Date    = 07.07.2021
 _____________________________________________________________________

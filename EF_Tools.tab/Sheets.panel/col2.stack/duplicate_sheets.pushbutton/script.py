@@ -2,7 +2,6 @@
 
 __title__ = "Duplicate Sheets"   # Name of the button displayed in Revit
 __author__ = "Erik Frits"
-__context__ = 'Sheets'
 __doc__ = """Version = 0.5
 Date    = 08.12.2020
 _____________________________________________________________________
