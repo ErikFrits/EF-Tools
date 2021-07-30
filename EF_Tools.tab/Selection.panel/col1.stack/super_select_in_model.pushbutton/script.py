@@ -8,7 +8,6 @@ _____________________________________________________________________
 Description:
 
 This is an improved version of Built-In tools named: 
-'Select All Instances: Visible in View' [SS] and
 'Select All Instances: In Model'        [SA]
 
 You can now select multiple similar instances in the 
