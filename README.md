@@ -1,23 +1,33 @@
-# EF-Tools 🛠
-This Git is work in progress. I have to refactor multiple tools and make sure they are ready to be used by everyone. 
-Some tools will need personal adjusting to make sure it works for each company. 
+# 🛠 EF-Tools 🛠 
+EF-Tools is a custom extension for pyRevit that contains multiple tools that might help you.  
+Developed by **Erik Frits**
 
-### 📦 Revit Version 📦
-These tools were developed on Revit 2019-2021.  
-So in case you are using different version of Revit and having any issues,  
+### 📦 Revit Versions 📦
+These tools were developed mainly in Revit 2021.  
+In case you are using different version of Revit and having any issues,  
 please let me know so I could adjust them to work on other versions too.
 
-## 🚧WIP🚧 : 🎉 Release v1.0 🎉
-This is the list of tools I want to refactor before I release them for all.  
-Once I reach the state of the repo I am happy to be called V1.0 I will talk to pyRevit moderators to 
-add it to the list of extensions.  
+##  🎉 Release v1.0 🎉
+I have contacted the creator of pyRevit - Ehsan Iran-Nejad, and he said that he will 
+add my extension to pyRevit extensions with its next release by default.
 
-You are welcome to use them even now but you will need to modify extensions.json file in  
+You are welcome to use them right now but you will need to modify `extensions.json` file in `pyRevit-Master` manually.
+Follow installation instructions below.
+
+#### 💠 Installation 💠 
+1) Find `extensions.json` file that is normally saved in the path below by default:  
 `%appdata%\pyRevit-Master\extensions\extensions.json`  
-Contact me if you need help with this step.
+2) Open `extension.json` file in `pyRevit-Master\extensions\`. Once you open this .json file 
+you will see a dictionary of other extensions. We will need to manually add information about EF-Tools here
+3) Open [`extension.json`](https://github.com/ErikFrits/EF-Tools/blob/main/extension.json) file in my repo.
+4) Add the content of my file to the `%appdata%\pyRevit-Master\extensions\extensions.json` so it 
+matches the other extensions listed in there.
+5) Restart your Revit. Once you open pyRevit -> Extensions you should be able to see EF-Tools displayed there. 
+Just click on install and you should have your new favourite tools installed.
 
+Contact me if you need help installing it.
 
-### 📜 List of tools
+### 📜 List of tools 📜
 
 - [x] Sheets
     - [x] Sheets: Add specific revision
@@ -70,11 +80,11 @@ Contact me if you need help with this step.
     - [ ] Rooms SUM* (might be too office specific)
     
 - [ ] DWG
-    - [ ] Save/Relink all DWGs **>WIP<**
-    - [ ] Save/Relink all JPGs
     - [x] Open selected DWG
+    - [x] Save/Relink all DWGs
+    - [ ] Save/Relink all JPGs
         
-- [ ] Other Tools 
+- [ ] Other Upcoming Tools 
     - [ ] Sheets: Allign viewports
     - [ ] Purge: all areas
     - [ ] Rooms: Flat Renumbering
@@ -85,12 +95,13 @@ Contact me if you need help with this step.
     - [ ] Apartments groups: Renumber with spline 
 
 
-### [🌐 My personal blog ](www.erikfrits.com/blog "Erik Frits - Blog") 
+### [🌐 My personal blog 🌐](www.erikfrits.com/blog "Erik Frits - Blog") 
+My website is still in development and I am lacking time, so please do not expect much from it right now.
+
 I will be sharing different snippets and explaining some of my scripts on my blog. 
-Hopefully some of you learning to do the similar thing will appreciate it and learn from me.
+Hopefully some of you will learn something from me.
 
 ## Contact me
-
 🤵 https://www.linkedin.com/in/erik-frits  
 📨 erikfrits95@gmail.com
 
