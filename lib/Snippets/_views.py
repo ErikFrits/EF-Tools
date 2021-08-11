@@ -70,6 +70,6 @@ if __name__ == '__main__':
 
     #>>>>>>>>>> PRINT RESULTS
     if sheet:   print('Sheet Found: {} - {}'.format(sheet.SheetNumber, sheet.Name))
-    else:       print('No sheet associated with the given view: {}'.format(view.Name))
+    else:       print('No sheet associated with the given view: {}'.format(sheet.Name))
 
 
