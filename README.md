@@ -18,14 +18,12 @@ Follow installation instructions below.
 
 #### 💠 Installation 💠 
 1) Find `extensions.json` file that is normally saved in the path below by default:  
-`%appdata%\pyRevit-Master\extensions\extensions.json`  
+`%appdata%\pyRevit-Master\extensions`  
 2) Open `extension.json` file in `pyRevit-Master\extensions\`. Once you open this .json file 
 you will see a dictionary of other extensions. We will need to manually add information about EF-Tools here
 3) Open [`extension.json`](https://github.com/ErikFrits/EF-Tools/blob/main/extension.json) file in my repo.
 4) Add the content of my file to the `%appdata%\pyRevit-Master\extensions\extensions.json` so it 
-matches the other extensions listed in there.
-5) Restart your Revit. Once you open pyRevit -> Extensions you should be able to see EF-Tools displayed there. 
-Just click on install and you should have your new favourite tools installed.
+matches the other extensions listed in there. Or just replace the file's content with [`extension.json`](https://github.com/ErikFrits/EF-Tools/blob/main/installation/extension.json)
 
 Contact me if you need help installing it.
 
