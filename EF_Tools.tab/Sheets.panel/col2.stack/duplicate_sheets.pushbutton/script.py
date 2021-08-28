@@ -779,7 +779,7 @@ class MyWindow(forms.WPFWindow):
         if checked_radiobutton.IsChecked:
             if checked_radiobutton.Content == "Duplicate":
                 self.view_dupicate_option = ViewDuplicateOption.Duplicate
-            elif checked_radiobutton.Content == "Duplicate Detailing":
+            elif checked_radiobutton.Content == "Duplicate detailing":
                 self.view_dupicate_option = ViewDuplicateOption.WithDetailing
             elif checked_radiobutton.Content == "Duplicate Dependent":
                 self.view_dupicate_option = ViewDuplicateOption.AsDependent
