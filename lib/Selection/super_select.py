@@ -77,8 +77,9 @@ from Autodesk.Revit.DB import ( ModelLine,
                                 BuiltInCategory,
                                 )
 
-uidoc = __revit__.ActiveUIDocument
-doc = uidoc.Document
+
+
+
 
 #____________________________________________________________________ FUNCTIONS
 def create_filter(key_parameter, element_value):
@@ -92,6 +93,12 @@ def create_filter(key_parameter, element_value):
 
 def select(mode):
     """Run Super Select: all in model/view based on given mode."""
+
+    uidoc = __revit__.ActiveUIDocument
+    doc = __revit__.ActiveUIDocument.Document
+    # print(doc.Title)
+
+
     # FILTERS CONTAINER
     list_of_filters = List[ElementFilter]()
 
