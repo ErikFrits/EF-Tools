@@ -17,6 +17,7 @@ You are welcome to use them right now but you will need to modify `extensions.js
 Follow installation instructions below.
 
 #### 💠 Installation 💠 
+🎬 YouTube Tutorial - https://www.youtube.com/watch?v=q0zbdyyBIo0
 1) Find `extensions.json` file that is normally saved in the path below by default:  
 `%appdata%\pyRevit-Master\extensions`  
 2) Open `extension.json` file in `pyRevit-Master\extensions\`. Once you open this .json file 
