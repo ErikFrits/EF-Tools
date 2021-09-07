@@ -14,6 +14,8 @@ app = __revit__.Application
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FilteredElementCollector(doc).
 
+all_text               = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_TextNotes).WhereElementIsNotElementType().ToElements()
+
 all_lines               = FilteredElementCollector(doc, doc.ActiveView.Id).WherePasses(ElementClassFilter(CurveElement)).ToElements()
 all_rooms               = FilteredElementCollector(doc).WherePasses(ElementCategoryFilter(BuiltInCategory.OST_Rooms)).ToElements()
 all_worksets            = FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset).ToWorksets()
