@@ -2,7 +2,7 @@
 __title__ = "DWG: open selected"
 __author__ = "Erik Frits"
 __helpurl__ = "https://www.erikfrits.com/blog/open-selected-dwg/"
-__doc__ = """Version = 1.0
+__doc__ = """Version = 1.1
 Date    = 12.04.2021
 _____________________________________________________________________
 Description:
@@ -21,7 +21,8 @@ Prerequisite:
 ImportInstance have to be linked and not imported!
 _____________________________________________________________________
 Last update:
--
+- [07.09.2021] - V 1.1
+- [07.09.2021] - Reload DWG button added.
 _____________________________________________________________________
 To-do:
 - add header logo to GUI
@@ -30,7 +31,7 @@ _____________________________________________________________________
 # IMPORTS
 from os import startfile
 from os.path import dirname
-from Autodesk.Revit.DB import ImportInstance, ModelPathUtils, BuiltInParameter
+from Autodesk.Revit.DB import ImportInstance, ModelPathUtils, BuiltInParameter, Transaction
 from pyrevit.forms import WPFWindow, alert
 from subprocess import Popen
 
@@ -55,18 +56,20 @@ class MyWindow(WPFWindow):
         self.dwg_linked = self.selected_dwg_ImportInstance.IsLinked
 
         if self.dwg_linked:
-            self.selected_dwg_path          = self.get_import_instance_path(self.selected_dwg_ImportInstance)
+            self.selected_dwg_path          = self.get_import_instance_path()
             self.selected_dwg_folder_path   = dirname(self.selected_dwg_path)
             self.dwg_path.Text              = self.selected_dwg_path
             self.main_title.Text            = __title__
             self.ShowDialog()
-
         else:
             alert("Selected DWG instance is not linked.", __title__, exitscript=False)
 
-    def get_import_instance_path(self, import_instance):
+
+
+    def get_import_instance_path(self):
         # type:(ImportInstance) -> str
         """Function to get a path of the selected ImportInstance if it is linked."""
+        import_instance = self.selected_dwg_ImportInstance
         if import_instance.IsLinked:
             cad_linktype_id = import_instance.get_Parameter(BuiltInParameter.ELEM_FAMILY_PARAM).AsElementId()
             cad_linktype = doc.GetElement(cad_linktype_id)
@@ -119,6 +122,19 @@ class MyWindow(WPFWindow):
         command = 'echo ' + self.selected_dwg_path.strip() + '| clip'
         Popen(command, shell=True)
         self.button_copy_clipboard.Content = "Copied!"
+
+    def button_reload(self, sender, e):
+        """Reload selected DWG"""
+        self.Close()
+        t = Transaction(doc,__title__)
+        t.Start()
+        import_instance = self.selected_dwg_ImportInstance
+        if import_instance.IsLinked:
+            cad_linktype_id = import_instance.get_Parameter(BuiltInParameter.ELEM_FAMILY_PARAM).AsElementId()
+            cad_linktype = doc.GetElement(cad_linktype_id)
+            cad_linktype.Reload()
+        t.Commit()
+
 
     def Hyperlink_RequestNavigate(self, sender, e):
         """Forwarding for a Hyperlink"""

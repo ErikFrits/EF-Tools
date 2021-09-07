@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="Views: Find and Replace"
-    Height="110" Width="400"
+    Height="110" Width="550"
     WindowStartupLocation="CenterScreen"
     HorizontalAlignment="Center"
     ShowInTaskbar="True"
@@ -82,8 +82,8 @@
                 <!--Source="https://www.erikfrits.com/media/images/LOGO.png"-->
 
                 <TextBlock>
-                    <Hyperlink  
-                        RequestNavigate="Hyperlink_RequestNavigate" 
+                    <Hyperlink
+                        RequestNavigate="Hyperlink_RequestNavigate"
                         NavigateUri="https://erikfrits.com/blog/"
                         FontSize="14px"
                         FontWeight="Heavy"
@@ -103,7 +103,7 @@
                 />
 
             <!--CLOSE-->
-            <Button 
+            <Button
                 Content="Close"
                 Grid.Column="2"
                 Width="60" Height="20"
@@ -159,6 +159,14 @@
                         Height="30"
                         Width="120"
                         Margin="5"/>
+
+                <!--BUTTON_4-->
+                <Button Content="Reload DWG"
+                        Click="button_reload"
+                        Height="30"
+                        Width="120"
+                        Margin="5"
+                        />
             </StackPanel>
         </StackPanel>
     </Grid>
