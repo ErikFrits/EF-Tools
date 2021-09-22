@@ -19,7 +19,7 @@ Follow installation instructions below.
 #### 💠 Installation 💠 
 🎬 YouTube Tutorial - https://www.youtube.com/watch?v=q0zbdyyBIo0
 1) Find `extensions.json` file that is normally saved in the path below by default:  
-`%appdata%\pyRevit-Master\extensions`  
+`%appdata%\pyRevit-Master\extensions` or sometimes it can be found here `C:\Program Files\pyRevit-Master`
 2) Open `extension.json` file in `pyRevit-Master\extensions\`. Once you open this .json file 
 you will see a dictionary of other extensions. We will need to manually add information about EF-Tools here
 3) Open [`extension.json`](https://github.com/ErikFrits/EF-Tools/blob/main/extension.json) file in my repo.
