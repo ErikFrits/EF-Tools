@@ -39,13 +39,20 @@ app   = __revit__.Application
 if __name__ == '__main__':
 
     #>>>>>>>>>> SELECT MAIN WALL
-    try: Selected_wall = pick_wall()
-    except: forms.alert("Script is canceled.",exitscript=True,title="Script Canceled.")
+    Selected_wall = None
+    try:
+        Selected_wall = pick_wall(uidoc)
+    except:
+        import traceback
+        print(traceback.format_exc())
 
+
+    if not Selected_wall:
+        forms.alert("Could not get selected wall. Please try again.", exitscript=True, title="Script Canceled.")
     #>>>>>>>>>> TOP
-    Main_Top_Constraint = Selected_wall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE)
-    Main_Top_Constraint_Id = Selected_wall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).AsElementId()
-    Main_is_unconnected = str(Main_Top_Constraint_Id) == "-1"  # True = Unconnected / False = Up to Level
+    Main_Top_Constraint     = Selected_wall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE)
+    Main_Top_Constraint_Id  = Selected_wall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).AsElementId()
+    Main_is_unconnected     = str(Main_Top_Constraint_Id) == "-1"  # True = Unconnected / False = Up to Level
 
     #>>>>>>>>>> BASE
     Main_Base_Containt = Selected_wall.get_Parameter(BuiltInParameter.WALL_BASE_CONSTRAINT).AsElementId()
@@ -56,7 +63,7 @@ if __name__ == '__main__':
         while True:
 
             #>>>>>>>>>> PICK WALL
-            try:    Match_wall = pick_wall()
+            try:    Match_wall = pick_wall(uidoc)
             except: break
             if not Match_wall: break
 

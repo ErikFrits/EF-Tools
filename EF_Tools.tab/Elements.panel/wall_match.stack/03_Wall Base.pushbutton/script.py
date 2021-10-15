@@ -38,7 +38,7 @@ app   = __revit__.Application
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN
 if __name__ == '__main__':
     #>>>>>>>>>> SELECT MAIN WALL
-    try: Selected_wall = pick_wall()
+    try: Selected_wall = pick_wall(uidoc)
     except: forms.alert("Script is canceled.",exitscript=True,title="Script Canceled.")
 
     #>>>>>>>>>> BASE
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         while True:
 
             #>>>>>>>>>> PICK WALL
-            try:    Match_wall = pick_wall()
+            try:    Match_wall = pick_wall(uidoc)
             except: break
 
             #>>>>>>>>>> SET PARAMETERS
