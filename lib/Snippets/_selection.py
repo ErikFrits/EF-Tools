@@ -132,11 +132,12 @@ class CustomISelectionFilter(ISelectionFilter):
     def AllowReference(self, ref, point):
         return true
 
+
 #>>>>>>>>>> PICK WALL
-def pick_wall():
+def pick_wall(given_uidoc = uidoc):
     """Function to promt user to select a wall element."""
-    wall_id = uidoc.Selection.PickObject(ObjectType.Element, CustomISelectionFilter("-2000011"), "Select a Wall")    # -2000011 <- Id of OST_Walls
-    wall = doc.GetElement(wall_id)
+    wall_id = given_uidoc.Selection.PickObject(ObjectType.Element, CustomISelectionFilter("-2000011"), "Select a Wall")    # -2000011 <- Id of OST_Walls
+    wall = given_uidoc.Document.GetElement(wall_id)
     return wall
 
 
