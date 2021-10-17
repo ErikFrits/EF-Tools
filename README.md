@@ -4,6 +4,9 @@
 EF-Tools is a custom extension for pyRevit that contains multiple tools that might help you.  
 Developed by **Erik Frits**
 
+
+
+
 ### 📦 Revit Versions 📦
 These tools were developed mainly in Revit 2021.  
 In case you are using different version of Revit and having any issues,  
@@ -17,7 +20,8 @@ You are welcome to use them right now but you will need to modify `extensions.js
 Follow installation instructions below.
 
 #### 💠 Installation 💠 
-🎬 YouTube Tutorial - https://www.youtube.com/watch?v=q0zbdyyBIo0
+
+#### 🎬 YouTube Tutorial - https://www.youtube.com/watch?v=q0zbdyyBIo0
 1) Find `extensions.json` file that is normally saved in the path below by default:  
 `%appdata%\pyRevit-Master\extensions` or sometimes it can be found here `C:\Program Files\pyRevit-Master`
 2) Open `extension.json` file in `pyRevit-Master\extensions\`. Once you open this .json file 
@@ -35,18 +39,16 @@ Contact me if you need help installing it.
     - [x] Sheets: Create multiple
     - [x] Place views on new sheets
     - [x] Sheets: Duplicate
-    - [x] Sheets: Find and Replace
     - [x] Sheets: Revision History
     
 - [ ] Attached Groups
     - [ ] Attached groups: Show on selected Views
     - [ ] Attached groups: Duplicate 
-    - [ ] Attached groups: Find and Replace 
         
 - [x] Views
     - [x] Duplicate views
     - [x] Group/Hide revision clouds (WIP)
-    - [x] Views: Find and Replace
+    - [x] Create Workset 3D Views
     
 - [ ] Maintenance
     - [ ] Purge: LinePatterns
@@ -57,7 +59,6 @@ Contact me if you need help installing it.
 - [x] Elements
     - [x] Elements: Rotate
     - [x] Regions: Change LineStyle
-    - [x] Text: Transform 
     - [x] Wall Match: Top Constraints
     - [x] Wall Match: Both Constraints
     - [x] Wall Match: Bottom Constraints
@@ -71,6 +72,15 @@ Contact me if you need help installing it.
         - [x] Select similar categories (in model)
         - [x] Select similar categories (in view)
         - [ ] Select elements of selected groups
+
+- [x] Naming
+    - [x] Rename
+        - [x] Find and Replace: Views
+        - [x] Find and Replace: Sheets
+        - [x] Find and Replace: RoomNames
+        - [x] Find and Replace: Types
+    - [x] Text: Transform
+    
 - [x] UI
     - [x] B/W/G 
     - [x] List all levels
@@ -90,7 +100,7 @@ Contact me if you need help installing it.
     - [ ] Purge: all areas
     - [ ] Rooms: Flat Renumbering
     - [ ] Rename DWGs
-    - [ ] Naming: Wall Types 
+    - [ ] Naming: Wall/Roof/Floor Types 
     - [ ] Delete 0 dimensions
     - [ ] Parking: Renumber with spline
     - [ ] Apartments groups: Renumber with spline 
