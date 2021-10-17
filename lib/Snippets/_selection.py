@@ -19,13 +19,13 @@ from Autodesk.Revit.UI.Selection import ISelectionFilter, ObjectType
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET ELEMENTS
 
-def get_selected_elements():
+def get_selected_elements(given_uidoc = uidoc):
     """Property that retrieves selected views or promt user to select some from the dialog box."""
     selected_elements = []
 
     #>>>>>>>>>> VIEWS SELECTED IN UI
-    for element_id in uidoc.Selection.GetElementIds():
-        element = doc.GetElement(element_id)
+    for element_id in given_uidoc.Selection.GetElementIds():
+        element = given_uidoc.Document.GetElement(element_id)
         selected_elements.append(element)
 
     if not selected_elements:
@@ -34,14 +34,14 @@ def get_selected_elements():
 
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET ROOMS
-def get_selected_rooms(exit_if_none = False):
+def get_selected_rooms(given_uidoc = uidoc, exit_if_none = False):
     """Function to get selected views.
     :return: list of selected views."""
     #>>>>>>>>>> GET SELECTED ELEMENTS
-    UI_selected = uidoc.Selection.GetElementIds()
+    UI_selected = given_uidoc.Selection.GetElementIds()
 
     #>>>>>>>>>> FILTER SELECTION
-    selected_rooms = [doc.GetElement(view_id) for view_id in UI_selected if type(doc.GetElement(view_id)) == Room]
+    selected_rooms = [given_uidoc.Document.GetElement(view_id) for view_id in UI_selected if type(given_uidoc.Document.GetElement(view_id)) == Room]
 
     #>>>>>>>>>> EXIT IF NONE SELECTED
     if not selected_rooms and exit_if_none:
@@ -56,11 +56,12 @@ def get_selected_rooms(exit_if_none = False):
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET VIEWS
 
-def get_selected_views(exit_if_none = False):
+def get_selected_views(given_uidoc = uidoc, exit_if_none = False):
     """Function to get selected views.
     :return: list of selected views."""
     #>>>>>>>>>> GET SELECTED ELEMENTS
-    UI_selected = uidoc.Selection.GetElementIds()
+    doc = given_uidoc.Document
+    UI_selected = given_uidoc.Selection.GetElementIds()
 
     #>>>>>>>>>> FILTER SELECTION
     selected_views = [doc.GetElement(view_id) for view_id in UI_selected if type(doc.GetElement(view_id)) in ALL_VIEW_TYPES]
@@ -72,11 +73,12 @@ def get_selected_views(exit_if_none = False):
     return selected_views
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET SHEETS
-def get_selected_sheets(exit_if_none = False):
+def get_selected_sheets(given_uidoc = uidoc, exit_if_none = False):
     """Function to get selected views.
     return list of selected views."""
     #>>>>>>>>>> GET SELECTED ELEMENTS
-    UI_selected = uidoc.Selection.GetElementIds()
+    doc = given_uidoc.Document
+    UI_selected = given_uidoc.Selection.GetElementIds()
 
     #>>>>>>>>>> FILTER SELECTION
     selected_sheets = [doc.GetElement(sheet_id) for sheet_id in UI_selected if type(doc.GetElement(sheet_id)) == ViewSheet ]
@@ -95,9 +97,9 @@ def get_selected_sheets(exit_if_none = False):
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SELECT TITLEBLOCK
 
 
-def select_title_block():
+def select_title_block(given_uidoc = uidoc):
     """Function to let user select a title block."""
-
+    doc = given_uidoc.Document
     #>>>>>>>>>> SELECT TITLE BLOCK
     all_title_blocks = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_TitleBlocks).WhereElementIsElementType().ToElements()
     unique_title_blocks = {}
@@ -145,8 +147,8 @@ def pick_wall(given_uidoc = uidoc):
 
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET RegionType
-def select_region_type():
-    all_filled_regions = FilteredElementCollector(doc).OfClass(FilledRegionType)
+def select_region_type(given_uidoc = uidoc):
+    all_filled_regions = FilteredElementCollector(given_uidoc.Document).OfClass(FilledRegionType)
     dict_filled_regions = {Element.Name.GetValue(fr):fr for fr in all_filled_regions}
 
     #>>>>>>>>>> PROMT USER TO SELECT FilledRegion TYPE
@@ -155,8 +157,8 @@ def select_region_type():
     return dict_filled_regions[selection]
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET FloorType
-def select_floor_type():
-    all_floor_types = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsElementType().ToElements()
+def select_floor_type(given_uidoc = uidoc):
+    all_floor_types = FilteredElementCollector(given_uidoc.Document).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsElementType().ToElements()
     dict_floor_types = {Element.Name.GetValue(fr):fr for fr in all_floor_types}
 
 

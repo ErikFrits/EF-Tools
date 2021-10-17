@@ -21,8 +21,8 @@ from Autodesk.Revit.DB import ( FilteredElementCollector,
 
                                 )
 
-uidoc = __revit__.ActiveUIDocument
-doc = uidoc.Document
+default_uidoc = __revit__.ActiveUIDocument
+default_doc = default_uidoc.Document
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FUNCTIONS
 def create_filter(key_parameter, element_value):
@@ -34,8 +34,9 @@ def create_filter(key_parameter, element_value):
     return filter
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN
 
-def select(mode):
+def select(mode, uidoc = default_uidoc ):
     """Run Super Select: all in model/view based on given mode."""
+    doc = uidoc.Document
     #>>>>>>>>>> FILTERS CONTAINER
     list_of_filters = List[ElementFilter]()
 
@@ -44,7 +45,7 @@ def select(mode):
 
     #>>>>>>>>>> LOOP THROUGH SELECTION
     for id in current_selection_ids:
-        element = doc.GetElement(id)
+        element = uidoc.Document.GetElement(id)
 
         #>>>>>>>>>> CREATE CATEGORY FILTER
         filter = create_filter(key_parameter=BuiltInParameter.ELEM_CATEGORY_PARAM,
