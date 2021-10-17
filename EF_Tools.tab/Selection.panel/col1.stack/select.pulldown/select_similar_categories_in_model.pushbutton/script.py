@@ -29,5 +29,7 @@ _____________________________________________________________________
 # - Select similar categories (in model)
 
 # lib/Selection/super_select.py
+uidoc = __revit__.ActiveUIDocument
+
 from Selection import select_similar_category
-select_similar_category.select(mode='model')
+select_similar_category.select(uidoc=uidoc, mode='model')

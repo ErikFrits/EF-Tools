@@ -38,7 +38,8 @@ Last update:
 - [08.02.2021] - Imports reduced
 _____________________________________________________________________
 To-do:
-- 
+- [Add Rule] Stair threads numbers
+- Check Scopebox, Reference plane, Reference line, annotations like spot elevations...
 _____________________________________________________________________
 If you select an element and it changes your selection to many other
 unwanted types, please let me know the Category of the elmenet, 

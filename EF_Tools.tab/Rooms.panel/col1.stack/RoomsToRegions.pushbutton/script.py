@@ -113,14 +113,14 @@ def ask_select_all_rooms():
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN
 if __name__ == '__main__':
     #>>>>>>>>>> GET SELECTED ROOMS
-    selected_rooms = get_selected_rooms(exit_if_none=False)
+    selected_rooms = get_selected_rooms(uidoc, exit_if_none=False)
 
     if not selected_rooms:
         #Select all rooms visible in the view.
         if ask_select_all_rooms():  selected_rooms = FilteredElementCollector(doc, active_view_id).WherePasses(ElementCategoryFilter(BuiltInCategory.OST_Rooms)).ToElements()
         else:                       sys.exit()
     #>>>>>>>>>> ASK USER TO SELECT FilledRegion TYPE
-    region_type = select_region_type()
+    region_type = select_region_type(uidoc)
     region_type_id = region_type.Id
 
     #>>>>>>>>>> LOOP THROUGH ROOMS

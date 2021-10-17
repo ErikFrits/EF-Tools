@@ -131,7 +131,7 @@ if __name__ == '__main__':
     active_view_level = active_view.GenLevel
 
     #>>>>>>>>>> GET SELECTED ROOMS
-    selected_rooms = get_selected_rooms(exit_if_none=False)
+    selected_rooms = get_selected_rooms(uidoc, exit_if_none=False)
 
     if not selected_rooms:
         #>>>>>>>>>>Select all rooms visible in the view.
@@ -139,7 +139,7 @@ if __name__ == '__main__':
         else:                       sys.exit()
 
     #>>>>>>>>>> ASK USER TO SELECT FLOOR TYPE
-    floor_type = select_floor_type()
+    floor_type = select_floor_type(uidoc)
 
     #>>>>>>>>>> LOOP THROUGH ROOMS
     with TransactionGroup(doc,__title__) as tg:

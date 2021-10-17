@@ -2,7 +2,7 @@
 
 __title__ = "WIP: Place views on new sheets"   # Name of the button displayed in Revit
 __author__ = "Erik Frits"
-__context__ = 'Views'
+# __context__ = 'Views'
 __doc__ = """Version = 0.2
 Date    = 31.08.2020
 _____________________________________________________________________
@@ -79,7 +79,7 @@ class MyWindow(forms.WPFWindow):
 if __name__ == '__main__':
 
     #>>>>>>>>>> GET SELECTED VIEWS
-    selected_views = get_selected_views()
+    selected_views = get_selected_views(uidoc)
     if not selected_views:
         forms.alert("No views selected. Please try again.", exitscript = True)
 
@@ -96,7 +96,7 @@ if __name__ == '__main__':
             print('View [{}] - Sheet [{}]'.format(view.Name, view.get_Parameter(BuiltInParameter.VIEWER_SHEET_NUMBER).AsString()))
 
     #>>>>>>>>>> SELECT TITLEBLOCK
-    selected_title_block = select_title_block()
+    selected_title_block = select_title_block(uidoc)
     if not selected_title_block:
         forms.alert("No TitleBlock selected. Please try again.", exitscript = True)
 

@@ -72,7 +72,7 @@ class MyWindow(forms.WPFWindow):
     #>>>>>>>>>>>>>>>>>>>> PROPERTIES
     @property
     def selected_elements(self):
-        return get_selected_elements()
+        return get_selected_elements(uidoc)
 
     @property
     def degrees(self):

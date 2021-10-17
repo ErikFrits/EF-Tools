@@ -5,6 +5,7 @@ layout:
   - Walls
   - UI
   - Elements
+  - Naming
   - Rooms
   - DWG
   - test

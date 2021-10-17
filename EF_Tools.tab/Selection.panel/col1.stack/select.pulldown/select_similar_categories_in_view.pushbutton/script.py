@@ -27,7 +27,8 @@ _____________________________________________________________________
 # Same script is used for 2 buttons.
 # - Select similar categories (in view)
 # - Select similar categories (in model)
+uidoc = __revit__.ActiveUIDocument
 
 # lib/Selection/super_select.py
 from Selection import select_similar_category
-select_similar_category.select(mode='view')
+select_similar_category.select(uidoc=uidoc, mode='view')

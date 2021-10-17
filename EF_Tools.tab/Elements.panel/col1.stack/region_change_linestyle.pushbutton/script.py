@@ -23,19 +23,20 @@ _____________________________________________________________________
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IMPORTS
 from pyrevit import forms, revit
-from Autodesk.Revit.DB import  FilledRegion
+from Autodesk.Revit.DB import  FilledRegion, Transaction
 
 #>>>>>>>>>> CUSTOM IMPORTS
 from Snippets._selection import get_selected_elements
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VARIABLES
+uidoc   = __revit__.ActiveUIDocument
 doc   = __revit__.ActiveUIDocument.Document
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN
 if __name__ == '__main__':
 
     #>>>>>>>>>> GET SELECTED FILLED REGIONS
-    selected_filled_regions = [element for element in get_selected_elements() if type(element) == FilledRegion]
+    selected_filled_regions = [element for element in get_selected_elements(uidoc) if type(element) == FilledRegion]
     if not selected_filled_regions:
         forms.alert('No FilledRegion selected. Please try again', title=__title__, exitscript=True)
 
@@ -47,10 +48,15 @@ if __name__ == '__main__':
 
     #>>>>>>>>>> PROMT USER TO SELECT ONE
     selection           = forms.SelectFromList.show(dict_valid_line_styles.keys(),title="Select LineStyle", button_name='Select')
-    if not selection:   forms.alert("LineStyle was not chosen. Please try again.", title=__title__, exitscript=True)
+    if not selection:
+        forms.alert("LineStyle was not chosen. Please try again.", title=__title__, exitscript=True)
     selected_line_style = dict_valid_line_styles[selection]
 
     #>>>>>>>>>> APPLY SELECTED LINESTYLE
-    with revit.Transaction(__title__):
-        for region in selected_filled_regions:
-            region.SetLineStyleId(selected_line_style.Id)
+    t = Transaction(doc, __title__)
+    t.Start()
+
+    for region in selected_filled_regions:
+        region.SetLineStyleId(selected_line_style.Id)
+
+    t.Commit()
