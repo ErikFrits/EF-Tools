@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
-
-__title__ = "Duplicate Sheets"   # Name of the button displayed in Revit
+__title__ = "Duplicate Sheets"
 __author__ = "Erik Frits"
-__doc__ = """Version = 0.5
+__doc__ = """Version = 1.1
 Date    = 08.12.2020
 _____________________________________________________________________
 Description:
 
-Duplicate selected sheets with control over copying elements.
-
+Duplicate selected sheets with controls over copying elements
+and naming of Views and Sheets.
 _____________________________________________________________________
 How-to:
 
@@ -21,8 +20,9 @@ Prerequisite:
 
 You have to select sheets in ProjectBrowser.
 _____________________________________________________________________
-Last update:
 
+Last update:
+- [22.10.2021] Refactoring 
 - Creates Sheet Copy
 - Copies Views
 - Failsave ViewName and SheetNumber
@@ -45,42 +45,46 @@ To-do:
 - Set similar Viewport Title 
 - Titleblock position
 - COPY parameters from sheets too! (ALL/GUI to select parameter to copy?)
+- ViewTemplate (Keep the same/ Remove/ Duplicate)
 - BUG Warning when duplicating dimensioning!!! Some elements are reported 
 to be deleted even ugh nothing is gone...? 
 _____________________________________________________________________
 """
 
-#todo reduce imports
-import pyrevit
-from pyrevit import forms
-from pyrevit import revit
-from pyrevit.forms import WPFWindow
-import clr
-from Autodesk.Revit import DB
+# ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
+# ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
+# ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
+#====================================================================================================
+
+
 from Autodesk.Revit.DB import *
 from Autodesk.Revit.UI.Selection import *
-from pyrevit import revit
-doc = __revit__.ActiveUIDocument.Document
-uidoc = __revit__.ActiveUIDocument
-app = __revit__.Application
-import sys
-from pyrevit.forms import SelectFromList
-from System.Collections.Generic import List
 
+import pyrevit
 from pyrevit import revit
 from pyrevit import forms
-from pyrevit.forms import WPFWindow
 
+# .NET IMPORTS
 import clr
+from pyrevit.forms import WPFWindow
 clr.AddReference("System")
 from System.Diagnostics.Process import Start
 from System.Collections.Generic import List
 from System.Windows.Window import DragMove
 from System.Windows.Input import MouseButtonState
 
+# ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
+# ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
+#  ╚╝ ╩ ╩╩╚═╩╩ ╩╚═╝╩═╝╚═╝╚═╝ VARIABLES
+#====================================================================================================
+doc = __revit__.ActiveUIDocument.Document
+uidoc = __revit__.ActiveUIDocument
+app = __revit__.Application
 
-
-###__________________________________________________________________________________________________APPLICATION______________###
+# ╔═╗╦  ╔═╗╔═╗╔═╗
+# ║  ║  ╠═╣╚═╗╚═╗
+# ╚═╝╩═╝╩ ╩╚═╝╚═╝ CLASS
+#====================================================================================================
 
 class MyWindow(forms.WPFWindow):
     """GUI for View renaming tool."""
@@ -88,9 +92,21 @@ class MyWindow(forms.WPFWindow):
     # VARIABLES
     view_dupicate_option = ViewDuplicateOption.Duplicate  # Default
 
+    # ╦╔╗╔╦╔╦╗
+    # ║║║║║ ║
+    # ╩╝╚╝╩ ╩  INIT
+    # ====================================================================================================
+
     def __init__(self, xaml_file_name):
-        self.form = forms.WPFWindow.__init__(self, xaml_file_name)
-        self.main_title.Text = __title__
+        self.selected_sheets = self.get_selected_sheets()
+        if self.selected_sheets:
+            self.form = forms.WPFWindow.__init__(self, xaml_file_name)
+            self.main_title.Text = __title__
+            self.ShowDialog()
+    # ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
+    # ╠╣ ║ ║║║║║   ║ ║║ ║║║║╚═╗
+    # ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝╚═╝ FUNCTIONS
+    # ====================================================================================================
 
     def remove_special_charachter(self, string_to_clean):
         """Function to remove special characters from the given string."""
@@ -100,6 +116,10 @@ class MyWindow(forms.WPFWindow):
                 string_to_clean= string_to_clean.replace(char,"")
         return string_to_clean if string_to_clean else "unnamed"
 
+    # ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔╗╔╔═╗╔╦╗╦╔╗╔╔═╗
+    # ║ ║╠═╝ ║║╠═╣ ║ ║╣   ║║║╠═╣║║║║║║║║ ╦
+    # ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╝╚╝╩ ╩╩ ╩╩╝╚╝╚═╝ UPDATE NAMING
+    # ====================================================================================================
 
     def update_view_name(self, view , new_view):
         #type:(ViewSheet, ViewSheet) -> None
@@ -196,20 +216,15 @@ class MyWindow(forms.WPFWindow):
                 print("count >5 = Break")
                 break
 
-
-
-
-
-
+    # ╔╦╗╦ ╦╔═╗╦  ╦╔═╗╔═╗╔╦╗╔═╗  ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
+    #  ║║║ ║╠═╝║  ║║  ╠═╣ ║ ║╣   ╠╣ ║ ║║║║║   ║ ║║ ║║║║╚═╗
+    # ═╩╝╚═╝╩  ╩═╝╩╚═╝╩ ╩ ╩ ╚═╝  ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝╚═╝ DUPLICATE FUNCTIONS
+    # ====================================================================================================
     def duplicate_schedules(self,sheet, new_sheet):
         # type:(ViewSheet, ViewSheet) -> None
-        """
-        :param sheet:
-        :param new_sheet:
-        :return:
-        """
+        """ Function to duplicate <Schedules> from original sheet to new one."""
 
-        #todo Create filter to get the right schedules with FilteredElementCollector(doc).
+        # [IMPROVEMENT] - little Perfomance Gain - Create filter to get the right schedules with FilteredElementCollector(doc)
         schedules_on_sheet = []
         schedules = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_ScheduleGraphics).ToElements()
 
@@ -222,35 +237,25 @@ class MyWindow(forms.WPFWindow):
                     # USE EXISTING
                     if self.use_existing_schedules :
                         schedule_view_id = s.ScheduleId
+
                     # DUPLICATE
                     else:
-
-
                         scheduleId = s.ScheduleId #s= scheduleSheetInstance
                         if scheduleId == ElementId.InvalidElementId:
                             continue
 
                         viewSchedule = doc.GetElement(scheduleId)
-
-
-
                         schedule_view_id = viewSchedule.Duplicate(self.view_dupicate_option)
                         #NAMING?
 
                     ScheduleSheetInstance.Create(doc, new_sheet.Id, schedule_view_id, origin)
 
 
-
     def duplicate_legends(self,sheet, new_sheet):
         # type:(ViewSheet, ViewSheet) -> None
-        """
-        :param sheet:
-        :param new_sheet:
-        :return:
-        """
+        """ Function to duplicate <Legends> from original sheet to new one."""
 
         viewports_ids = sheet.GetAllViewports()
-
         for viewport_id in viewports_ids:
 
             viewport = doc.GetElement(viewport_id)
@@ -264,18 +269,13 @@ class MyWindow(forms.WPFWindow):
             if view.ViewType == ViewType.Legend:
                 legend_view = view
 
-
                 if not self.use_existing_legends:
                     # DUPLICATE LEGEND
                     legend_view_id = view.Duplicate(ViewDuplicateOption.WithDetailing)  # DUplicate legend with detailing!
                     legend_view = doc.GetElement(legend_view_id)
 
-
-
                 # PLACE NEW VIEWS ON A NEW SHEET
                 new_viewport = Viewport.Create(doc, new_sheet.Id, legend_view.Id, viewport_origin)
-
-
                 if new_viewport:
                     new_viewport_type_id = new_viewport.GetTypeId()
 
@@ -284,66 +284,37 @@ class MyWindow(forms.WPFWindow):
                         new_viewport.ChangeTypeId(viewport_type_id)
 
 
-
-
-
-
-
-
-
-
-
-
     def duplicate_views(self, sheet, new_sheet):
         #type:(ViewSheet, ViewSheet) -> None
-        """
-        Function to duplicate viewports.
-        ViewPlan,ViewSection,View3D, ViewElevation?
-        Legends
-
-        :param sheet:
-        :param new_sheet:
-        :return:
-        """
-        #FIXME REFACTOR.
+        """ Function to duplicate <Views(ViewPlan, ViewSection, View3D... )> from original sheet to new one."""
         viewports_ids = sheet.GetAllViewports()
-
-
         for viewport_id in viewports_ids:
-
             viewport = doc.GetElement(viewport_id)
             viewport_type_id = viewport.GetTypeId()
             viewport_origin = viewport.GetBoxCenter()
             view_id = viewport.ViewId
             view = doc.GetElement(view_id)
             new_view = None
+
             # Legends
             if view.ViewType == ViewType.Legend:
                 # IGNORE LEGENDS (they have their own method)
                 continue
 
-
             elif view.ViewType == ViewType.ThreeD and self.view_dupicate_option == ViewDuplicateOption.AsDependent:
                 new_view_id = view.Duplicate(ViewDuplicateOption.Duplicate)
                 new_view = doc.GetElement(new_view_id)
-            # elif view.ViewType == ViewType.
 
-            #TODO write each type, to avoid issues with unpredicted types...
-            # ViewPlan,ViewSection,View3D
+            # FIXME elif ViewPlan,ViewSection,View3D
             else:
-
                 new_view_id = view.Duplicate(self.view_dupicate_option) #todo user input options!
                 new_view = doc.GetElement(new_view_id)
 
-                # self.view_rename(new_view, view_name=str(view.Name))
-                #todo rename view
-                #todo remove View Template
-
+            #TODO REMOVE/DUPLICATE/USE THE SAME ViewTemplate?
 
             if new_view:
                 # RENAME
                 self.update_view_name(view,new_view)
-
 
                 # PLACE NEW VIEWS ON A NEW SHEET
                 new_viewport = Viewport.Create(doc, new_sheet.Id, new_view.Id, viewport_origin)
@@ -353,35 +324,21 @@ class MyWindow(forms.WPFWindow):
                 if viewport_type_id != new_viewport_type_id:
                     new_viewport.ChangeTypeId(viewport_type_id)
 
-
-
-
-
-
-
-    # def place_view_on_sheet(self, sheet_id, view_id, viewport_origin):
-    #     """
-    #
-    #     :param sheet_id:
-    #     :param view_id:
-    #     :param viewport_origin:
-    #     :return:
-    #     """
-    #
-    #     # new_viewport = Viewport.Create(doc, newsheet.Id, new_view.Id, viewport_origin)
-    #     # new_viewport_type_id = new_viewport.GetTypeId()
-    #     # if viewport_type_id != new_viewport_type_id:
-    #     #     new_viewport.ChangeTypeId(viewport_type_id)
-    #
-    #     pass
+                # def place_view_on_sheet(self, sheet_id, view_id, viewport_origin):
+                #     # new_viewport = Viewport.Create(doc, newsheet.Id, new_view.Id, viewport_origin)
+                #     # new_viewport_type_id = new_viewport.GetTypeId()
+                #     # if viewport_type_id != new_viewport_type_id:
+                #     #     new_viewport.ChangeTypeId(viewport_type_id)
+                #     pass
 
     def duplicate_elements(self, sourceView, elements_ids, destinationView):
         #type:(View, list , View) -> None
-        """Function to duplicate elements from one view to another.
+        """Repeating function to duplicate given elements from one View/ViewSheet to another.
         :param sourceView:      View where elements are located.
         :param elements_ids:    List of elements_ids to copy
         :param destinationView: View where elements will be copied to.
         :return: None"""
+
         # Prepare parameters
         elementsToCopy      = List[ElementId](elements_ids)
         additionalTransform = None
@@ -396,105 +353,58 @@ class MyWindow(forms.WPFWindow):
                                            options)
 
 
-
     def duplicate_lines(self,sheet, new_sheet):
         #type:(ViewSheet, ViewSheet) -> None
-        """
-        :param sheet:
-        :param new_sheet:
-        :return:
-        """
-
+        """ Function to duplicate <Lines> from original sheet to new one."""
         lines_on_sheet = FilteredElementCollector(doc, sheet.Id).OfCategory(BuiltInCategory.OST_Lines).ToElementIds()
         self.duplicate_elements(sheet, lines_on_sheet, new_sheet)
 
 
-    #TODO make unique function to get elements on a sheet with a list of Categories. 1 Function for all elements on the sheet.
     def duplicate_clouds(self, sheet, new_sheet):
         #type:(ViewSheet, ViewSheet) -> None
-        """
-        :param sheet:
-        :param new_sheet:
-        :return:
-        """
-
+        """ Function to duplicate <RevisionClouds> from original sheet to new one."""
         categories = [  BuiltInCategory.OST_RevisionClouds,
                         BuiltInCategory.OST_RevisionCloudTags]
         categories_list = List[BuiltInCategory](categories)
         filter = ElementMulticategoryFilter(categories_list)
-
-
         cloud_and_tags_ids = FilteredElementCollector(doc, sheet.Id).WherePasses(filter).ToElementIds()
-
         self.duplicate_elements(sheet, cloud_and_tags_ids, new_sheet)
-
 
 
     def duplicate_images(self, sheet, new_sheet):
         # type:(ViewSheet, ViewSheet) -> None
-        """
-        :param sheet:
-        :param new_sheet:
-        :return:
-        """
-
+        """ Function to duplicate <Images> from original sheet to new one."""
         images_on_sheet = FilteredElementCollector(doc, sheet.Id).OfCategory(BuiltInCategory.OST_RasterImages).ToElementIds()
         self.duplicate_elements(sheet, images_on_sheet , new_sheet)
 
+
     def duplicate_text(self, sheet, new_sheet):
         # type:(ViewSheet, ViewSheet) -> None
-        """
-        :param sheet:
-        :param new_sheet:
-        :return:
-        """
-
+        """ Function to duplicate <TextNotes> from original sheet to new one."""
         text_on_sheet = FilteredElementCollector(doc, sheet.Id).OfCategory(BuiltInCategory.OST_TextNotes).ToElementIds()
         self.duplicate_elements(sheet, text_on_sheet , new_sheet)
 
 
     def duplicate_dimensons(self, sheet, new_sheet):
         # type:(ViewSheet, ViewSheet) -> None
-        """ Function to duplicate all dimension placed on the sheet to a new sheet.
-        :param sheet:
-        :param new_sheet:
-        :return:
-        """
-        # TODO [Warning] - 5 elements were deleted???
+        """ Function to duplicate <Dimensions> from original sheet to new one."""
         dimensions_on_sheet = FilteredElementCollector(doc, sheet.Id).OfCategory(BuiltInCategory.OST_Dimensions).ToElementIds()
         self.duplicate_elements(sheet, dimensions_on_sheet , new_sheet)
+        #TODO Supress warning about deleted elements(nothing is deleted!!!!)
 
 
     def duplicate_symbols(self, sheet, new_sheet):
         # type:(ViewSheet, ViewSheet) -> None
-        """
-        :param sheet:
-        :param new_sheet:
-        :return:
-        """
-
+        """ Function to duplicate <Symbols> from original sheet to new one."""
         symbols_on_sheet = FilteredElementCollector(doc, sheet.Id).OfCategory(BuiltInCategory.OST_GenericAnnotation).ToElementIds()
         self.duplicate_elements(sheet, symbols_on_sheet , new_sheet)
 
+
     def duplicate_dwgs(self, sheet, new_sheet):
         # type:(ViewSheet, ViewSheet) -> None
-        """
-        :param sheet:
-        :param new_sheet:
-        :return:
-        """
-
+        """ Function to duplicate <DWGs> from original sheet to new one."""
         dwgs = FilteredElementCollector(doc,sheet.Id).OfClass(ImportInstance).ToElementIds()
         self.duplicate_elements(sheet, dwgs, new_sheet)
-
-        pass
-
-        #fixme
-        # def titleblock_location(self):
-        #     origin = self.titleblock.Location.Point
-        #     if origin != XYZ(0,0,0):
-        #         return origin
-        #     return None
 
 
     def duplicate_selected_sheets(self):
@@ -502,7 +412,6 @@ class MyWindow(forms.WPFWindow):
 
         # SELECTED SHEETS LOOP
         for sheet in self.selected_sheets:
-
 
             # TITLE BLOCK
             #todo more than 1 title block?
@@ -513,16 +422,11 @@ class MyWindow(forms.WPFWindow):
             # TITLE BLOCK POSITION
             #todo save position(s) on sheet.
 
-
-
             # CREATE SHEET
             if title_block:
                 new_sheet = ViewSheet.Create(doc, title_block.GetTypeId())
             else:
                 new_sheet = ViewSheet.Create(doc, ElementId.InvalidElementId)
-
-
-
 
             # SHEET NUMBER
             self.update_sheet_number(sheet, new_sheet)
@@ -530,20 +434,13 @@ class MyWindow(forms.WPFWindow):
             # SHEET NAME
             self.update_sheet_name(sheet, new_sheet)
 
-
-
-
             # DUPLICATE VIEWPORTS  [Legends / ViewPlan,ViewSection,View3D]
             if self.checkbox_views:
-                #todo split views and legends into seperate functions?
                 self.duplicate_views(sheet, new_sheet)
-                #todo place on sheet separate function?
-
 
             # DUPLICATE LEGENDS
             if self.checkbox_legends:
                 self.duplicate_legends(sheet,new_sheet)
-
 
             # DUPLICATE SCHEDULE
             if self.checkbox_schedules:
@@ -564,7 +461,6 @@ class MyWindow(forms.WPFWindow):
             # DUPLICATE Text
             if self.checkbox_text:
                 self.duplicate_text(sheet,new_sheet)
-
 
             # DUPLICATE DWGs
             if self.checkbox_dwgs:
@@ -594,56 +490,45 @@ class MyWindow(forms.WPFWindow):
             new_sheet.SetAdditionalRevisionIds(additional_revisions_ids)
 
 
-
     def get_sheet_title_block(self, sheet):
         """Get titleblock of a sheet.
         :param sheet:   ViewSheet
         :return:        titleblock element or None.
         """
-        # Filter?
         #TODO - Improve efficiency?
-        all_TitleBlocks = FilteredElementCollector(doc).OfCategory(DB.BuiltInCategory.OST_TitleBlocks).WhereElementIsNotElementType().ToElements()
+        all_TitleBlocks = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_TitleBlocks).WhereElementIsNotElementType().ToElements()
         for title_block in all_TitleBlocks:
             if title_block.OwnerViewId == sheet.Id:
                 return title_block
         return None
 
-
+    # ╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗╦╔═╗╔╗╔
+    # ╚═╗║╣ ║  ║╣ ║   ║ ║║ ║║║║
+    # ╚═╝╚═╝╩═╝╚═╝╚═╝ ╩ ╩╚═╝╝╚╝ SELECTION
+    # ====================================================================================================
 
     # GET SELECTION
-    @property
-    def selected_sheets(self):
+
+    def get_selected_sheets(self):
         """Function to get selected elements in Revit UI ."""
-
-        # one liner:
-        # selected_sheets = [doc.GetElement(element_id) for element_id in uidoc.Selection.GetElementIds() if
-        #                    type(doc.GetElement(element_id)) == ViewSheet]
-
-        # GET SHEETS FROM CURRENT SELECTION
-        selected_sheets = []
-        selected_elements = uidoc.Selection.GetElementIds()
-        for element_id in selected_elements:
-            element = doc.GetElement(element_id)
-            if type(element) == ViewSheet:
-                selected_sheets.append(element)
+        # one liner for fun :)
+        selected_sheets = [doc.GetElement(element_id) for element_id in uidoc.Selection.GetElementIds() if
+                           type(doc.GetElement(element_id)) == ViewSheet]
 
         # CANCEL IF NO SHEETS SELECTED / Open a menu with all sheets in the project.
         if not selected_sheets:
-            msg = "No Sheets were selected."
-            pyrevit.forms.alert(msg, title=__title__, sub_msg=None, expanded=None, footer='', ok=True, warn_icon=True, exitscript=True)
-
+            msg = "No Sheets were selected. \nPlease Try again."
+            pyrevit.forms.alert(msg, title=__title__, sub_msg=None, expanded=None, footer='', ok=True, warn_icon=True, exitscript=False)
         return selected_sheets
 
 
-    # ELEMENTS ON THE SHEET
-    def get_views_from_sheet(self,sheet):
-        """Function to get views from sheet."""
-
-        # FIlter legends and
-
-        pass
+    # ╔═╗╦═╗╔═╗╔═╗╔═╗╦═╗╔╦╗╦╔═╗╔═╗
+    # ╠═╝╠╦╝║ ║╠═╝║╣ ╠╦╝ ║ ║║╣ ╚═╗
+    # ╩  ╩╚═╚═╝╩  ╚═╝╩╚═ ╩ ╩╚═╝╚═╝ PROPERTIES
+    # ====================================================================================================
 
     # [NAMING] VIEWS
+    # =========================
     @property
     def view_find(self):
         return self.UI_view_find.Text
@@ -660,9 +545,8 @@ class MyWindow(forms.WPFWindow):
     def view_suffix(self):
         return self.UI_view_suffix.Text
 
-
-
     # [NAMING] SHEET NUMBER
+    # ==================================================
     @property
     def sheet_number_find(self):
         return self.UI_sheet_number_find.Text
@@ -679,9 +563,9 @@ class MyWindow(forms.WPFWindow):
     def sheet_number_suffix(self):
         return self.UI_sheet_number_suffix.Text
 
-
-
     # [NAMING] SHEET NAME
+    # ==================================================
+
     @property
     def sheet_name_find(self):
         return self.UI_sheet_name_find.Text
@@ -698,11 +582,8 @@ class MyWindow(forms.WPFWindow):
     def sheet_name_suffix(self):
         return self.UI_sheet_name_suffix.Text
 
-
-
-
     # [CHECKBOXES] - INCLUDE ELEMENTS
-
+    # ==================================================
     @property
     def checkbox_views(self):
         return self.UI_checkbox_views.IsChecked
@@ -748,7 +629,7 @@ class MyWindow(forms.WPFWindow):
         return self.UI_checkbox_additional_revisions.IsChecked
 
     # [Checkboxes] - USE EXISTING
-
+    # ==================================================
     @property
     def use_existing_legends(self):
         return self.UI_checkbox_use_existing_legend.IsChecked
@@ -757,8 +638,10 @@ class MyWindow(forms.WPFWindow):
     def use_existing_schedules(self):
         return self.UI_checkbox_use_existing_schedules.IsChecked
 
-
-    # GUI EVENT HANDLERS:
+    # ╔═╗╦  ╦╔═╗╔╗╔╔╦╗  ╦ ╦╔═╗╔╗╔╔╦╗╦  ╔═╗╦═╗╔═╗
+    # ║╣ ╚╗╔╝║╣ ║║║ ║   ╠═╣╠═╣║║║ ║║║  ║╣ ╠╦╝╚═╗
+    # ╚═╝ ╚╝ ╚═╝╝╚╝ ╩   ╩ ╩╩ ╩╝╚╝═╩╝╩═╝╚═╝╩╚═╚═╝ GUI EVENT HANDLERS:
+    # ====================================================================================================
 
     def button_close(self,sender,e):
         """Stop application by clicking on a <Close> button in the top right corner."""
@@ -790,73 +673,42 @@ class MyWindow(forms.WPFWindow):
 
         self.Close()
         self.duplicate_selected_sheets()
+    # ====================================================================================================
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
-#
-#
-#
-#
-#
-#
-# selected_views = []
-# UI_Selected = uidoc.Selection.GetElementIds()
-#
-# # selected_views = [doc.GetElement(view_id) if type(doc.GetElement(view_id)) == ViewPlan or  type(doc.GetElement(view_id)) == ViewSection or  type(doc.GetElement(view_id)) == View3D]
-#
-# for view_id in UI_Selected:
-#     element = doc.GetElement(view_id)
-#     if type(element) == ViewPlan or  type(element) == ViewSection or  type(element) == View3D:
-#         selected_views.append(element)
+# ╔╦╗╔═╗╦╔╗╔
+# ║║║╠═╣║║║║
+# ╩ ╩╩ ╩╩╝╚╝ MAIN
+#====================================================================================================
 t = Transaction(doc,__title__)
 t.Start()
-
-MyWindow("Script.xaml").ShowDialog()
+MyWindow("Script.xaml")
 t.Commit()
 
 
+# ╦ ╦╦╔═╗
+# ║║║║╠═╝
+# ╚╩╝╩╩   WORK IN PROGRESS (FUTURE FEATURES...)
+#====================================================================================================
 
-#todo Create Config for Project Browser values.
-#todo remove View Template
+#todo 1 Option remove View Template from views.
 
+# fixme
+# def titleblock_location(self):
+#     origin = self.titleblock.Location.Point
+#     if origin != XYZ(0,0,0):
+#         return origin
+#     return None
 
-
-# else:
-#     forms.alert("No views were selected.\nPlease, try again.", exitscript=True, title="Script Cancelled.")
-# #
-
-#fixme
+#todo 2
 #     def viewport_label_visible(self,viewport_type_id):
 #         """returns 0/1 depending if Viewport Title is visible or not."""
 #         viewport_type = doc.GetElement(viewport_type_id)
 #         label_shown = viewport_type .get_Parameter(BuiltInParameter.VIEWPORT_ATTR_SHOW_LABEL)
 #         return label_shown.AsInteger()
 
-
-#
-
-
-
-
-
-#todo
+#todo 3
 # label_attempt = """
 #             # #TODO: Find a way to adjust right position of viewport title.
 #             # label_shown = self.viewport_label_visible(viewport_type_id)
@@ -879,245 +731,5 @@ t.Commit()
 #             #                     Reset size of view to original, title remain in place
 #             #                     It would be good if the API had a method.  Mine is a very "messy" workaround.
 #             #                 """+
-#
-#
-#             print("_"*40)
-#
-#
 
 
-
-
-
-# # # Create similar sheets
-# #
-# # # Duplicate views ( Detailed, not
-# # #  // all views but schedules
-# # #                 foreach (ElementId eid in vs.GetAllPlacedViews())
-# # #                 {
-# # #                     View ev = doc.GetElement(eid) as View;
-# # #
-# # #                     View newview = null;
-# # #
-# # #                     // legends
-# # #                     if (ev.ViewType == ViewType.Legend)
-# # #                     {
-# # #                         newview = ev;
-# # #                     }
-# # #                     // all non-legend and non-schedule views
-# # #                     else
-# # #                     {
-# # #                         ElementId newviewid = ev.Duplicate(ViewDuplicateOption.WithDetailing);
-# # #                         newview = doc.GetElement(newviewid) as View;
-# # #                         newview.Name = ev.Name + "-DUP";
-# # #                     }
-# # #
-# # #                     foreach (Viewport vp in new FilteredElementCollector(doc).OfClass(typeof(Viewport)))
-# # #                     {
-# # #
-# # #                         if (vp.SheetId == vs.Id && vp.ViewId == ev.Id)
-# # #                         {
-# # #                             BoundingBoxXYZ vpbb = vp.get_BoundingBox(vs);
-# # #                             XYZ initialCenter = (vpbb.Max + vpbb.Min) / 2;
-# # #
-# # #                             Viewport newvp = Viewport.Create(doc, newsheet.Id, newview.Id, XYZ.Zero);
-# # #
-# # #                             BoundingBoxXYZ newvpbb = newvp.get_BoundingBox(newsheet);
-# # #                             XYZ newCenter = (newvpbb.Max + newvpbb.Min) / 2;
-# # #
-# # #                             ElementTransformUtils.MoveElement(doc, newvp.Id, new XYZ(
-# # #                             initialCenter.X - newCenter.X,
-# # #                             initialCenter.Y - newCenter.Y,
-# # #                             0));
-# # #                         }
-# #
-# # # detailed)
-# # # Suffix = Hardcoded COPY_
-# # # place views on sheets in the right position (get position)
-# #
-# #
-# # # foreach(ScheduleSheetInstance
-# # # si in (new FilteredElementCollector(doc).OfClass(typeof(ScheduleSheetInstance))))
-# # # {
-# # # if (si.OwnerViewId == vs.Id)
-# # # {
-# # # if (!si.IsTitleblockRevisionSchedule)
-# # # {
-# # #     foreach(ViewSchedule
-# # # vsc in new
-# # # FilteredElementCollector(doc).OfClass(typeof(ViewSchedule)))
-# # # {
-# # # if (si.ScheduleId == vsc.Id)
-# # # {
-# # #     BoundingBoxXYZ
-# # # sibb = si.get_BoundingBox(vs);
-# # # XYZ
-# # # initialCenter = (sibb.Max + sibb.Min) / 2;
-# # #
-# # # ScheduleSheetInstance
-# # # newssi = ScheduleSheetInstance.Create(doc, newsheet.Id, vsc.Id, XYZ.Zero);
-# # #
-# # # BoundingBoxXYZ
-# # # newsibb = newssi.get_BoundingBox(newsheet);
-# # # XYZ
-# # # newCenter = (newsibb.Max + newsibb.Min) / 2;
-# # #
-# # # ElementTransformUtils.MoveElement(doc, newssi.Id, new
-# # # XYZ(
-# # #     initialCenter.X - newCenter.X,
-# # #     initialCenter.Y - newCenter.Y,
-# # #     0));
-# # # }
-# #
-# # c_shart = """
-# #
-# #
-# #
-# # using System;
-# # using System.Collections.Generic;
-# # using System.Linq;
-# # using System.Data.Linq;
-# # using System.Text;
-# # using System.IO;
-# # //using System.Windows.Forms;
-# # using System.Collections;
-# #
-# # using Autodesk.Revit.ApplicationServices;
-# # using Autodesk.Revit.Attributes;
-# # using Autodesk.Revit.DB;
-# # using Autodesk.Revit.UI;
-# # using Autodesk.Revit.UI.Selection;
-# # using Autodesk.Revit.DB.Architecture;
-# # using Autodesk.Revit.DB.Mechanical;
-# # using Autodesk.Revit.DB.Structure;
-# #
-# # namespace TestDuplicateSheet
-# # {
-# #     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
-# #     [Autodesk.Revit.DB.Macros.AddInId("6EF458B5-2974-4A59-994D-BDFA407B2CF6")]
-# #     public partial class ThisApplication
-# #     {
-# #         private void Module_Startup(object sender, EventArgs e)
-# #         {
-# #
-# #         }
-# #
-# #         private void Module_Shutdown(object sender, EventArgs e)
-# #         {
-# #
-# #         }
-# #
-# #         #region Revit Macros generated code
-# #         private void InternalStartup()
-# #         {
-# #             this.Startup += new System.EventHandler(Module_Startup);
-# #             this.Shutdown += new System.EventHandler(Module_Shutdown);
-# #         }
-# #         #endregion
-# #
-# #         public void DuplicateSheet()
-# #         {
-# #             UIDocument uidoc = this.ActiveUIDocument;
-# #             Document doc = uidoc.Document;
-# #             ViewSheet vs = doc.ActiveView as ViewSheet;
-# #
-# #             using (Transaction t = new Transaction(doc, "Duplicate Sheet"))
-# #             {
-# #                 t.Start();
-# #
-# #                 FamilyInstance titleblock = new FilteredElementCollector(doc).OfClass(typeof(FamilyInstance)).OfCategory(BuiltInCategory.OST_TitleBlocks).Cast<​FamilyInstance>().First(q => q.OwnerViewId == vs.Id);
-# #
-# #                 ViewSheet newsheet = ViewSheet.Create(doc, titleblock.GetTypeId());
-# #                 newsheet.SheetNumber = vs.SheetNumber + "-DUP";
-# #                 newsheet.Name = vs.Name;
-# #
-# #                 // all views but schedules
-# #                 foreach (ElementId eid in vs.GetAllPlacedViews())
-# #                 {
-# #                     View ev = doc.GetElement(eid) as View;
-# #
-# #                     View newview = null;
-# #
-# #                     // legends
-# #                     if (ev.ViewType == ViewType.Legend)
-# #                     {
-# #                         newview = ev;
-# #                     }
-# #                     // all non-legend and non-schedule views
-# #                     else
-# #                     {
-# #                         ElementId newviewid = ev.Duplicate(ViewDuplicateOption.WithDetailing);
-# #                         newview = doc.GetElement(newviewid) as View;
-# #                         newview.Name = ev.Name + "-DUP";
-# #                     }
-# #
-# #                     foreach (Viewport vp in new FilteredElementCollector(doc).OfClass(typeof(Viewport)))
-# #                     {
-# #
-# #                         if (vp.SheetId == vs.Id && vp.ViewId == ev.Id)
-# #                         {
-# #                             BoundingBoxXYZ vpbb = vp.get_BoundingBox(vs);
-# #                             XYZ initialCenter = (vpbb.Max + vpbb.Min) / 2;
-# #
-# #                             Viewport newvp = Viewport.Create(doc, newsheet.Id, newview.Id, XYZ.Zero);
-# #
-# #                             BoundingBoxXYZ newvpbb = newvp.get_BoundingBox(newsheet);
-# #                             XYZ newCenter = (newvpbb.Max + newvpbb.Min) / 2;
-# #
-# #                             ElementTransformUtils.MoveElement(doc, newvp.Id, new XYZ(
-# #                             initialCenter.X - newCenter.X,
-# #                             initialCenter.Y - newCenter.Y,
-# #                             0));
-# #                         }
-# #
-# #                     }// end for each
-# #
-# #                 }// end foreach
-# #
-# #                 // schedules
-# #
-# #                 foreach (ScheduleSheetInstance si in (new FilteredElementCollector(doc).OfClass(typeof(ScheduleSheetInstance))))
-# #                 {
-# #                     if (si.OwnerViewId == vs.Id)
-# #                     {
-# #                         if (!si.IsTitleblockRevisionSchedule)
-# #                         {
-# #                             foreach (ViewSchedule vsc in new FilteredElementCollector(doc).OfClass(typeof(ViewSchedule)))
-# #                             {
-# #                                 if (si.ScheduleId == vsc.Id)
-# #                                 {
-# #                                     BoundingBoxXYZ sibb = si.get_BoundingBox(vs);
-# #                                     XYZ initialCenter = (sibb.Max + sibb.Min) / 2;
-# #
-# #                                     ScheduleSheetInstance newssi = ScheduleSheetInstance.Create(doc, newsheet.Id, vsc.Id, XYZ.Zero);
-# #
-# #                                     BoundingBoxXYZ newsibb = newssi.get_BoundingBox(newsheet);
-# #                                     XYZ newCenter = (newsibb.Max + newsibb.Min) / 2;
-# #
-# #                                     ElementTransformUtils.MoveElement(doc, newssi.Id, new XYZ(
-# #                                         initialCenter.X - newCenter.X,
-# #                                         initialCenter.Y - newCenter.Y,
-# #                                         0));
-# #                                 }
-# #                             }
-# #                         }
-# #
-# #                     }
-# #                 }// end foreach
-# #
-# #
-# #                 t.Commit();
-# #             }// end using
-# #
-# #
-# #
-# #
-# #
-# #     }// end public void duplicate sheet
-# #
-# #
-# #     }// end this applicaton
-# # }// end namespace
-# #
-# #
-# # """
