@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__title__ = "Find and Replace: Views"
+__title__ = "Find and Replace in Views"
 __author__ = "Erik Frits"
 __helpurl__ = ""
 __doc__ = """Version = 1.0

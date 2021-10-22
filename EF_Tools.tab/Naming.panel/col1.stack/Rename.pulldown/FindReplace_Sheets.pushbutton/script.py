@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-__title__ = "Find and Replace: Sheets"  # Name of the button displayed in Revit
+__title__ = "Find and Replace in Sheets"  # Name of the button displayed in Revit
 __author__ = "Erik Frits"
 __doc__ = """Version = 1.0
 Date    = 28.07.2020

@@ -170,7 +170,7 @@
 
                 <StackPanel Grid.Column="0"
                                     Margin="5" >
-                    <Label Content="Use Existing view / Duplicate"
+                    <Label Content="ViewName"
                            Margin="0, -25,0,0 "
                            Foreground="{StaticResource text_magenta}"/>
                     <Border  Height="110"

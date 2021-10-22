@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__title__ = "Find and Replace: FamilyTypes"
+__title__ = "Find and Replace in FamilyTypes"
 __author__ = "Erik Frits"
 __doc__ = """Version = 1.0
 Date    = 11.10.2021
