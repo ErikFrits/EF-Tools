@@ -111,7 +111,7 @@ def select_title_block(given_uidoc = uidoc):
     #>>>>>>>>>> MAKE SURE IT'S SELECTED
     selected_option = SelectFromList.show(list(unique_title_blocks), title="Select Title Block")
     if not selected_option:
-        forms.alers("Nothing was selected. Please try again", exitscript=True)
+        forms.alerts("Nothing was selected. Please try again", exitscript=True)
 
     selected_title_block = unique_title_blocks[selected_option]
     return selected_title_block
@@ -132,7 +132,7 @@ class CustomISelectionFilter(ISelectionFilter):
         else:
             return False
     def AllowReference(self, ref, point):
-        return true
+        return True
 
 
 #>>>>>>>>>> PICK WALL
