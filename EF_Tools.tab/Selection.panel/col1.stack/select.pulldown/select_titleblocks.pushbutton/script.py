@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-__title__ = "Select TitleBlocks"
+__title__ = "Select on sheets: TitleBlocks"
 __author__ = "Erik Frits"
-__helpurl__ = ""
 __doc__ = """Version = 1.2
 Date    = 08.12.2020
 _____________________________________________________________________
@@ -62,3 +61,5 @@ if __name__ == '__main__':
     # SET SELECTION IF TITLE BLOCKS FOUND
     if title_blocks:
         uidoc.Selection.SetElementIds(List[ElementId](title_blocks))
+
+

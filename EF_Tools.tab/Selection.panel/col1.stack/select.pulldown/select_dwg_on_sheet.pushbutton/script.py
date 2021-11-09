@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__title__ = "Select DWGs on sheets"
+__title__ = "Select on sheets: DWGs"
 __author__ = "Erik Frits"
 __doc__ = """Version = 1.0
 Date    = 07.07.2021
