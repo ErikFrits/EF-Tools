@@ -1,0 +1,438 @@
+<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+
+    Title="Views: Find and Replace"
+    Height="340" Width="550"
+    WindowStartupLocation="CenterScreen"
+    HorizontalAlignment="Center"
+    ShowInTaskbar="False"
+
+    WindowStyle="None"
+    ResizeMode="NoResize"
+
+
+    Background="#181735"
+    >
+
+    <Window.Resources>
+        <ResourceDictionary>
+
+
+            <Color x:Key="ButtonColor1" A="0" R="124" G="111" B="44"/>
+
+
+
+            <SolidColorBrush x:Key="header_background"  Color="#0f0f2d" />
+            <SolidColorBrush x:Key="main_background"    Color="Aqua" />
+
+            <SolidColorBrush x:Key="checkbox_checked_colour"    Color="#FE6584" />
+            <SolidColorBrush x:Key="checkbox_unchecked_colour"    Color="Aqua" />
+
+
+            <SolidColorBrush x:Key="text_header_title"  Color="White" />
+            <SolidColorBrush x:Key="text_header_item"   Color="White" />
+
+            <SolidColorBrush x:Key="text_white"         Color="White" />
+            <SolidColorBrush x:Key="text_darkblue"      Color="#383660" />
+            <SolidColorBrush x:Key="text_red"           Color="#FE6584" />
+            <SolidColorBrush x:Key="text_magenta"       Color="#EE82EE" />
+
+
+            <SolidColorBrush x:Key="input_box_darkblue"       Color="#383660" />
+
+
+
+            <SolidColorBrush x:Key="border_main"        Color="DodgerBlue" />
+            <SolidColorBrush x:Key="border_secondary"     Color="#EE82EE" />
+
+
+            <SolidColorBrush x:Key="button_01_background_normal"     Color="#EE82EE" />
+            <SolidColorBrush x:Key="button_01_background_hover"     Color="#EE82EE" />
+
+            <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
+                <Setter Property="OverridesDefaultStyle" Value="true"/>
+                <Setter Property="Background" Value="#505050"/>
+                <Setter Property="Focusable" Value="false"/>
+                <Setter Property="IsTabStop" Value="false"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type RepeatButton}">
+                            <Border Background="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" CornerRadius="10"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ScrollBarThumbVertical" TargetType="{x:Type Thumb}">
+                <Setter Property="OverridesDefaultStyle" Value="true"/>
+                <!--<Setter Property="Margin" Value="3"/>-->
+
+                <Setter Property="IsTabStop" Value="false"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Thumb}">
+                            <Border x:Name="rectangle" Background="Black" Height="{TemplateBinding Height}" SnapsToDevicePixels="True" Width="{TemplateBinding Width}" CornerRadius="8"/>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="Background" TargetName="rectangle" Value="Black"/>
+                                </Trigger>
+                                <Trigger Property="IsDragging" Value="true">
+                                    <Setter Property="Background" TargetName="rectangle" Value="Black"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="350"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+
+        <Grid MouseDown="header_drag"
+                Background="{StaticResource header_background}"
+                Grid.ColumnSpan="2"
+              >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="100"/>
+
+
+            </Grid.ColumnDefinitions>
+
+            <DockPanel Grid.Column="0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Margin="10,0,0,0">
+
+
+
+
+                <TextBlock>
+                    <Hyperlink
+                        RequestNavigate="Hyperlink_RequestNavigate"
+                        NavigateUri="https://erikfrits.com/blog/"
+                        FontSize="14px"
+                        FontWeight="Heavy"
+                        Foreground="{StaticResource text_white}">
+                        EF-Tools
+                    </Hyperlink>
+                </TextBlock>
+            </DockPanel>
+
+
+
+            <TextBlock x:Name="main_title"
+                Text="__title__"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Foreground="{StaticResource text_header_item}"
+                />
+
+
+            <Button
+                HorizontalAlignment="Right"
+                    Grid.Column="2"
+                    Content="Close"
+                    Foreground="{DynamicResource text_white}"
+                    FontSize="10"
+                    FontWeight="Medium"
+                    Click="button_close"
+                    Margin="0,0,10,0"
+                    >
+
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="TextElement.FontFamily" Value="Arial"/>
+                        <Setter Property="Background" Value="#39385D"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF4C70"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                                Width="60" Height="20"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}"
+                                >
+                            <ContentPresenter  VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"/>
+                        </Border>
+
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+        </Grid>
+
+
+
+
+
+
+
+        <StackPanel Grid.Row="1"
+                    VerticalAlignment="Top"
+                    Margin="40">
+
+
+
+
+
+
+
+
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="100"/>
+                </Grid.RowDefinitions>
+
+
+                <Label Content="Select Main Sheet:"
+                           Margin="0, -25,0,0 "
+                           Foreground="{StaticResource text_magenta}"/>
+
+                <ListBox x:Name="test_ListBox"
+                         MinHeight="100" Grid.Row="0"
+                         Background="{StaticResource header_background}"
+                         SelectionMode="Single"
+                         ScrollViewer.VerticalScrollBarVisibility="Visible"
+                         ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                         BorderBrush="{StaticResource border_secondary}"
+
+                         >
+
+                    <ListBox.Resources>
+                        <Style TargetType="ScrollBar">
+                            <Setter Property="Background" Value="{StaticResource border_secondary}"/>
+                            <Setter Property="Foreground" Value="{StaticResource border_secondary}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource header_background}"/>
+                            <Setter Property="Opacity" Value="0.9"/>
+                            <Setter Property="Margin" Value="3"/>
+
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                        <Grid x:Name="Bg"
+                                              SnapsToDevicePixels="true">
+                                            <Border BorderBrush     = "{TemplateBinding BorderBrush}"
+                                                    BorderThickness = "{TemplateBinding BorderThickness}"
+                                                    Background      = "{TemplateBinding Background}"
+
+                                                    Grid.Row        = "1"
+                                                    CornerRadius="10"/>
+
+                                            <Track x:Name="PART_Track"
+                                                   IsDirectionReversed="true"
+                                                   IsEnabled="{TemplateBinding IsMouseOver}"
+                                                   Grid.Row="1">
+                                                <Track.Thumb>
+                                                    <Thumb Style="{StaticResource ScrollBarThumbVertical}"
+                                                           Margin="2"/>
+                                                </Track.Thumb>
+                                            </Track>
+
+                                        </Grid>
+
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style TargetType="ListBox">
+                            <Style.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="10"/>
+                                </Style>
+                            </Style.Resources>
+                        </Style>
+                    </ListBox.Resources>
+
+
+
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <RadioButton GroupName="One" Background="#EE82EE" Foreground="{StaticResource text_white}" Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+
+
+
+
+                <StackPanel Grid.Column="0"
+                                    Margin="5,30,5,5" Grid.ColumnSpan="2" Grid.Row="1"
+                            >
+                    <Label Content="Settings:"
+                           Margin="0, -25,0,0 "
+                           Foreground="{StaticResource text_magenta}"/>
+                    <Border  Height="60"
+                          BorderBrush="{DynamicResource border_secondary}"
+                         BorderThickness="1,1,1,1" CornerRadius="10" HorizontalAlignment="Stretch" Width="Auto">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+
+
+
+                            <StackPanel VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Margin="10" Grid.Column="0" Orientation="Vertical">
+
+                                <CheckBox
+                                     x:Name = "UI_checkbox_apply_same_crop"
+                                    Content="Apply same CropBox/ScopeBox"
+                                    IsChecked="True"
+                                    Foreground="{DynamicResource text_white}"
+                                    Background="#EE82EE"
+                                    VerticalAlignment="Center"
+                                    FontSize="12"
+                                    FontWeight="Medium"
+                                     Margin="0,0,10,0"
+                                    />
+
+
+
+                                <CheckBox
+                                     x:Name = "UI_checkbox_overlap"
+                                    Content="Overlap multiple ViewPlans (same scale)"
+                                    IsChecked="True"
+                                    Foreground="{DynamicResource text_white}"
+                                    Background="#EE82EE"
+                                    VerticalAlignment="Center"
+                                    FontSize="12"
+                                    FontWeight="Medium"
+                                     Margin="0,5,10,0"
+                                    />
+                            </StackPanel>
+
+
+                            <StackPanel VerticalAlignment="Top"
+                                        HorizontalAlignment="Center"
+                                        Margin="10" Grid.Column="1" Orientation="Vertical">
+
+
+                                <CheckBox
+                                     x:Name = "UI_checkbox_align_legend"
+                                    Content="Align Legend(if same)"
+                                    IsChecked="True"
+                                    Foreground="{DynamicResource text_white}"
+                                    Background="#EE82EE"
+                                    VerticalAlignment="Center"
+                                    FontSize="12"
+                                    FontWeight="Medium"
+                                     Margin="0,5,10,0"
+                                    />
+
+                                <CheckBox
+                                     x:Name = "UI_checkbox_apply_same_titleblock"
+                                    Content="Apply same TitleBlock"
+                                    IsChecked="False"
+                                    Foreground="{DynamicResource text_white}"
+                                    Background="#EE82EE"
+                                    VerticalAlignment="Center"
+                                    FontSize="12"
+                                    FontWeight="Medium"
+                                     Margin="0,5,10,0"
+                                    />
+
+
+                            </StackPanel>
+
+
+                        </Grid>
+                    </Border>
+
+
+
+                </StackPanel>
+
+
+
+            </Grid>
+
+
+
+            <Button
+                    Grid.Column="10"
+                    Content="Align Viewports"
+                    Foreground="{DynamicResource text_white}"
+                    FontSize="14"
+                    FontWeight="Medium"
+                    Click="button_run"
+                    Margin="0,10,0,0"
+                Height="40"
+                    >
+
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="TextElement.FontFamily" Value="Arial"/>
+                        <Setter Property="Background" Value="#39385D"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF4C70"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                                Width="200" Height="30"
+                                CornerRadius="8"
+                                Background="{TemplateBinding Background}"
+                                >
+                            <ContentPresenter  VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"/>
+                        </Border>
+
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+        </StackPanel>
+
+    </Grid>
+
+
+
+</Window>
+
+    
