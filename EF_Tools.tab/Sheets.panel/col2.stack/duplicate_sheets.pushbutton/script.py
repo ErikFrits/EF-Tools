@@ -305,31 +305,31 @@ class MyWindow(forms.WPFWindow):
                 new_view_id = view.Duplicate(ViewDuplicateOption.Duplicate)
                 new_view = doc.GetElement(new_view_id)
 
-            # FIXME elif ViewPlan,ViewSection,View3D
+            # else (ViewPlan,ViewSection,View3D, ViewDrafting, View)
             else:
                 new_view_id = view.Duplicate(self.view_dupicate_option) #todo user input options!
                 new_view = doc.GetElement(new_view_id)
 
-            #TODO REMOVE/DUPLICATE/USE THE SAME ViewTemplate?
-
             if new_view:
                 # RENAME
                 self.update_view_name(view,new_view)
+                try:
+                    # PLACE NEW VIEWS ON A NEW SHEET
+                    new_viewport = Viewport.Create(doc, new_sheet.Id, new_view.Id, viewport_origin)
+                    new_viewport_type_id = new_viewport.GetTypeId()
 
-                # PLACE NEW VIEWS ON A NEW SHEET
-                new_viewport = Viewport.Create(doc, new_sheet.Id, new_view.Id, viewport_origin)
-                new_viewport_type_id = new_viewport.GetTypeId()
+                    # SET SAME VIEWPORT TYPE
+                    if viewport_type_id != new_viewport_type_id:
+                        new_viewport.ChangeTypeId(viewport_type_id)
 
-                # SET SAME VIEWPORT TYPE
-                if viewport_type_id != new_viewport_type_id:
-                    new_viewport.ChangeTypeId(viewport_type_id)
-
-                # def place_view_on_sheet(self, sheet_id, view_id, viewport_origin):
-                #     # new_viewport = Viewport.Create(doc, newsheet.Id, new_view.Id, viewport_origin)
-                #     # new_viewport_type_id = new_viewport.GetTypeId()
-                #     # if viewport_type_id != new_viewport_type_id:
-                #     #     new_viewport.ChangeTypeId(viewport_type_id)
-                #     pass
+                    # def place_view_on_sheet(self, sheet_id, view_id, viewport_origin):
+                    #     # new_viewport = Viewport.Create(doc, newsheet.Id, new_view.Id, viewport_origin)
+                    #     # new_viewport_type_id = new_viewport.GetTypeId()
+                    #     # if viewport_type_id != new_viewport_type_id:
+                    #     #     new_viewport.ChangeTypeId(viewport_type_id)
+                    #     pass
+                except:
+                    pass
 
     def duplicate_elements(self, sourceView, elements_ids, destinationView):
         #type:(View, list , View) -> None
