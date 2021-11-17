@@ -254,7 +254,7 @@
 
                 <ListBox x:Name="ListBox_FloorTypes"
                          Margin="0,25,0,0"
-                         MinHeight="350" Grid.Row="0"
+                         Height="350" Grid.Row="0"
                          Background="{StaticResource header_background}"
                          SelectionMode="Single"
                          ScrollViewer.VerticalScrollBarVisibility="Visible"
