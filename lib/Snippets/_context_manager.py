@@ -10,14 +10,14 @@ import sys, os
 #====================================================================================================
 
 @contextlib.contextmanager
-def try_except():
+def try_except(debug=False):
     try:
         yield
     except Exception as e:
-        print("*"*20)
-        print("Exception occured: " + traceback.format_exc())
-        print("*"*20)
-
+        if debug:
+            print("*"*20)
+            print("Exception occured: " + traceback.format_exc())
+            print("*"*20)
 
 
 @contextlib.contextmanager
