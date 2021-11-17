@@ -36,8 +36,11 @@ from Autodesk.Revit.DB import (BuiltInParameter,
                                BuiltInCategory,
                                Element,
                                CurveLoop,
+                               Transaction,
                                CurveArray,
-                               CurveElement)
+                               CurveElement,
+                               Line,
+                               XYZ)
 
 #>>>>>>>>>> .NET IMPORTS
 import clr
@@ -135,14 +138,6 @@ class MainGUI(forms.WPFWindow):
     def __init__(self):
         """Main class for GUI to creating floors from selected Rooms."""
         self.selected_rooms = self.get_selected_rooms()
-        self.random_line = FilteredElementCollector(doc, doc.ActiveView.Id).OfClass(CurveElement).FirstElement()
-
-        # FIXME
-        if not self.random_line:
-            forms.alert("Could not find any Detail Lines in the project.\n "
-                        "There has to be at least 1 line anywhere in the project.\n "
-                        "Please Draw a DetailLine and Try Again.", __title__, exitscript=True)
-
 
         if self.selected_rooms:
             self.form = forms.WPFWindow.__init__(self, "Script.xaml")
@@ -168,10 +163,24 @@ class MainGUI(forms.WPFWindow):
             selected_rooms = ask_select_all_floors()
         return selected_rooms
 
+
+    def get_line_styles(self):
+        """Function to get available LineStyles for DetaiLines."""
+        # CREATE TEMP LINE
+        t = Transaction(doc, "temp - Create DetailLine")
+        t.Start()
+        new_line         = Line.CreateBound(XYZ(0,0,0), XYZ(1,1,0))
+        random_line      = doc.Create.NewDetailCurve(active_view, new_line)
+        line_styles_ids  = random_line.GetLineStyleIds()
+        t.RollBack()
+
+        line_styles = [doc.GetElement(line_style) for line_style in line_styles_ids]
+        return line_styles
+
     def generate_list_items(self):
         """Function to create a ICollection to pass to ListBox in GUI"""
-        line_styles_ids = self.random_line.GetLineStyleIds()
-        line_styles = [doc.GetElement(ls_id) for ls_id in line_styles_ids]
+
+        line_styles = self.get_line_styles()
         self.dict_line_styles = {Element.Name.GetValue(fr): fr for fr in line_styles}
 
         list_of_items = List[type(ListItem())]()
