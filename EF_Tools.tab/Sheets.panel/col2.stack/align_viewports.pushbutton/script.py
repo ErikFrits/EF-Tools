@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __title__   = "Align Viewports"
 __author__  = "Erik Frits"
-__doc__ = """Version = 1.0
+__doc__ = """Version = 1.1
 Date    = 08.11.2021
 _____________________________________________________________________
 Description:
@@ -23,6 +23,7 @@ How-to:
 -> Click on Align Viewports
 _____________________________________________________________________
 Last update:
+- [22.11.2021] - Minor bugs fixed.
 - [08.11.2021] RELEASE 
 _____________________________________________________________________
 """
@@ -177,24 +178,25 @@ class SheetObject():
         main_legend_viewport  = MainSheet.legend
         other_legend_viewport = self.legend
 
-        # VIEWS
-        main_legend  = doc.GetElement(main_legend_viewport.ViewId)
-        other_legend = doc.GetElement(other_legend_viewport.ViewId)
+        if  main_legend_viewport and other_legend_viewport:
+            # VIEWS
+            main_legend  = doc.GetElement(main_legend_viewport.ViewId)
+            other_legend = doc.GetElement(other_legend_viewport.ViewId)
 
-        if main_legend.Name == other_legend.Name:
-            # ╔═╗╦  ╦╔═╗╔╗╔  ╦  ╔═╗╔═╗╔═╗╔╗╔╔╦╗
-            # ╠═╣║  ║║ ╦║║║  ║  ║╣ ║ ╦║╣ ║║║ ║║
-            # ╩ ╩╩═╝╩╚═╝╝╚╝  ╩═╝╚═╝╚═╝╚═╝╝╚╝═╩╝ ALIGN LEGEND
-            #==================================================
-            with ef_Transaction(doc,"Align Legends"):
+            if main_legend.Name == other_legend.Name:
+                # ╔═╗╦  ╦╔═╗╔╗╔  ╦  ╔═╗╔═╗╔═╗╔╗╔╔╦╗
+                # ╠═╣║  ║║ ╦║║║  ║  ║╣ ║ ╦║╣ ║║║ ║║
+                # ╩ ╩╩═╝╩╚═╝╝╚╝  ╩═╝╚═╝╚═╝╚═╝╝╚╝═╩╝ ALIGN LEGEND
+                #==================================================
+                with ef_Transaction(doc,"Align Legends"):
 
-                try:    other_legend_viewport.SetBoxCenter(main_legend_viewport.GetBoxCenter())
-                except:
-                    import traceback
-                    print(traceback.format_exc())
-                    print("***Could not align Legend on {}***".format(self.sheet.SheetNumber))
-        else:
-            print("***The legend is not matching the MainSheet. It will not be aligned on the given sheet - {} .***".format(self.SheetNumber))
+                    try:    other_legend_viewport.SetBoxCenter(main_legend_viewport.GetBoxCenter())
+                    except:
+                        import traceback
+                        print(traceback.format_exc())
+                        print("***Could not align Legend on {}***".format(self.sheet.SheetNumber))
+            else:
+                print("***The legend is not matching the MainSheet. It will not be aligned on the given sheet - {} .***".format(self.SheetNumber))
 
 
     def align_viewports(self, MainSheet, apply_CropScopeBox = False, overlap = False):
@@ -207,10 +209,26 @@ class SheetObject():
         # ╔╦╗╔═╗╦╔╗╔  ╔═╗╦ ╦╔═╗╔═╗╔╦╗
         # ║║║╠═╣║║║║  ╚═╗╠═╣║╣ ║╣  ║
         # ╩ ╩╩ ╩╩╝╚╝  ╚═╝╩ ╩╚═╝╚═╝ ╩ MAIN SHEET
-        main_viewport = MainSheet.viewport_viewplan[0]
-        main_view       = doc.GetElement(main_viewport.ViewId)
-        main_scopebox_id = main_view.get_Parameter(BuiltInParameter.VIEWER_VOLUME_OF_INTEREST_CROP).AsElementId()
-        main_cropbox = main_view.GetCropRegionShapeManager().GetCropShape()[0] # IT WILL TAKE ONLY SINGLE CURVELOOP.
+        main_viewport        = MainSheet.viewport_viewplan[0]
+        main_view            = doc.GetElement(main_viewport.ViewId)
+        main_scopebox_id     = main_view.get_Parameter(BuiltInParameter.VIEWER_VOLUME_OF_INTEREST_CROP).AsElementId()
+        main_cropbox_manager = main_view.GetCropRegionShapeManager().GetCropShape()
+        main_cropbox         = None
+
+        # GET CROPBOX / ACTIVATE CROP IF CROPBOX NOT FOUND
+        try:
+            if main_cropbox_manager:
+                main_cropbox = main_cropbox_manager[0] #IT WILL TAKE ONLY SINGLE CURVELOOP.
+            else:
+                view_crop_param = main_view.get_Parameter(BuiltInParameter.VIEWER_CROP_REGION)
+                if not view_crop_param.AsInteger():
+                    with ef_Transaction(doc, "Actiavte Crop"):
+                        view_crop_param.Set(1)
+                        main_cropbox = main_view.GetCropRegionShapeManager().GetCropShape()[0]
+        except:
+            msg = "Please activate CropBox or ScopeBox on your views that are placed on MainSheet[{}]. \nPlease Try again.\n If error still persist, please contact me in LinkedIn.".format(self.SheetNumber)
+            forms.alert(msg, title=__title__,  exitscript=True)
+
 
         # ╦  ╔═╗╔═╗╔═╗  ╔╦╗╦ ╦╦═╗╔═╗╦ ╦╔═╗╦ ╦  ╔═╗╔╦╗╦ ╦╔═╗╦═╗╔═╗
         # ║  ║ ║║ ║╠═╝   ║ ╠═╣╠╦╝║ ║║ ║║ ╦╠═╣  ║ ║ ║ ╠═╣║╣ ╠╦╝╚═╗
