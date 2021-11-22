@@ -2,7 +2,7 @@
 
 __title__ = "Duplicate views"
 __author__ = "Erik Frits"
-__doc__ = """Version = 1.1
+__doc__ = """Version = 1.2
 Date    = 31.08.2020
 _____________________________________________________________________
 Description:
@@ -21,6 +21,7 @@ TODO:
 [FEATURE] - Set selection to duplicated views once its done
 _____________________________________________________________________
 Last Updates:
+- [22.11.2021] Selection is update to new Views
 - [01.06.2021] Added rules for Scheudles
 - [01.06.2021] Added rules for Legends 
 _____________________________________________________________________
@@ -36,7 +37,8 @@ from Autodesk.Revit.DB import (View,
                                ViewSchedule,
                                ViewDuplicateOption,
                                Transaction,
-                               ViewType
+                               ViewType,
+                               ElementId
                                )
 from pyrevit import forms
 from pyrevit.forms import WPFWindow, alert, select_views
@@ -44,6 +46,7 @@ from pyrevit.forms import WPFWindow, alert, select_views
 #____________________________________________________________________ .NET IMPORTS
 from clr import AddReference
 AddReference("System")
+from System.Collections.Generic import List
 from System.Diagnostics.Process import Start
 from System.Windows.Window import DragMove
 from System.Windows.Input import MouseButtonState
@@ -73,7 +76,7 @@ class MyWindow(WPFWindow):
         - ViewDuplicateOption.Duplicate,
         - ViewDuplicateOption.WithDetailing,
         - ViewDuplicateOption.AsDependent"""
-
+        new_views = []
         t = Transaction(doc, __title__)
         t.Start()
         try:
@@ -94,11 +97,14 @@ class MyWindow(WPFWindow):
                 # REGULAR VIEWS
                 else:
                     for i in range(self.count):
-                        view.Duplicate(options)
-
+                        new_view = view.Duplicate(options)
+                        new_views.append(new_view)
         except:
             pass
 
+        if new_views:
+            uidoc.Selection.SetElementIds(List[ElementId]([]))
+            uidoc.Selection.SetElementIds(List[ElementId](new_views))
         t.Commit()
 
 
