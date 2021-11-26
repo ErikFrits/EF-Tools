@@ -38,7 +38,7 @@ Author : Erik Frits
 # ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
 # ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
 #==================================================
-import json, os
+import json, os, codecs
 from Autodesk.Revit.ApplicationServices import LanguageType
 from pyrevit.coreutils.ribbon import ICON_MEDIUM
 from pyrevit.script import toggle_icon
@@ -103,7 +103,7 @@ if __name__ == '__main__':
               "and it will be added to the list.".format(lang))
 
     # READ TRANSLATION DICTIONARY
-    with open(path_translation) as f:
+    with codecs.open(path_translation, 'r', 'utf-8') as f:
         translation = json.load(f)
 
     # REVERSE TRANSLATION IF NOT TOGGLE
