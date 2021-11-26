@@ -84,6 +84,7 @@ Contact me if you need help installing it.
 - [x] UI
     - [x] B/W/G 
     - [x] List all levels
+    - [x] Shorten Ribbon names
            
 - [ ] Rooms
     - [x] Rooms to Floors
