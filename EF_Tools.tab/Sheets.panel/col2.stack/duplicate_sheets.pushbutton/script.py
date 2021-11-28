@@ -245,7 +245,7 @@ class MyWindow(forms.WPFWindow):
                             continue
 
                         viewSchedule = doc.GetElement(scheduleId)
-                        schedule_view_id = viewSchedule.Duplicate(self.view_dupicate_option)
+                        schedule_view_id = viewSchedule.Duplicate(ViewDuplicateOption.Duplicate)
                         #NAMING?
 
                     ScheduleSheetInstance.Create(doc, new_sheet.Id, schedule_view_id, origin)
