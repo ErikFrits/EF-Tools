@@ -64,13 +64,18 @@ def get_selected_views(given_uidoc = uidoc, exit_if_none = False):
     UI_selected = given_uidoc.Selection.GetElementIds()
 
     #>>>>>>>>>> FILTER SELECTION
-    selected_views = [doc.GetElement(view_id) for view_id in UI_selected if type(doc.GetElement(view_id)) in ALL_VIEW_TYPES]
+    selected_views = [given_uidoc.Document.GetElement(view_id) for view_id in UI_selected if type(doc.GetElement(view_id)) in ALL_VIEW_TYPES]
 
     #>>>>>>>>>> EXIT IF NONE SELECTED
     if not selected_views and exit_if_none:
         forms.alert("No views were selected. Please try again.", exitscript=True)
 
     return selected_views
+
+
+
+
+
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET SHEETS
 def get_selected_sheets(given_uidoc = uidoc, exit_if_none = False):

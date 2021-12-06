@@ -22,7 +22,7 @@ doc = __revit__.ActiveUIDocument.Document
 
 
 
-#FIXME DELETE? IT WAS MOVED TO ANOTHER FOLDER
+#FIXME DELETE? IT WAS MOVED TO SELECTION FILE
 def get_selected_views():
     """Function to get selected views.
     :return: list of selected views."""
