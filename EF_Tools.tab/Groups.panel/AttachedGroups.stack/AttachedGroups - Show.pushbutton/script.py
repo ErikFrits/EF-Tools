@@ -57,7 +57,7 @@ if __name__ == '__main__':
     selected_group_types            = select_group_types(uidoc=uidoc, title=__title__, version=__version__, exit_if_none=True)
     selected_group_type_ids         = [g.Id for g in selected_group_types]
     selected_group_names            = [g.get_Parameter(BuiltInParameter.ALL_MODEL_TYPE_NAME).AsString() for g in selected_group_types]
-    selected_attached_groups        = select_attached_groups(selected_group_types, title=__title__, uidoc=uidoc, version=__version__, exit_if_none=True)
+    selected_attached_groups        = select_attached_groups(selected_group_types, title=__title__, label='Select AttachedGroups to Show', uidoc=uidoc, version=__version__, exit_if_none=True)
     selected_attached_group_names   = [g.get_Parameter(BuiltInParameter.ALL_MODEL_TYPE_NAME).AsString() for g in selected_attached_groups]
 
     # SHOW ATTACHED GROUPS
