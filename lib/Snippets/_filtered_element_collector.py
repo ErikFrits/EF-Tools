@@ -41,6 +41,10 @@ view_doors_tags         = FilteredElementCollector(doc).OfCategory(BuiltInCatego
 #>>>>>>>>>> DOC
 all_Categories = doc.Settings.Categories
 
+# MATERIALS
+materials = FilteredElementCollector(doc).OfClass(Material)
+
+
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
