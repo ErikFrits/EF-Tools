@@ -17,7 +17,9 @@ Generate multiple overviews of your Graphics:
 _____________________________________________________________________
 How-to:
 
-Select a few instances in the model and run the script.
+-> Click on the button
+-> Change Settings(optional)
+-> Click on Generate Overviews
 _____________________________________________________________________
 Last update:
 
