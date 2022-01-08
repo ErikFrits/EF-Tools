@@ -20,9 +20,6 @@ Last update:
 - [18.07.2021] - Refactored 
 - [18.07.2021] - Optimized perfomance 
 _____________________________________________________________________
-To-do:
-- 
-_____________________________________________________________________
 """
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IMPORTS
@@ -40,11 +37,8 @@ if __name__ == '__main__':
 
     #>>>>>>>>>> SELECT MAIN WALL
     Selected_wall = None
-    try:
-        Selected_wall = pick_wall(uidoc)
-    except:
-        import traceback
-        print(traceback.format_exc())
+    try:    Selected_wall = pick_wall(uidoc)
+    except: forms.alert("Script is canceled.", exitscript=True, title="Script Canceled.")
 
 
     if not Selected_wall:
