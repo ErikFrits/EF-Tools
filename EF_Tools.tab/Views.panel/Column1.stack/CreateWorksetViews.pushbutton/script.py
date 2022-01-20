@@ -19,66 +19,57 @@ ViewNaming:  'Py_(Workset.Name)'
 
 _____________________________________________________________________
 Last update:
-
+- [18.01.2022] - 1.1 Refactoring
 - [12.08.2021] - 1.0 RELEASE
 _____________________________________________________________________
 """
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IMPORTS
-from Autodesk.Revit.DB import  (View3D ,FilteredWorksetCollector, WorksetKind, WorksetVisibility,ViewFamilyType, FilteredElementCollector,
-                                Transaction, SubTransaction, BuiltInParameter)
+from Snippets._context_manager import ef_Transaction
 import sys
+from Autodesk.Revit.DB import  (View3D ,FilteredWorksetCollector, WorksetKind, WorksetVisibility,ViewFamilyType, FilteredElementCollector,
+                                Transaction, SubTransaction, BuiltInParameter, BuiltInCategory)
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VARIABLES
-doc   = __revit__.ActiveUIDocument.Document
+doc            = __revit__.ActiveUIDocument.Document
+all_views      = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Views).ToElements()
+all_view_names = [view.Name for view in all_views]
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FUNCTIONS
+def get_view_type_3D():
+    """Function to get ViewType - 3D View"""
+    all_view_types = FilteredElementCollector(doc).OfClass(ViewFamilyType).ToElements()
+    for view_type in all_view_types:
+        if '3D' in view_type.get_Parameter(BuiltInParameter.ALL_MODEL_TYPE_NAME).AsString():
+            return view_type
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN
+view_type_3D = get_view_type_3D()
+
 if __name__ == '__main__':
+    with ef_Transaction(doc,__title__, debug=True):
+        #>>>>>>>>>>>>>>>>>>>> GET WORKSETS
+        all_worksets = FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset).ToWorksets() #ToWorksets #ToWorksets()
+        if not all_worksets:
+            print("No Worksets found in the current project.")
+            sys.exit()
 
-    t = Transaction(doc, __title__)
-    t.Start()
+        #>>>>>>>>>>>>>>>>>>>> LOOP THROUGH WORKSETS
+        print("CREATING WORKSETS: ")
+        for workset in all_worksets:
+            view_new_name = "Py_{}".format(workset.Name)
+            if view_new_name in all_view_names:
+                print("--- Workset 3DView already exists: {}".format(view_new_name))
+                continue
 
-    #>>>>>>>>>>>>>>>>>>>> GET WORKSETS
-    all_worksets = FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset).ToWorksets() #ToWorksets #ToWorksets()
-    if not all_worksets:
-        print("No Worksets found in the current project.")
-        sys.exit()
-
-    #>>>>>>>>>>>>>>>>>>>> LOOP THROUGH WORKSETS
-    print("CREATING WORKSETS: ")
-    for Workset in all_worksets:
-        workset_name = Workset.Name
-
-        #>>>>>>>>>> GET 3D VIEW TYPE
-        all_view_types = FilteredElementCollector(doc).OfClass(ViewFamilyType).ToElements()
-        view_type_3D = None
-        for view_type in all_view_types:
-            if '3D' in view_type.get_Parameter(BuiltInParameter.ALL_MODEL_TYPE_NAME).AsString():
-                view_type_3D = view_type
-                break
-
-        #>>>>>>>>>> CREATE 3D VIEW
-        st = SubTransaction(doc)
-        st.Start()
-
-        view = View3D.CreateIsometric(doc, view_type_3D.Id)
-        view_new_name = "Py_{}".format(Workset.Name)
-
-        try:
+            # CREATE NEW WORKSET VIEW
+            view      = View3D.CreateIsometric(doc, view_type_3D.Id)
             view.Name = view_new_name
             print("--- Workset 3DView created: {}".format(view_new_name))
 
-        except:
-            st.RollBack()
-            print("--- Workset 3DView already exists: {}".format(view_new_name))
-            continue
-        st.Commit()
-
-        #>>>>>>>>>> SET WORKSET VISIBILITIES
-        for workset in all_worksets:
-            if workset.Name == Workset.Name:
-                view.SetWorksetVisibility(workset.Id, WorksetVisibility.Visible)
-            else:
-                view.SetWorksetVisibility(workset.Id, WorksetVisibility.Hidden)
-    t.Commit()
-
+            #>>>>>>>>>> SET WORKSET VISIBILITIES
+            for ws in all_worksets:
+                if workset.Name == ws.Name:
+                    view.SetWorksetVisibility(ws.Id, WorksetVisibility.Visible)
+                else:
+                    view.SetWorksetVisibility(ws.Id, WorksetVisibility.Hidden)
