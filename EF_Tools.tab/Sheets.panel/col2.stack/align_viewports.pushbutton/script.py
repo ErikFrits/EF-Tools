@@ -242,9 +242,20 @@ class SheetObject():
             # ╚═╝╩╚═╚═╝╩  ╚═╝╚═╝╩ ╚═       ╚═╝╚═╝╚═╝╩  ╚═╝╚═╝╚═╝╩ ╚═ CROPBOX / SCOPEBOX
             # ==================================================
             if apply_CropScopeBox:
+
+                with ef_Transaction(doc, 'Crop View - True'):
+                    # SET CROP VIEW TO TRUE
+                    crop_param = other_view.get_Parameter(BuiltInParameter.VIEWER_CROP_REGION)
+                    if not crop_param.AsInteger():
+                        try:
+                            crop_param.Set(1)
+                        except:
+                            pass
+
                 with ef_Transaction(doc, "Apply Crop/Scope Box"):
                     # SCOPE BOX
                     try:
+                        # SET SCOPE BOX
                         param_scopebox = other_view.get_Parameter(BuiltInParameter.VIEWER_VOLUME_OF_INTEREST_CROP)
                         param_scopebox.Set(main_scopebox_id)
                     except:
