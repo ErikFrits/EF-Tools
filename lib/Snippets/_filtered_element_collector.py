@@ -32,6 +32,7 @@ all_revision_clouds     = FilteredElementCollector(doc).OfCategory(BuiltInCatego
 
 #>>>>>>>>>> VIEWS
 all_views               = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Views).ToElements()
+all_legends             = [view for view in all_views if view.ViewType == ViewType.Legend]
 all_sheets              = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Sheets).WhereElementIsNotElementType().ToElements()
 
 #>>>>>>>>>> TAGS
