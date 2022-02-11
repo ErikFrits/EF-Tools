@@ -23,8 +23,26 @@ import operator
 from Autodesk.Revit.DB import (FilteredElementCollector,
                                BuiltInCategory,
                                UnitUtils)
+
 from Snippets._convert import convert_m_to_feet
+app   = __revit__.Application
 doc = __revit__.ActiveUIDocument.Document
+
+# FUNCTIONS
+def convert_internal_to_m(length):
+    """Function to convert cm to feet."""
+    rvt_year = int(app.VersionNumber)
+    # RVT >= 2022
+    if rvt_year < 2022:
+        from Autodesk.Revit.DB import DisplayUnitType
+        return UnitUtils.Convert(length,
+                                 DisplayUnitType.DUT_DECIMAL_FEET,
+                                 DisplayUnitType.DUT_METERS)
+    # RVT >= 2022
+    else:
+        from Autodesk.Revit.DB import UnitTypeId
+        return UnitUtils.ConvertFromInternalUnits(length, UnitTypeId.Meters)
+
 
 #____________________________________________________________________ MAIN
 # GET ALL ELVELS
@@ -33,8 +51,8 @@ levels = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Levels).Wh
 # CONVERT UNITS TO METERS
 dict_lvl = {}
 for i in levels:
-    dict_lvl[i.Name] = convert_m_to_feet(i.Elevation)
-
+    # dict_lvl[i.Name] = convert_m_to_feet(i.Elevation)
+    dict_lvl[i.Name] = convert_internal_to_m(i.Elevation)
 # SORT BY ELEVATION
 sorted_x = sorted(dict_lvl.items(), key=operator.itemgetter(1))
 
