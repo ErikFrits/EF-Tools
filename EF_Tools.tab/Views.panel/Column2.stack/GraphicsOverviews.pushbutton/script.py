@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __title__   = "Generate Graphics Overviews"
 __author__  = "Erik Frits"
-__version__ = "Version: 1.0"
+__version__ = "Version: 1.1"
 __doc__ = """Version = 1.0
 Date    = 10.12.2021
 _____________________________________________________________________
@@ -22,7 +22,7 @@ How-to:
 -> Click on Generate Overviews
 _____________________________________________________________________
 Last update:
-
+- [11.02.2022] - 1.1 added Revit 2022 Support.
 - [21.12.2021] - 1.0 RELEASE
 _____________________________________________________________________
 To-Do:
@@ -41,6 +41,7 @@ from Autodesk.Revit.DB import *
 #>>>>>>>>>> CUSTOM IMPORTS
 from Snippets._context_manager import ef_Transaction, try_except
 from GUI.forms import my_WPF
+from Snippets._convert import convert_cm_to_feet
 
 #>>>>>>>>>> .NET IMPORTS
 import clr
@@ -84,13 +85,6 @@ def create_text_note(view, x ,y ,text, text_note_type):
     # TEXTNOTE
     text_note = TextNote.Create(doc, view.Id, XYZ(x, y, 0),text, text_note_type.Id)
     return text_note
-
-
-def convert_cm_to_feet(length):
-    """Function to convert cm to feet."""
-    return UnitUtils.Convert(length,
-                           DisplayUnitType.DUT_CENTIMETERS,
-                           DisplayUnitType.DUT_DECIMAL_FEET)
 
 def rename_view(view, view_name):
     """Function with try/except statement to rename view"""

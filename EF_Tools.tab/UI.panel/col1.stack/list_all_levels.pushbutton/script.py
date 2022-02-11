@@ -2,7 +2,7 @@
 
 __title__  = "List All Levels"
 __author__  = "Erik Frits"
-__doc__ = """Version = 1.0
+__doc__ = """Version = 1.01
 Date    = 01.07.2020
 _____________________________________________________________________
 Description:
@@ -12,13 +12,18 @@ _____________________________________________________________________
 How-to:
 - Just run the script.
 _____________________________________________________________________
+Last update:
+- [11.02.2022] - 1.01 added Revit 2022 Support.
+
+_____________________________________________________________________
+Author: Erik Frits
 """
 #____________________________________________________________________ IMPORTS
 import operator
 from Autodesk.Revit.DB import (FilteredElementCollector,
                                BuiltInCategory,
-                               UnitUtils,
-                               DisplayUnitType)
+                               UnitUtils)
+from Snippets._convert import convert_m_to_feet
 doc = __revit__.ActiveUIDocument.Document
 
 #____________________________________________________________________ MAIN
@@ -28,7 +33,7 @@ levels = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Levels).Wh
 # CONVERT UNITS TO METERS
 dict_lvl = {}
 for i in levels:
-    dict_lvl[i.Name] = UnitUtils.Convert(i.Elevation, DisplayUnitType.DUT_DECIMAL_FEET, DisplayUnitType.DUT_METERS)
+    dict_lvl[i.Name] = convert_m_to_feet(i.Elevation)
 
 # SORT BY ELEVATION
 sorted_x = sorted(dict_lvl.items(), key=operator.itemgetter(1))

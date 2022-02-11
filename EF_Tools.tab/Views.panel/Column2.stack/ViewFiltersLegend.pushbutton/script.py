@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 __title__   = "Create ViewFilters Legend"
 __author__  = "Erik Frits"
-__version__ = "Version: 1.0"
-__highlight__ = "new"
+__version__ = "Version: 1.1"
+__highlight__ = "updated"
 __doc__ = """Version = 1.0
 Date    = 25.01.2022
 _____________________________________________________________________
@@ -31,7 +31,7 @@ How-to:
 -> Click on Generate Legends
 _____________________________________________________________________
 Last update:
-
+- [11.02.2022] - 1.1 added Revit 2022 Support.
 - [31.01.2022] - 1.0 RELEASE
 _____________________________________________________________________
 Author: Erik Frits"""
