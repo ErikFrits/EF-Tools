@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-__title__ = "Wall Match: Base Constraints"
+__title__ = "Wall Match: Base"
 __author__ = "Erik Frits"
 __doc__ = """Version = 1.0
 Date    = 21.10.2019
