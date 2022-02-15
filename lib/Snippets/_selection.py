@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+
+# ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
+# ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
+# ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝
+#==================================================
+from Autodesk.Revit.DB.Architecture import Room
+from Autodesk.Revit.UI.Selection import ISelectionFilter, ObjectType
 from Autodesk.Revit.DB import (FilteredElementCollector,
                                BuiltInCategory,
                                BuiltInParameter,
@@ -5,20 +13,28 @@ from Autodesk.Revit.DB import (FilteredElementCollector,
                                Element,
                                FilledRegionType)
 
-from Autodesk.Revit.DB.Architecture import Room
+# pyRevit IMPORTS
 from pyrevit.forms import SelectFromList
 from pyrevit import forms
 
+# CUSTOM IMPORTS
 from Snippets._variables import ALL_VIEW_TYPES
-import sys
+from GUI.forms           import select_from_dict
 
+# ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
+# ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
+#  ╚╝ ╩ ╩╩╚═╩╩ ╩╚═╝╩═╝╚═╝╚═╝
+#==================================================
 uidoc = __revit__.ActiveUIDocument
 doc = __revit__.ActiveUIDocument.Document
-from Autodesk.Revit.UI.Selection import ISelectionFilter, ObjectType
 
 
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET ELEMENTS
-
+# ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
+# ╠╣ ║ ║║║║║   ║ ║║ ║║║║╚═╗
+# ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝╚═╝
+#==================================================
+#TODO Create parmaeter 'filter' to pass to a list of Types to filter selection.
+# e.g. get_selected_elements(uidoc, filter=[Room,Area]
 def get_selected_elements(given_uidoc = uidoc):
     """Property that retrieves selected views or promt user to select some from the dialog box."""
     selected_elements = []
@@ -34,6 +50,7 @@ def get_selected_elements(given_uidoc = uidoc):
 
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET ROOMS
+#TODO OBSOLETE. UPDATE FUNCTION ABOVE TO BE ABLE TO FILTER ELEMENTS AND REPLACE WHERE IT IS USED.
 def get_selected_rooms(given_uidoc = uidoc, exit_if_none = False):
     """Function to get selected views.
     :return: list of selected views."""
@@ -50,60 +67,66 @@ def get_selected_rooms(given_uidoc = uidoc, exit_if_none = False):
     return selected_rooms
 
 
-
-
-
-
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET VIEWS
-
-def get_selected_views(given_uidoc = uidoc, exit_if_none = False):
-    """Function to get selected views.
+def get_selected_views(given_uidoc = uidoc, exit_if_none = False, title = '__title__'):
+    """Function to get selected views. If none selected give a menu for a user to select views.
+    ALL_VIEW_TYPES = [ViewPlan, ViewSection, View3D , ViewSchedule, View, ViewDrafting]
+    LastUpdates:
+    [15.02.2022] - If no views selected -> Select from DialogBox
     :return: list of selected views."""
-    #>>>>>>>>>> GET SELECTED ELEMENTS
-    doc = given_uidoc.Document
+
+    # GET SELECTED ELEMENTS
+    doc         = given_uidoc.Document
     UI_selected = given_uidoc.Selection.GetElementIds()
 
-    #>>>>>>>>>> FILTER SELECTION
+    # GET VIEWS FROM SELECTION
     selected_views = [given_uidoc.Document.GetElement(view_id) for view_id in UI_selected if type(doc.GetElement(view_id)) in ALL_VIEW_TYPES]
 
-    #>>>>>>>>>> EXIT IF NONE SELECTED
+    # IF NONE SELECTED - OPEN A DIALOGBOX TO CHOOSE FROM.
+    if not selected_views and exit_if_none:
+        all_views = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Views).WhereElementIsNotElementType().ToElements()
+        dict_views = {view.Name:view for view in all_views}
+        selected_views = select_from_dict(dict_views, title=title, label = 'Select Views', button_name='Select')
+
+    # EXIT IF STILL NONE SELECTED
     if not selected_views and exit_if_none:
         forms.alert("No views were selected. Please try again.", exitscript=True)
 
     return selected_views
 
-
-
-
-
-
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET SHEETS
-def get_selected_sheets(given_uidoc = uidoc, exit_if_none = False):
-    """Function to get selected views.
-    return list of selected views."""
+def get_selected_sheets(given_uidoc = uidoc, exit_if_none = False, title='__title__'):
+    """Function to get selected views. return list of selected views.
+    LastUpdates:
+    [15.02.2022] - If no sheets selected -> Select from DialogBox"""
     #>>>>>>>>>> GET SELECTED ELEMENTS
     doc = given_uidoc.Document
     UI_selected = given_uidoc.Selection.GetElementIds()
 
-    #>>>>>>>>>> FILTER SELECTION
-    selected_sheets = [doc.GetElement(sheet_id) for sheet_id in UI_selected if type(doc.GetElement(sheet_id)) == ViewSheet ]
+    #>>>>>>>>>> GET SHEETS FROM SELECTION
+    selected_sheets = [doc.GetElement(sheet_id) for sheet_id in UI_selected if type(doc.GetElement(sheet_id)) == ViewSheet]
 
-    #>>>>>>>>>> EXIT IF NONE SELECTED
+    #>>>>>>>>>> IF NONE SELECTED - OPEN A DIALOGBOX TO CHOOSE FROM.
+    if not selected_sheets and exit_if_none:
+        all_sheets = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Sheets).WhereElementIsNotElementType().ToElements()
+        dict_sheets = {sheet.Name : sheet for sheet in all_sheets}
+        selected_sheets = select_from_dict(dict_sheets, title=title, label='Select Sheets', button_name='Select')
+
+    #>>>>>>>>>> EXIT IF STILL NONE SELECTED
     if not selected_sheets and exit_if_none:
         forms.alert("No sheets were selected. Please try again.", exitscript=True)
 
     return selected_sheets
 
-
-
-
-
-
+# ╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗
+# ╚═╗║╣ ║  ║╣ ║   ║
+# ╚═╝╚═╝╩═╝╚═╝╚═╝ ╩
+#==================================================
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SELECT TITLEBLOCK
-
-
-def select_title_block(given_uidoc = uidoc):
-    """Function to let user select a title block."""
+def select_title_block(given_uidoc = uidoc, exitscript = True):
+    """Function to let user select a title block.
+    LastUpdates:
+    [15.02.2022] - SelectFromList -> select_from_dict()"""
     doc = given_uidoc.Document
     #>>>>>>>>>> SELECT TITLE BLOCK
     all_title_blocks = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_TitleBlocks).WhereElementIsElementType().ToElements()
@@ -114,42 +137,13 @@ def select_title_block(given_uidoc = uidoc):
         unique_title_blocks["{} - {}".format(family_name, type_name)] = tb.Id
 
     #>>>>>>>>>> MAKE SURE IT'S SELECTED
-    selected_option = SelectFromList.show(list(unique_title_blocks), title="Select Title Block")
-    if not selected_option:
-        forms.alerts("Nothing was selected. Please try again", exitscript=True)
+    selected_title_block = select_from_dict(unique_title_blocks)
 
-    selected_title_block = unique_title_blocks[selected_option]
-    return selected_title_block
+    # VERIFY SOMETHING IS SELECTED
+    if not selected_title_block and exitscript:
+        forms.alert("No TitleBlock was selected. Please try again.", exitscript = exitscript)
 
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PICK WALL
-
-#>>>>>>>>> LIMIT SELECTION
-class CustomISelectionFilter(ISelectionFilter):
-    """Filter user selection to certain element."""
-    def __init__(self, nom_categorie):
-        self.nom_categorie = nom_categorie
-
-    def AllowElement(self, e):
-        if str(e.Category.Id) == str(self.nom_categorie):
-        #if e.Category.Name == "Walls"
-            return True
-        else:
-            return False
-    def AllowReference(self, ref, point):
-        return True
-
-
-#>>>>>>>>>> PICK WALL
-def pick_wall(given_uidoc = uidoc):
-    """Function to promt user to select a wall element."""
-    wall_id = given_uidoc.Selection.PickObject(ObjectType.Element, CustomISelectionFilter("-2000011"), "Select a Wall")    # -2000011 <- Id of OST_Walls
-    wall = given_uidoc.Document.GetElement(wall_id)
-    return wall
-
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
+    return selected_title_block[0]
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET RegionType
 def select_region_type(given_uidoc = uidoc):
@@ -172,4 +166,29 @@ def select_floor_type(given_uidoc = uidoc):
     if not selection:     forms.alert("Floor Type was not chosen. Please try again.", title='Select Floor Type', exitscript=True)
     return dict_floor_types[selection]
 
+# ╔═╗╦╔═╗╦╔═  ╔═╗╦  ╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
+# ╠═╝║║  ╠╩╗  ║╣ ║  ║╣ ║║║║╣ ║║║ ║ ╚═╗
+# ╩  ╩╚═╝╩ ╩  ╚═╝╩═╝╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝
+#==================================================
+#>>>>>>>>> LIMIT SELECTION
+class CustomISelectionFilter(ISelectionFilter):
+    """Filter user selection to certain element."""
+    def __init__(self, nom_categorie):
+        self.nom_categorie = nom_categorie
 
+    def AllowElement(self, e):
+        if str(e.Category.Id) == str(self.nom_categorie):
+        #if e.Category.Name == "Walls"
+            return True
+        else:
+            return False
+    def AllowReference(self, ref, point):
+        return True
+
+
+#>>>>>>>>>> PICK WALL
+def pick_wall(given_uidoc = uidoc):
+    """Function to promt user to select a wall element."""
+    wall_id = given_uidoc.Selection.PickObject(ObjectType.Element, CustomISelectionFilter("-2000011"), "Select a Wall")    # -2000011 <- Id of OST_Walls
+    wall = given_uidoc.Document.GetElement(wall_id)
+    return wall

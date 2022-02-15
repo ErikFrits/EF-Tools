@@ -16,7 +16,7 @@ from Autodesk.Revit.DB import ( Transaction,
 from Autodesk.Revit.Exceptions import ArgumentException
 
 #CUSTOM
-from GUI.WPF_Base import my_WPF
+from GUI.forms import my_WPF
 
 # .NET IMPORTS
 from clr import AddReference

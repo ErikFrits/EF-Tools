@@ -19,27 +19,6 @@ uidoc = __revit__.ActiveUIDocument
 doc = __revit__.ActiveUIDocument.Document
 
 
-
-
-
-#FIXME DELETE? IT WAS MOVED TO SELECTION FILE
-def get_selected_views():
-    """Function to get selected views.
-    :return: list of selected views."""
-    # GET SELECTED ELEMENTS
-    UI_selected = uidoc.Selection.GetElementIds()
-
-    # FILTER SELECTION
-    VIEW_TYPES = [  View, ViewPlan, ViewSection, View3D, ViewSchedule, ViewDrafting]
-    selected_views = [doc.GetElement(view_id) for view_id in UI_selected if type(doc.GetElement(view_id)) in VIEW_TYPES]
-
-    return selected_views
-
-
-
-
-
-
 # >>>>>> CREATE FILTER
 def create_string_equals_filter(key_parameter, element_value, caseSensitive = True):
     """Function to create ElementParameterFilter based on FilterStringRule."""
@@ -60,10 +39,7 @@ def get_sheet_from_view(view):
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Sheets).WhereElementIsNotElementType().WherePasses(my_filter).FirstElement()
 
 
-
-
 if __name__ == '__main__':
-
     #>>>>>>>>>> ACTIVE VIEW
     active_view = doc.ActiveView
     sheet       = get_sheet_from_view(active_view)
@@ -71,5 +47,3 @@ if __name__ == '__main__':
     #>>>>>>>>>> PRINT RESULTS
     if sheet:   print('Sheet Found: {} - {}'.format(sheet.SheetNumber, sheet.Name))
     else:       print('No sheet associated with the given view: {}'.format(sheet.Name))
-
-

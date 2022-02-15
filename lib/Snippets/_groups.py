@@ -9,7 +9,7 @@ from Autodesk.Revit.DB import *
 from pyrevit import forms
 
 # CUSTOM IMPORTS
-from GUI.SelectFromDict import select_from_dict
+from GUI.forms           import select_from_dict
 
 
 default_doc     = __revit__.ActiveUIDocument.Document

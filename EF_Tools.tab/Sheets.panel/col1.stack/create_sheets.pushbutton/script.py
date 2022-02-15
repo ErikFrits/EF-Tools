@@ -53,27 +53,7 @@ app = __revit__.Application
 
 
 # FUNCTIONS
-
-def select_title_block():
-    """Function to promt user to select titleblock."""
-    # TITLE BLOCKS IN PROJECT
-    all_title_blocks = FilteredElementCollector(doc).OfCategory(
-        BuiltInCategory.OST_TitleBlocks).WhereElementIsElementType().ToElements()
-    unique_title_blocks = {}
-    for tb in all_title_blocks:
-        family_name = tb.FamilyName
-        type_name = tb.get_Parameter(BuiltInParameter.SYMBOL_NAME_PARAM).AsString()
-        unique_title_blocks["{} - {}".format(family_name, type_name)] = tb.Id
-
-    # SELECT TITLE BLOCK
-    selected_option = SelectFromList.show(list(unique_title_blocks), title="TEST")
-
-    # CANCEL IF NOTHING SELECTED
-    if not selected_option:
-        forms.alert('TitleBlock was not selected!\n Please try again.',exitscript=True)
-
-
-    return unique_title_blocks[selected_option]
+from Snippets._selection import select_title_block
 
 def create_sheets(n_copies, prefix, start_count):
     """Function to create sheets"""
@@ -138,7 +118,7 @@ class MyWindow(forms.WPFWindow):
 
 
 if __name__ == '__main__':
-    selected_title_block = select_title_block()
+    selected_title_block = select_title_block(uidoc, exitscript=True)
     t = Transaction(doc, __title__)
     t.Start()
     if selected_title_block:

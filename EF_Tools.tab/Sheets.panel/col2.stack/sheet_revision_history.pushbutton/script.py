@@ -270,7 +270,7 @@ class ExcelWriter:
 if __name__ == '__main__':
 
     #>>>>>>>>>> GET SELECTED SHEETS
-    selected_sheets = get_selected_sheets(exit_if_none=True)
+    selected_sheets = get_selected_sheets(exit_if_none=True, title=__title__)
 
     #>>>>>>>>>> ASK USER TO INCLUDE PRIMARY AND DEPENDANT
     incl_primary_and_dependant = promt_user_incl_primary_and_dependant()

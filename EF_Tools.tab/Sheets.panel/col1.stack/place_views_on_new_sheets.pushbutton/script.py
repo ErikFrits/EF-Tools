@@ -96,9 +96,7 @@ if __name__ == '__main__':
             print('View [{}] - Sheet [{}]'.format(view.Name, view.get_Parameter(BuiltInParameter.VIEWER_SHEET_NUMBER).AsString()))
 
     #>>>>>>>>>> SELECT TITLEBLOCK
-    selected_title_block = select_title_block(uidoc)
-    if not selected_title_block:
-        forms.alert("No TitleBlock selected. Please try again.", exitscript = True)
+    selected_title_block = select_title_block(uidoc, exitscript=True)
 
     #>>>>>>>>>> OPEN GUI
     GUI = MyWindow("Script.xaml")

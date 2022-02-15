@@ -8,7 +8,7 @@
 import os, sys
 
 from pyrevit import revit, forms
-from Snippets._selection import get_selected_rooms
+# from Snippets._selection import get_selected_rooms
 from Snippets._context_manager import ef_Transaction
 from Autodesk.Revit.DB import (BuiltInParameter,
                                SpatialElementBoundaryOptions,
@@ -38,7 +38,7 @@ from System import Uri
 
 
 # LIB IMPORTS
-from GUI.WPF_Base import my_WPF
+from GUI.forms import my_WPF
 
 # ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
 # ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
