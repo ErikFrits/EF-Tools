@@ -29,9 +29,9 @@ uidoc = __revit__.ActiveUIDocument
 doc = __revit__.ActiveUIDocument.Document
 
 
-# ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
-# ╠╣ ║ ║║║║║   ║ ║║ ║║║║╚═╗
-# ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝╚═╝
+# ╔═╗╔═╗╔╦╗  ╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗╔═╗╔╦╗
+# ║ ╦║╣  ║   ╚═╗║╣ ║  ║╣ ║   ║ ║╣  ║║
+# ╚═╝╚═╝ ╩   ╚═╝╚═╝╩═╝╚═╝╚═╝ ╩ ╚═╝═╩╝
 #==================================================
 #TODO Create parmaeter 'filter' to pass to a list of Types to filter selection.
 # e.g. get_selected_elements(uidoc, filter=[Room,Area]
@@ -184,7 +184,6 @@ class CustomISelectionFilter(ISelectionFilter):
             return False
     def AllowReference(self, ref, point):
         return True
-
 
 #>>>>>>>>>> PICK WALL
 def pick_wall(given_uidoc = uidoc):

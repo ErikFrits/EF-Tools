@@ -67,7 +67,7 @@ def hide_clouds(view):
     print("*** Hiding clouds - {} ***".format(view.Name))
 
     #>>>>>>>>>>>>>>>>>>>> Get all clouds on views
-    all_clouds_on_view      = FilteredElementCollector(doc,view_id).OfCategory(BuiltInCategory.OST_RevisionClouds).WhereElementIsNotElementType().ToElements() # Only visible clouds are found!
+    all_clouds_on_view      = FilteredElementCollector(doc,view.Id).OfCategory(BuiltInCategory.OST_RevisionClouds).WhereElementIsNotElementType().ToElements() # Only visible clouds are found!
     clouds_to_group         = [i for i in all_clouds_on_view if     i.GroupId.Equals(ElementId.InvalidElementId)]           #NOT IN THE GROUP
     clouds_already_in_group = [i for i in all_clouds_on_view if not i.GroupId.Equals(ElementId.InvalidElementId)]           #IN THE GROUP
     clouds_issued           = [i for i in all_clouds_on_view if i.IsRevisionIssued()]
@@ -106,15 +106,13 @@ def hide_clouds(view):
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN
 if __name__ == '__main__':
     all_detail_groups = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSDetailGroups).WhereElementIsNotElementType().ToElements()
-    selected_views = uidoc.Selection.GetElementIds()
-
+    from Snippets._selection import get_selected_views
+    selected_views = get_selected_views(uidoc, exit_if_none=True, title=__title__)
     if selected_views:
         t = Transaction(doc,__title__)
         t.Start()
-
-        for view_id in selected_views:
+        for view in selected_views:
             #>>>>>>>>>> SELECTED VIEW
-            view = doc.GetElement(view_id)
             hide_clouds(view)
 
             #>>>>>>>>>>DEPENTANT VIEWS
