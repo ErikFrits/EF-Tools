@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__title__   = "Add Sheet Revisions"
+__title__   = "Create Sheet Revision Stamps"
 __version__ = "Version: 1.3"
 __author__  = "Erik Frits"
 __highlight__ = 'updated'
