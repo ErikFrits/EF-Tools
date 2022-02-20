@@ -111,7 +111,7 @@ def create_List(list_sheets):
     :param list_sheets:   list of sheets
     :return:                List<ListItem>"""
     List_of_sheets= List[type(ListItem())]()
-    dict_sheets = {'{} - {}'.format(sheet.Name, sheet.SheetNumber): sheet for sheet in list_sheets}
+    dict_sheets = {'{} - {}'.format(sheet.SheetNumber, sheet.Name): sheet for sheet in list_sheets}
     for name, sheet in sorted(dict_sheets.items()):
         List_of_sheets.Add(ListItem(name, sheet))
     return List_of_sheets
@@ -184,18 +184,17 @@ class CreateSheetRevisions(my_WPF):
 
         # RESTORE ORIGINAL SHEETS
         if not filter_keyword:
-            self.List_sheets = self.List_all_sheets
+            self.List_filtered_sheets = self.List_all_sheets
 
         # FILTER ITEMS
         dict_sheet_elements = {s.Name:s for s in self.List_all_sheets}
         for sheet_element in dict_sheet_elements.values():
             if filter_keyword.lower() in sheet_element.Name.lower():
                 List_filtered_sheets.Add(sheet_element)
-
-            self.List_sheets = List_filtered_sheets
+            self.List_filtered_sheets = List_filtered_sheets
 
         # UPDATE LIST OF ITEMS
-        self.UI_ListBox_Sheets.ItemsSource = self.List_sheets
+        self.UI_ListBox_Sheets.ItemsSource = self.List_filtered_sheets
     # ╦═╗╦ ╦╔╗╔
     # ╠╦╝║ ║║║║
     # ╩╚═╚═╝╝╚╝ RUN
