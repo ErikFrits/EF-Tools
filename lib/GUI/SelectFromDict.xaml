@@ -238,13 +238,14 @@
             <!--PATREON-->
             <TextBlock  Grid.Column="2"
                         VerticalAlignment="Center"
-                        HorizontalAlignment="Center">
+                        HorizontalAlignment="Right"
+                        Margin="0,0,10,0">
                     <Hyperlink
                         RequestNavigate="Hyperlink_RequestNavigate"
                         NavigateUri="https://www.patreon.com/EF_tools"
                         FontWeight="Medium"
-                        Foreground="{StaticResource text_gray}">
-                        Become a Patreon
+                        Foreground="{StaticResource button_bg_hover}">
+                        Donate
                     </Hyperlink>
             </TextBlock>
 
