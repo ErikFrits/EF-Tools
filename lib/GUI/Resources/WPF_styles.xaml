@@ -16,11 +16,10 @@
             <SolidColorBrush x:Key="border_magenta"     Color="#EE82EE" />
             <SolidColorBrush x:Key="border_blue"     Color="DodgerBlue" />
 
-
             <SolidColorBrush x:Key="uncheckbox_checked_colour"     Color="Gray" />
             <SolidColorBrush x:Key="checkbox_checked_colour"     Color="#EE82EE" />
 
-
+            <SolidColorBrush x:Key="footer_donate"     Color="#FF4C70" />
 
 
 
@@ -110,7 +109,7 @@
                 <Setter Property="Background" Value="{StaticResource header_background}"/>
                 <Setter Property="Foreground" Value="{StaticResource text_magenta}"/>
                 <Setter Property="BorderBrush" Value="{StaticResource border_blue}"/>
-
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
 
                 <Style.Resources>
                     <Style TargetType="Border">
