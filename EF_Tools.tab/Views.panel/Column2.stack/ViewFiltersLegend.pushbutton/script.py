@@ -46,7 +46,7 @@ from Autodesk.Revit.DB import *
 
 #>>>>>>>>>> CUSTOM IMPORTS
 from Snippets._context_manager  import ef_Transaction, try_except
-from GUI.forms                  import my_WPF
+from GUI.forms                  import my_WPF, ListItem
 from Snippets._annotations      import create_region, create_horizontal_line, create_text_note
 from Snippets._convert          import convert_cm_to_feet
 from Snippets._overrides        import override_graphics_region, override_graphics_line
@@ -59,13 +59,6 @@ from System.Collections.Generic import List
 from System.Windows.Controls import ComboBoxItem
 import wpf
 
-
-class ListItem:
-    """Helper Class for displaying selected sheets in my custom GUI."""
-    def __init__(self,  Name='Unnamed', element = None):
-        self.Name       = Name
-        self.IsChecked  = False
-        self.element    = element
 
 
 # ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗

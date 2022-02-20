@@ -24,21 +24,16 @@ Revision clouds should not be deleted from their views,
 but hidden instead! Otherwise the script will not be able 
 to detect which revisions were associated with the views.
 _____________________________________________________________________
-TODO:
-
-- 
-_____________________________________________________________________
 Last Updates:
 
 - [25.07.2021] - 1.1 RELEASE
 - [25.07.2021] - Refactoring
 - [25.07.2021] - Script logic changed
-- [25.07.2021] - Promt user if dependant views and their sheets should be included.
-
+- [25.07.2021] - Promt user if dependant views and their sheets 
+should be included.
 - [15.07.2021] - 1.0 RELEASE
 - [15.07.2021] - Write to excel 
 - [15.07.2021] - Refactoring
-
 - [20.01.2021] - 0.1 RELEASE
 _____________________________________________________________________
 """
@@ -63,6 +58,7 @@ uidoc   = __revit__.ActiveUIDocument
 doc     = __revit__.ActiveUIDocument.Document
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FUNCTIONS
+
 def promt_user_incl_primary_and_dependant():
     """Function to show Yes/No dialog box to a user asking
     'Incl primary and dependant views and sheets?' """
@@ -100,8 +96,8 @@ class Revisions_on_sheet():
         views_on_sheet     = [doc.GetElement(view_id) for view_id in views_on_sheet_ids]
 
         # >>>>>>>>>> PRIMARY VIEWS - clouds always reside on primary views instead of dependant ones
-        primary_view_ids = [view.GetPrimaryViewId() for view in views_on_sheet]
-        primary_views = [doc.GetElement(view_id) for view_id in primary_view_ids if doc.GetElement(view_id)]
+        primary_view_ids   = [view.GetPrimaryViewId() for view in views_on_sheet]
+        primary_views      = [doc.GetElement(view_id) for view_id in primary_view_ids if doc.GetElement(view_id)]
 
         #>>>>>>>>>> RETURN VIEWS WITH DEPENDANT ONES
         if self.include_primary_and_dependant:
@@ -118,9 +114,6 @@ class Revisions_on_sheet():
 
             dependant_views = all_dependant_views.values()
 
-            print(views_on_sheet)
-            print(primary_views)
-            print(dependant_views)
             #>>>>>>>>>> COMBINE ALL VIEWS
             all_views = views_on_sheet + primary_views + dependant_views
             all_view_ids = [view.Id for view in all_views]
