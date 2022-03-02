@@ -383,8 +383,7 @@ class OverviewsGenerator(my_WPF):
         # GET DRAFTING VIEW TYPE ID
         drafting_view_type_id = None
         for view_type in FilteredElementCollector(doc).OfClass(ViewFamilyType).ToElements():
-            #FIXME CHECK IN GERMAN REVIT.
-            if "Drafting View" == view_type.FamilyName:
+            if "Drafting" == str(view_type.ViewFamily):
                 return view_type
 
     def create_drafting_view(self, name = ""):
