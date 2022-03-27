@@ -33,3 +33,23 @@ def convert_m_to_feet(length):
     else:
         from Autodesk.Revit.DB import UnitTypeId
         return UnitUtils.ConvertToInternalUnits(length, UnitTypeId.Meters)
+
+
+
+def convert_internal_to_m(length):
+    """Function to convert internal to meters."""
+    rvt_year = int(app.VersionNumber)
+
+    # RVT >= 2022
+    if rvt_year < 2022:
+        from Autodesk.Revit.DB import DisplayUnitType
+        return UnitUtils.Convert(length,
+                                 DisplayUnitType.DUT_DECIMAL_FEET,
+                                 DisplayUnitType.DUT_METERS)
+    # RVT >= 2022
+    else:
+        from Autodesk.Revit.DB import UnitTypeId
+        return UnitUtils.ConvertFromInternalUnits(length, UnitTypeId.Meters)
+
+
+
