@@ -59,9 +59,9 @@ def select(mode, uidoc = default_uidoc ):
 
         #>>>>>>>>>> GET ELEMENTS BASED ON SELECTION MODE
         if mode == "view":
-            elems = FilteredElementCollector(doc, doc.ActiveView.Id).WherePasses(multiple_filters).ToElementIds()
+            elems = FilteredElementCollector(doc, doc.ActiveView.Id).WherePasses(multiple_filters).WhereElementIsNotElementType().ToElementIds()
         elif mode == "model":
-            elems = FilteredElementCollector(doc).WherePasses(multiple_filters).ToElementIds()
+            elems = FilteredElementCollector(doc).WherePasses(multiple_filters).WhereElementIsNotElementType().ToElementIds()
         else:
             print("ERROR occured: 'wrong mode'.\n Please contact developer.")
             sys.exit()
