@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__title__   = "Generate Graphics Overviews"
+__title__   = "Graphics Overviews"
 __author__  = "Erik Frits"
 __version__ = "Version: 1.1"
 __doc__ = """Version = 1.0

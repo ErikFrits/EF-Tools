@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__title__ = "Create 3D Views: Worksets"   # Name of the button displayed in Revit
+__title__ = "Create Workset Views"   # Name of the button displayed in Revit
 __author__ = "Erik Frits"
 __doc__ = """Version = 1.0
 Date    = 12.08.2021
@@ -22,7 +22,8 @@ Last update:
 - [18.01.2022] - 1.1 Refactoring
 - [12.08.2021] - 1.0 RELEASE
 _____________________________________________________________________
-"""
+Author:     Erik Frits
+Support on: patreon.com/ErikFrits"""
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IMPORTS
 from Snippets._context_manager import ef_Transaction
