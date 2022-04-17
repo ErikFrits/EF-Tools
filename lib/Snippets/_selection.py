@@ -4,6 +4,8 @@
 # ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
 # ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝
 #==================================================
+import sys
+
 from Autodesk.Revit.DB.Architecture import Room
 from Autodesk.Revit.UI.Selection import ISelectionFilter, ObjectType
 from Autodesk.Revit.DB import (FilteredElementCollector,
@@ -166,10 +168,7 @@ def select_floor_type(given_uidoc = uidoc):
     if not selection:     forms.alert("Floor Type was not chosen. Please try again.", title='Select Floor Type', exitscript=True)
     return dict_floor_types[selection]
 
-# ╔═╗╦╔═╗╦╔═  ╔═╗╦  ╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
-# ╠═╝║║  ╠╩╗  ║╣ ║  ║╣ ║║║║╣ ║║║ ║ ╚═╗
-# ╩  ╩╚═╝╩ ╩  ╚═╝╩═╝╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝
-#==================================================
+
 #>>>>>>>>> LIMIT SELECTION
 class CustomISelectionFilter(ISelectionFilter):
     """Filter user selection to certain element."""
@@ -185,9 +184,21 @@ class CustomISelectionFilter(ISelectionFilter):
     def AllowReference(self, ref, point):
         return True
 
+
+# ╔═╗╦╔═╗╦╔═  ╔═╗╦  ╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
+# ╠═╝║║  ╠╩╗  ║╣ ║  ║╣ ║║║║╣ ║║║ ║ ╚═╗
+# ╩  ╩╚═╝╩ ╩  ╚═╝╩═╝╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝
+#==================================================
 #>>>>>>>>>> PICK WALL
 def pick_wall(given_uidoc = uidoc):
-    """Function to promt user to select a wall element."""
-    wall_id = given_uidoc.Selection.PickObject(ObjectType.Element, CustomISelectionFilter("-2000011"), "Select a Wall")    # -2000011 <- Id of OST_Walls
-    wall = given_uidoc.Document.GetElement(wall_id)
+    """Function to promt user to select a wall element in Revit UI."""
+    wall_ref = given_uidoc.Selection.PickObject(ObjectType.Element, CustomISelectionFilter("-2000011"), "Select a Wall")    # -2000011 <- Id of OST_Walls
+    wall = given_uidoc.Document.GetElement(wall_ref)
     return wall
+
+def pick_curve(given_uidoc = uidoc):
+    """Function to promt user to select a curve element in Revit UI."""
+    curve_ref = given_uidoc.Selection.PickObject(ObjectType.Element, CustomISelectionFilter("-2000051"), "Select a Curve")
+    selected_curve = given_uidoc.Document.GetElement(curve_ref)
+    curve = selected_curve.GeometryCurve
+    return curve
