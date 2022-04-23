@@ -2,8 +2,7 @@
 __title__   = "ViewFilters Legend"
 __author__  = "Erik Frits"
 __version__ = "Version: 1.1"
-__highlight__ = "updated"
-__doc__ = """Version = 1.0
+__doc__ = """Version = 1.1
 Date    = 25.01.2022
 _____________________________________________________________________
 Description:
