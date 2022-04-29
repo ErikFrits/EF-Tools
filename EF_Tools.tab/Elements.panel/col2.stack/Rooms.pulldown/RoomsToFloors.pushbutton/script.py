@@ -42,7 +42,8 @@ from Autodesk.Revit.DB import (BuiltInParameter,
                                BuiltInCategory,
                                CurveArray,
                                TransactionGroup,
-                               Element)
+                               Element,
+                               FloorType)
 
 #>>>>>>>>>> .NET IMPORTS
 import clr
@@ -95,8 +96,8 @@ class RoomToFloor:
         :param floor_type:          selected FloorType.
         :param active_view_level:   Level of a currently open view."""
 
-        self.floor_type = floor_type
-        self.active_view_level = active_view_level
+        self.floor_type         = floor_type
+        self.active_view_level  = active_view_level
 
         self.room = room
         self.area = room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble()
@@ -119,7 +120,7 @@ class RoomToFloor:
         openings = list(self.room_boundaries)[1:] if len(self.room_boundaries) > 1 else []
 
         #>>>>>>>>>> CREATE FLOOR
-        with ef_Transaction(doc,'Create Floor'):
+        with ef_Transaction(doc,'Create Floor',debug=True):
             curveLoopList = CurveArray()
             for seg in floor_shape:
                 curveLoopList.Append(seg.GetCurve())
@@ -187,6 +188,7 @@ class MainGUI(forms.WPFWindow):
     def generate_list_items(self):
         """Function to create a ICollection to pass to ListBox in GUI"""
         all_floor_types = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsElementType().ToElements()
+        all_floor_types = [f for f in all_floor_types if type(f) == FloorType]
         self.dict_floor_types = {Element.Name.GetValue(fr): fr for fr in all_floor_types}
         list_of_items = List[type(ListItem())]()
 
