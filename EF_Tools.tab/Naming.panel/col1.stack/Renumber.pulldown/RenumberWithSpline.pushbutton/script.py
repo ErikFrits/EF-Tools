@@ -30,6 +30,7 @@ from Autodesk.Revit.UI.Selection import *
 # pyRevit
 from pyrevit import forms
 
+
 # Custom
 from GUI.forms                  import my_WPF, ListItem
 from Snippets._selection        import pick_curve
@@ -84,6 +85,9 @@ class ParkingRenumbering(my_WPF):
     def combobox_add_parameters(self):
         """Function to add all TextNoteTypes to ComboBox(self.UI_text_type)."""
         random_parking = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Parking).WhereElementIsNotElementType().FirstElement()
+        if not random_parking:
+            forms.alert('Could not find any Parking in the Project. \nPlease Try Again', title=__title__, exitscript=True)
+
         text_params = [p for p in random_parking.Parameters if p.StorageType == StorageType.String and not p.IsReadOnly]
         self.dict_text_params = {p.Definition.Name:p for p in text_params}
 
@@ -104,6 +108,9 @@ class ParkingRenumbering(my_WPF):
         """Function to renumber parking spaces with order based on points along selected line."""
         with ef_Transaction(doc,__title__, debug=True):
             all_parkings_in_view = list(FilteredElementCollector(doc, doc.ActiveView.Id).OfCategory(BuiltInCategory.OST_Parking).WhereElementIsNotElementType().ToElements())
+            if not all_parkings_in_view:
+                forms.alert('Could not find any Parking in the current view. \nPlease Try Again',title=__title__,exitscript=True)
+
             points = get_points_along_a_curve(selected_curve, step=self.step)
 
             sel_param_id = self.get_selected_parameter().Id
