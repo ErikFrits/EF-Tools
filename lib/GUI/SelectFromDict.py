@@ -4,41 +4,21 @@
 # ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
 # ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
 #====================================================================================================
+import os
 
-import os, sys
+#>>>>>>>>>> pyRevit
+from pyrevit import forms # Needed for wpf import to work.
 
-from pyrevit import revit, forms
-# from Snippets._selection import get_selected_rooms
-from Snippets._context_manager import ef_Transaction
-from Autodesk.Revit.DB import (BuiltInParameter,
-                               SpatialElementBoundaryOptions,
-                               FilteredElementCollector,
-                               ElementCategoryFilter,
-                               BuiltInCategory,
-                               Element,
-                               CurveLoop,
-                               Transaction,
-                               CurveArray,
-                               CurveElement,
-                               Line,
-                               XYZ)
+# Custom Imports
+from GUI.forms import my_WPF
 
 #>>>>>>>>>> .NET IMPORTS
 import clr
 clr.AddReference("System.Windows.Forms")
 clr.AddReference("System")
-from System.Diagnostics.Process import Start
 from System.Collections.Generic import List
-from System.Windows.Window      import DragMove
-from System.Windows.Input       import MouseButtonState
+from System.Windows             import Visibility
 import wpf
-from System.Windows import Application, Window, ResourceDictionary
-from System import Uri
-
-
-
-# LIB IMPORTS
-from GUI.forms import my_WPF
 
 # ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
 # ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
@@ -54,40 +34,40 @@ active_view_id      = doc.ActiveView.Id
 active_view         = doc.GetElement(active_view_id)
 active_view_level   = active_view.GenLevel
 
+class ListItem:
+    """Helper Class for displaying selected sheets in my custom GUI."""
+    def __init__(self,  Name='Unnamed', element = None, checked = False):
+        self.Name       = Name
+        self.IsChecked  = checked
+        self.element    = element
+
 # ╔═╗╦  ╔═╗╔═╗╔═╗╔═╗╔═╗
 # ║  ║  ╠═╣╚═╗╚═╗║╣ ╚═╗
 # ╚═╝╩═╝╩ ╩╚═╝╚═╝╚═╝╚═╝ CLASSES
 #====================================================================================================
-
-
-class ListItem:
-    """Helper Class for displaying selected sheets in my custom GUI."""
-    def __init__(self,  Name='Unnamed', element = None):
-        self.Name       = Name
-        self.IsChecked  = False
-        self.element    = element
-
-
-
-class Test(my_WPF):
-    def __init__(self, xaml_file, items, title = '__title', label = "Select Elements:" ,button_name = 'Select', version = 'version= 1.0'):
+class SelectFromDict(my_WPF):
+    def __init__(self, items, title = '__title', label = "Select Elements:" ,button_name = 'Select', version = 'version= 1.0', SelectMultiple = True):
+        self.SelectMultiple = SelectMultiple
         self.given_dict_items = {k:v for k,v in items.items() if k}
 
         self.items          = self.generate_list_items()
         self.selected_items = []
         #>>>>>>>>>> SET RESOURCES FOR WPF
         self.add_wpf_resource()
-        wpf.LoadComponent(self, xaml_file)
+        path_xaml_file = os.path.join(PATH_SCRIPT, 'SelectFromDict.xaml')
+        wpf.LoadComponent(self, path_xaml_file )
 
         # UPDATE GUI ELEMENTS
         self.main_title.Text        = title
         self.text_label.Content     = label
         self.button_main.Content    = button_name
-        self.footer_version         = version
+        self.footer_version.Text    = version
+        if not SelectMultiple:
+            self.UI_Buttons_all_none.Visibility = Visibility.Collapsed
+
 
         self.main_ListBox.ItemsSource = self.items
         self.ShowDialog()
-
 
     def __iter__(self):
         """Return selected items."""
@@ -117,7 +97,7 @@ class Test(my_WPF):
     #>>>>>>>>>> INHERIT WPF RESOURCES
     def add_wpf_resource(self):
         """Function to get resources from super()"""
-        super(Test, self).add_wpf_resource()
+        super(SelectFromDict, self).add_wpf_resource()
 
 
     # ╔═╗╦ ╦╦  ╔═╗╦  ╦╔═╗╔╗╔╔╦╗╔═╗
@@ -142,6 +122,15 @@ class Test(my_WPF):
         # UPDATE LIST OF ITEMS
         self.update_list_items(filtered_list_of_items)
 
+    def UIe_ItemChecked(self, sender, e):
+        # SINGLE SELECTIOn
+        if not self.SelectMultiple:
+            filtered_list_of_items = List[type(ListItem())]()
+            for item in self.main_ListBox.Items:
+                item.IsChecked = True if item.Name == sender.Content.Text else False
+                filtered_list_of_items.Add(item)
+            self.main_ListBox.ItemsSource = filtered_list_of_items
+
     # ╔╗ ╦ ╦╔╦╗╔╦╗╔═╗╔╗╔╔═╗
     # ╠╩╗║ ║ ║  ║ ║ ║║║║╚═╗
     # ╚═╝╚═╝ ╩  ╩ ╚═╝╝╚╝╚═╝ BUTTONS
@@ -159,7 +148,6 @@ class Test(my_WPF):
 
         self.main_ListBox.ItemsSource = list_of_items
 
-
     def button_select_all(self, sender, e):
         """ """
         self.select_mode(mode='all')
@@ -167,7 +155,6 @@ class Test(my_WPF):
     def button_select_none(self, sender, e):
         """ """
         self.select_mode(mode='none')
-
 
     def button_select(self, sender, e):
         """Button to finilize selection"""
@@ -190,24 +177,27 @@ def select_from_dict(elements_dict,
                      title          = '__title__',
                      label          = "Select Elements:" ,
                      button_name    = 'Select',
-                     version        = 'version= 1.0'):
-    """TODO Write good docs
-    :param elements_dict: Dictonary of elements {name : element}. If list is provided it will be converted to dict {i:i}
-    :param label:   Label that is displayed above ListBox
-    :param button_name: Text in Button
-    :param version: Version of the script for footer.
-    :return:
-    """
+                     version        = 'version= 1.0',
+                     SelectMultiple = True):
+    #type:(any, str,str,str,str,bool) -> list
+    """Function to present a DialogBox to a user to select elements from the list based on the dict keys.
+    :param elements_dict:   Dictonary or list of elements {name : element}.
+                                if list is provided it will be converted to dict {i:i}.
+    :param title:           Title of the window.
+    :param label:           Label that is displayed above ListBox
+    :param button_name:     Text in Button
+    :param version:         Version of the script for footer.
+    :param SelectMultiple:  By default it allows multiple selection. Set False if you need only single item selection.
+    :return:                Selected elements. (dict values)"""
+
+    # CONVERT LIST TO DICT
     if isinstance(elements_dict,list):
         elements_dict = {i:i for i in elements_dict}
 
-
-    path_xaml_file = os.path.join(PATH_SCRIPT,'SelectFromDict.xaml')
-    GUI_select = Test(xaml_file     = path_xaml_file,
-                      items         = elements_dict,
-                      title         = title,
-                      label         = label,
-                      button_name   = button_name,
-                      version       = version
-                      )
+    GUI_select = SelectFromDict(items          = elements_dict,
+                                title          = title,
+                                label          = label,
+                                button_name    = button_name,
+                                version        = version,
+                                SelectMultiple = SelectMultiple)
     return list(GUI_select)

@@ -50,7 +50,7 @@
                 <TextBlock Margin="5,0,0,0">
                     <Hyperlink
                         RequestNavigate="Hyperlink_RequestNavigate"
-                        NavigateUri="https://erikfrits.com/blog/"
+                        NavigateUri="https://www.linkedin.com/company/80151029"
                         FontSize="14px"
                         FontWeight="Heavy"
                         Foreground="{StaticResource text_white}">
@@ -175,18 +175,19 @@
                     </Style>
                 </ListBox.Resources>
 
-
-
-
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox  Background="#EE82EE" Foreground="{StaticResource text_white}" Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
+                        <CheckBox  Background="#EE82EE" Foreground="{StaticResource text_white}" IsChecked="{Binding IsChecked}"  Checked="UIe_ItemChecked" >
+                            <TextBlock Text="{Binding Name}"/>
+                        </CheckBox>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+
+
             </ListBox>
 
             <!--BUTTONS START-->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" x:Name="UI_Buttons_all_none">
                 <!--BUTTON_1-->
                 <Button Content="Select All"
                         Click="button_select_all"
@@ -242,7 +243,7 @@
                         Margin="0,0,10,0">
                     <Hyperlink
                         RequestNavigate="Hyperlink_RequestNavigate"
-                        NavigateUri="https://www.patreon.com/EF_tools"
+                        NavigateUri="https://www.patreon.com/ErikFrits"
                         FontWeight="Medium"
                         Foreground="{StaticResource button_bg_hover}">
                         Donate
