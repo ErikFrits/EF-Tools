@@ -53,7 +53,7 @@ check_revit_version(min_version=2020)
 
 if __name__ == '__main__':
     #SELECTED VIEWS
-    selected_views                  = get_selected_views(exit_if_none=True, title=__title__)
+    selected_views                  = get_selected_views(uidoc, exit_if_none=True, title=__title__)
     selected_group_types            = select_group_types(uidoc=uidoc, title=__title__, version=__version__, exit_if_none=True)
     selected_group_type_ids         = [g.Id for g in selected_group_types]
     selected_group_names            = [g.get_Parameter(BuiltInParameter.ALL_MODEL_TYPE_NAME).AsString() for g in selected_group_types]
