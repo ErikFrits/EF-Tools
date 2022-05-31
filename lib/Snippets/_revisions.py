@@ -12,7 +12,8 @@ from Autodesk.Revit.DB import (RevisionNumberType,
 from Snippets._context_manager import try_except
 
 doc = __revit__.ActiveUIDocument.Document
-
+app = __revit__.Application
+rvt_year = int(app.VersionNumber)
 
 
 def create_revision(description, date, revision_type = RevisionNumberType.None):
@@ -25,7 +26,19 @@ def create_revision(description, date, revision_type = RevisionNumberType.None):
         new_rev              = Revision.Create(doc)
         new_rev.Description  = description
         new_rev.RevisionDate = date
-        new_rev.NumberType   = revision_type
+
+        try:
+            new_rev.NumberType   = revision_type #OBSOLETE IN RVT 2023
+        except:
+            pass
+
+        #FIXME LATER.Set NumberType to None
+        # if rvt_year < 2023:
+        #     pass
+        # else:
+        #     new_rev.RevisionNumberingSequenceId =
+        #
+
         return new_rev
 
 def add_revision_to_sheet(sheet, revision_id):
