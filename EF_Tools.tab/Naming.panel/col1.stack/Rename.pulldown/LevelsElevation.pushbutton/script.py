@@ -104,10 +104,12 @@ class LevelElevations(my_WPF):
 
         # UPDATE LEVEL NAME
         if lvl.Name != new_name:
-            with try_except(debug=True):
-                lvl_name = lvl.Name  # Current name (for reporting)
+            lvl_name = lvl.Name  # Current name (for reporting)
+            try:
                 lvl.Name = new_name  # Change Name
                 print('Renamed: {} -> {}'.format(lvl_name, new_name))
+            except:
+                print('Could not rename - {}. \nPlease make sure there is no Level with the same intended name.'.format(lvl_name))
 
     # ╔═╗╦  ╦╔═╗╔╗╔╔╦╗╔═╗
     # ║╣ ╚╗╔╝║╣ ║║║ ║ ╚═╗
