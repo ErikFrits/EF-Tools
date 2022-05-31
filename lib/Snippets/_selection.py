@@ -111,7 +111,7 @@ def get_selected_sheets(given_uidoc = uidoc, exit_if_none = False, title='__titl
     #>>>>>>>>>> IF NONE SELECTED - OPEN A DIALOGBOX TO CHOOSE FROM.
     if not selected_sheets and exit_if_none:
         all_sheets = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Sheets).WhereElementIsNotElementType().ToElements()
-        dict_sheets = {sheet.Name : sheet for sheet in all_sheets}
+        dict_sheets = {'{} - {}'.format(sheet.SheetNumber, sheet.Name): sheet for sheet in all_sheets}
         selected_sheets = select_from_dict(dict_sheets, title=title, label='Select Sheets', button_name='Select')
 
     #>>>>>>>>>> EXIT IF STILL NONE SELECTED
