@@ -2,6 +2,7 @@
 __title__ = "Attached Groups: Rename"
 __author__ = "Erik Frits"
 __version__ = "Version 1.1"
+__min_revit_ver__= 2020
 __doc__ = """Version = 1.1
 Date    = 30.11.2021
 _____________________________________________________________________
@@ -33,7 +34,6 @@ from Autodesk.Revit.DB import BuiltInParameter
 from Snippets._groups           import select_group_types, select_attached_groups
 from Snippets._context_manager  import ef_Transaction
 from GUI.forms            import FindReplace
-from Snippets._revit            import check_revit_version
 
 # ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
 # ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
@@ -47,7 +47,6 @@ app   = __revit__.Application
 # ║║║╠═╣║║║║
 # ╩ ╩╩ ╩╩╝╚╝ MAIN
 #==================================================
-check_revit_version(min_version=2020)
 
 if __name__ == '__main__':
     #SELECTED VIEWS

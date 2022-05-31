@@ -2,6 +2,7 @@
 
 __title__ = "Attached Groups: Show"   # Name of the button displayed in Revit
 __author__ = "Erik Frits"
+__min_revit_ver__= 2020
 __version__ = "Version 1.1"
 __doc__ = """Version = 1.1
 Date    = 30.11.2021
@@ -21,7 +22,8 @@ Last update:
 - [04.12.2021] - RELEASE 1.1
 - [04.12.2021] - CUSTOM GUI
 - [04.12.2021] - REFACTORED
-_____________________________________________________________________"""
+_____________________________________________________________________
+Erik Frits"""
 
 
 # ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗
@@ -33,7 +35,6 @@ from Autodesk.Revit.DB import BuiltInParameter,BuiltInCategory, FilteredElementC
 
 # CUSTOM
 from Snippets._groups           import select_group_types, select_attached_groups, show_attached_group
-from Snippets._revit            import check_revit_version
 from Snippets._selection        import get_selected_views
 from Snippets._context_manager  import ef_Transaction
 
@@ -49,7 +50,6 @@ app   = __revit__.Application
 # ║║║╠═╣║║║║
 # ╩ ╩╩ ╩╩╝╚╝ MAIN
 #==================================================
-check_revit_version(min_version=2020)
 
 if __name__ == '__main__':
     #SELECTED VIEWS
