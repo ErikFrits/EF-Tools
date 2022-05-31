@@ -4,9 +4,12 @@ from Autodesk.Revit.DB import *
 app   = __revit__.Application
 from Autodesk.Revit.DB import UnitUtils
 
+rvt_year = int(app.VersionNumber)
+
+
+
 def convert_cm_to_feet(length):
     """Function to convert cm to feet."""
-    rvt_year = int(app.VersionNumber)
 
     # RVT >= 2022
     if rvt_year < 2022:
@@ -21,7 +24,6 @@ def convert_cm_to_feet(length):
 
 def convert_m_to_feet(length):
     """Function to convert cm to feet."""
-    rvt_year = int(app.VersionNumber)
 
     # RVT >= 2022
     if rvt_year < 2022:
@@ -38,7 +40,6 @@ def convert_m_to_feet(length):
 
 def convert_internal_to_m(length):
     """Function to convert internal to meters."""
-    rvt_year = int(app.VersionNumber)
 
     # RVT >= 2022
     if rvt_year < 2022:
