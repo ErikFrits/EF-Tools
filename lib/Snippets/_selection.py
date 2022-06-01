@@ -97,27 +97,27 @@ def get_selected_views(given_uidoc = uidoc, exit_if_none = False, title = '__tit
     return selected_views
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET SHEETS
-def get_selected_sheets(given_uidoc = uidoc, exit_if_none = False, title='__title__'):
+def get_selected_sheets(given_uidoc = uidoc, exit_if_none = False, title='__title__', label='Select Sheets', btn_name = 'Select Sheets'):
     """Function to get selected views. return list of selected views.
     LastUpdates:
-    [15.02.2022] - If no sheets selected -> Select from DialogBox"""
+    [15.02.2022] - If no sheets selected -> Select from DialogBox
+    [01.06.2022] - Bug Fixed + added more controls(label, btn_name)"""
     #>>>>>>>>>> GET SELECTED ELEMENTS
-    doc = given_uidoc.Document
+    doc         = given_uidoc.Document
     UI_selected = given_uidoc.Selection.GetElementIds()
 
     #>>>>>>>>>> GET SHEETS FROM SELECTION
     selected_sheets = [doc.GetElement(sheet_id) for sheet_id in UI_selected if type(doc.GetElement(sheet_id)) == ViewSheet]
 
     #>>>>>>>>>> IF NONE SELECTED - OPEN A DIALOGBOX TO CHOOSE FROM.
-    if not selected_sheets and exit_if_none:
-        all_sheets = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Sheets).WhereElementIsNotElementType().ToElements()
-        dict_sheets = {'{} - {}'.format(sheet.SheetNumber, sheet.Name): sheet for sheet in all_sheets}
-        selected_sheets = select_from_dict(dict_sheets, title=title, label='Select Sheets', button_name='Select')
+    if not selected_sheets:
+        all_sheets      = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Sheets).WhereElementIsNotElementType().ToElements()
+        dict_sheets     = {'{} - {}'.format(sheet.SheetNumber, sheet.Name): sheet for sheet in all_sheets}
+        selected_sheets = select_from_dict(dict_sheets, title=title, label=label, button_name=btn_name)
 
     #>>>>>>>>>> EXIT IF STILL NONE SELECTED
     if not selected_sheets and exit_if_none:
         forms.alert("No sheets were selected. Please try again.", exitscript=True)
-
     return selected_sheets
 
 # ╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗
