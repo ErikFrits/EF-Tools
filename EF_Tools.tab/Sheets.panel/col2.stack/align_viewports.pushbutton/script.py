@@ -430,7 +430,8 @@ class AlignViewports(forms.WPFWindow):
     # ====================================================================================================
     def get_selected_sheets(self):
         """Function to get selected elements in Revit UI ."""
-        selected_sheets = [doc.GetElement(element_id) for element_id in uidoc.Selection.GetElementIds() if type(doc.GetElement(element_id)) == ViewSheet]
+        from Snippets._selection import get_selected_sheets
+        selected_sheets = get_selected_sheets(title=__title__, label='Select Sheet to Align Viewports')
 
         # CANCEL IF NO SHEETS SELECTED
         if not selected_sheets:
