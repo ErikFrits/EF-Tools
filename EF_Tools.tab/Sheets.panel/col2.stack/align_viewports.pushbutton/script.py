@@ -353,7 +353,7 @@ class AlignViewports(forms.WPFWindow):
 
         def XYZ_to_str(XYZ_obj):
             """Convert XYZ object into readable string for further comparison."""
-            return "{},{},{}".format(XYZ_obj.X, XYZ_obj.Y, XYZ_obj.Z)
+            return "{},{}".format(XYZ_obj.X, XYZ_obj.Y)
 
         if not MainSheet.viewport_viewplan:
             return False
