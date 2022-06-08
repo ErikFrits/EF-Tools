@@ -431,21 +431,17 @@ class AlignViewports(forms.WPFWindow):
     def get_selected_sheets(self):
         """Function to get selected elements in Revit UI ."""
         from Snippets._selection import get_selected_sheets
-        selected_sheets = get_selected_sheets(given_uidoc=uidoc ,title=__title__, label='Select Sheet to Align Viewports')
-
-        # CANCEL IF NO SHEETS SELECTED
-        if not selected_sheets:
-            msg = "No Sheets were selected. \nPlease Try again."
-            forms.alert(msg, title=__title__,  exitscript=False)
+        selected_sheets = get_selected_sheets(given_uidoc=uidoc ,title=__title__,
+                                              label='Select Sheet to Align Viewports', exit_if_none=True)
 
         # CANCEL IF NOT ENOUGH SHEETS SELECTED
-        elif len(selected_sheets) < 2:
-            msg ="Not enough sheets were selected. Try again."
-            forms.alert(msg, title=__title__,  exitscript=False)
+        if len(selected_sheets) < 2:
+            msg ="Not enough sheets were selected. Min 2 is required. Please, Try again."
+            forms.alert(msg, title=__title__,  exitscript=True)
 
-        else:
-            selected_sheets = {"{} - {}".format(sheet.SheetNumber, sheet.Name): sheet for sheet in selected_sheets}
-            return selected_sheets
+        # FORMAT AND RETURN
+        selected_sheets = {"{} - {}".format(sheet.SheetNumber, sheet.Name): sheet for sheet in selected_sheets}
+        return selected_sheets
 
     # ==================================================
     def generate_list_items(self):
