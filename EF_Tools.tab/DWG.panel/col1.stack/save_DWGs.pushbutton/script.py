@@ -123,6 +123,8 @@ class SaveDWGs:
                         CADfiles_dict[dwg_name] = dwg_new_path
                 except:
                     print("***Exception occured while saving DWG***")
+                    import traceback
+                    print(traceback.format_exc())
                     continue
             return CADfiles_dict
         else:
