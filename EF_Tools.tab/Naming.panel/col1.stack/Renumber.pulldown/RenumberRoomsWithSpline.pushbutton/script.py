@@ -3,21 +3,20 @@ __title__ = "Renumber Rooms with Spline"
 __author__ = "Erik Frits"
 __version__ = "Version 1.0"
 __doc__ = """Version = 1.0
-Date    = 17.04.2022
+Date    = 29.06.2022
 _____________________________________________________________________
 Description:
-Renumber parking spaces visible in an ActiveView with selected Curve
+Renumber Rooms spaces visible in an ActiveView with selected Curve.
 _____________________________________________________________________
 How-to:
 -> Click on Button
 -> Provide required parameters
--> Renumber Parkings
+-> Renumber Rooms
 _____________________________________________________________________
 Last update:
-- [17.04.2022] - 1.0 RELEASE
+- [29.06.2022] - 1.0 RELEASE
 _____________________________________________________________________
-Author:  Erik Frits
-Patreon: www.patreon.com/EF_Tools"""
+Author:  Erik Frits"""
 
 # ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
 # ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
