@@ -27,31 +27,30 @@ active_view_level   = active_view.GenLevel
 def get_points_along_a_curve(curve, step=0.3):
     """ Function to get points along given Curve
     :param curve: Curve that will be tessellated.
-    :param step:  approx. Step distance between points
+    :param step:  approx. Step distance between points in feet
     :return: list of Points along the curve."""
 
-    # CONTAINER
-    points = []
+    # Generate points along curve
+    pt_0 = curve.GetEndParameter(0)
+    pt_1 = curve.GetEndParameter(1)
+    list_XYZ = []
+    n = 1
+    while True:
+        dist = step * n
+        n += 1
+        if dist > curve.Length:
+            break
 
-    # GET POINTS ALONG CURVE
-    tessellation = curve.Tessellate()
-    dist = 0
+        # Get point on curve?
+        paramCalc = pt_0 + ((pt_1 - pt_0) * dist / curve.Length)
 
-    pt = curve.GetEndPoint(0)
-    for q in tessellation:
+        if curve.IsInside(paramCalc):
+            normParam = curve.ComputeNormalizedParameter(paramCalc)
 
-        if not points:
-            points.append(pt)
-            dist = 0.0
+            evaluatedPoint = curve.Evaluate(normParam, True)
+            list_XYZ.append(evaluatedPoint)
 
-        else:
-            dist += pt.DistanceTo(q)
-            if dist >= step:
-                points.append(q)
-                dist = 0
-        pt = q
-
-    return points
+    return list_XYZ
 
 
 

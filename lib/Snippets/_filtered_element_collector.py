@@ -18,7 +18,6 @@ all_text               = FilteredElementCollector(doc).OfCategory(BuiltInCategor
 
 all_lines               = FilteredElementCollector(doc, doc.ActiveView.Id).WherePasses(ElementClassFilter(CurveElement)).ToElements()
 all_rooms               = FilteredElementCollector(doc).WherePasses(ElementCategoryFilter(BuiltInCategory.OST_Rooms)).ToElements()
-all_worksets            = FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset).ToWorksets()
 all_doors               = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Doors).WhereElementIsNotElementType().ToElements()
 all_windows             = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Windows).WhereElementIsNotElementType().ToElements()
 all_floors              = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsNotElementType().ToElements()
@@ -42,8 +41,22 @@ view_doors_tags         = FilteredElementCollector(doc).OfCategory(BuiltInCatego
 #>>>>>>>>>> DOC
 all_Categories = doc.Settings.Categories
 
-# MATERIALS
-materials = FilteredElementCollector(doc).OfClass(Material)
+#>>>>>>>>>> SPECIAL
+materials    = FilteredElementCollector(doc).OfClass(Material)
+all_worksets = FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset).ToWorksets()
+
+
+
+
+
+# ElementMulticategoryFilter
+list_of_categories  = List[BuiltInCategory]([BuiltInCategory.OST_Walls, BuiltInCategory.OST_Floors, BuiltInCategory.OST_Roofs])
+multi_cat_filter    = ElementMulticategoryFilter(list_of_categories)
+all_builtin_types   = FilteredElementCollector(doc).WherePasses(multi_cat_filter).ToElements()
+
+
+
+
 
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
