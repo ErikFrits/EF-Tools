@@ -16,8 +16,13 @@ _____________________________________________________________________
 Last update:
 - [17.04.2022] - 1.0 RELEASE
 _____________________________________________________________________
-Author:  Erik Frits
-Patreon: www.patreon.com/EF_Tools"""
+TO-DO:
+- Get points on Line with a fixed distance!!!! 
+Check Elements on Curve Prototype
+
+
+_____________________________________________________________________
+Author:  Erik Frits"""
 
 # ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
 # ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
@@ -115,17 +120,17 @@ class ParkingRenumbering(my_WPF):
 
             sel_param_id = self.get_selected_parameter().Id
 
-            for p in points:
+            for pt in points:
                 for parking in all_parkings_in_view:
                     try:
                         BB = parking.get_BoundingBox(doc.ActiveView)
-                        if is_point_in_BB_2D(BB,p):
+                        if is_point_in_BB_2D(BB,pt):
 
                             # RENUMBER
                             param = None
-                            for p in parking.Parameters:
-                                if p.Id == sel_param_id:
-                                    param = p
+                            for par in parking.Parameters:
+                                if par.Id == sel_param_id:
+                                    param = par
                                     break
 
                             if param:
