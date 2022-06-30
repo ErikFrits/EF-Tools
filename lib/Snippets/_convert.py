@@ -1,13 +1,22 @@
 # -*- coding: utf-8 -*-
-
+# ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
+# ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
+# ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
+# ==================================================
 from Autodesk.Revit.DB import *
-app   = __revit__.Application
-from Autodesk.Revit.DB import UnitUtils
 
+# ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
+# ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
+#  ╚╝ ╩ ╩╩╚═╩╩ ╩╚═╝╩═╝╚═╝╚═╝ VARIABLES
+# ==================================================
+app      = __revit__.Application
 rvt_year = int(app.VersionNumber)
 
 
-
+# ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
+# ╠╣ ║ ║║║║║   ║ ║║ ║║║║╚═╗
+# ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝╚═╝ FUNCTIONS
+# ==================================================
 def convert_cm_to_feet(length):
     """Function to convert cm to feet."""
 
@@ -54,3 +63,33 @@ def convert_internal_to_m(length):
 
 
 
+def convert_internal_to_cm(length):
+    """Function to convert internal to centimeters."""
+
+    # RVT >= 2022
+    if rvt_year < 2022:
+        from Autodesk.Revit.DB import DisplayUnitType
+        return UnitUtils.Convert(length,
+                                 DisplayUnitType.DUT_DECIMAL_FEET,
+                                 DisplayUnitType.DUT_CENTIMETERS)
+    # RVT >= 2022
+    else:
+        from Autodesk.Revit.DB import UnitTypeId
+        return UnitUtils.ConvertFromInternalUnits(length, UnitTypeId.Centimeters)
+
+
+
+
+def convert_internal_to_m2(area):
+    """Function to convert internal to meters."""
+
+    # RVT >= 2022
+    if rvt_year < 2022:
+        from Autodesk.Revit.DB import DisplayUnitType
+        return UnitUtils.Convert(area,
+                                 DisplayUnitType.DUT_SQUARE_FEET,
+                                 DisplayUnitType.DUT_SQUARE_METERS)
+    # RVT >= 2022
+    else:
+        from Autodesk.Revit.DB import UnitTypeId
+        return UnitUtils.ConvertFromInternalUnits(area, UnitTypeId.SquareMeters)

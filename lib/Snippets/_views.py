@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
+# ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
+# ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
+# ==================================================
 from pyrevit import forms
 from Autodesk.Revit.DB import ( Transaction,
                                 View,
@@ -15,17 +20,29 @@ from Autodesk.Revit.DB import ( Transaction,
                                 BuiltInCategory,
                                 ElementId)
 
-uidoc = __revit__.ActiveUIDocument
-doc = __revit__.ActiveUIDocument.Document
+# ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
+# ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
+#  ╚╝ ╩ ╩╩╚═╩╩ ╩╚═╝╩═╝╚═╝╚═╝ VARIABLES
+# ==================================================
+uidoc    = __revit__.ActiveUIDocument
+doc      = __revit__.ActiveUIDocument.Document
+app      = __revit__.Application
+rvt_year = int(app.VersionNumber)
 
-
-# >>>>>> CREATE FILTER
+# ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
+# ╠╣ ║ ║║║║║   ║ ║║ ║║║║╚═╗
+# ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝╚═╝ FUNCTIONS
+# ==================================================
 def create_string_equals_filter(key_parameter, element_value, caseSensitive = True):
     """Function to create ElementParameterFilter based on FilterStringRule."""
     f_parameter         = ParameterValueProvider(ElementId(key_parameter))
     f_parameter_value   = element_value
-    caseSensitive       = True
-    f_rule              = FilterStringRule(f_parameter, FilterStringEquals(), f_parameter_value, caseSensitive)
+
+    if rvt_year < 2022:
+        f_rule = FilterStringRule(f_parameter, FilterStringEquals(), f_parameter_value, caseSensitive)
+    else:
+        f_rule = FilterStringRule(f_parameter, FilterStringEquals(), f_parameter_value)
+
     return ElementParameterFilter(f_rule)
 
 def get_sheet_from_view(view):
