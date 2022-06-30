@@ -28,8 +28,10 @@ _____________________________________________________________________
 """
 
 
-#____________________________________________________________________ IMPORTS
-# from Autodesk.Revit.DB import *
+# ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
+# ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
+# ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
+# ==================================================
 from Autodesk.Revit.DB import (View,
                                ViewPlan,
                                ViewSection,
@@ -38,26 +40,34 @@ from Autodesk.Revit.DB import (View,
                                ViewDuplicateOption,
                                Transaction,
                                ViewType,
-                               ElementId
-                               )
-from pyrevit import forms
-from pyrevit.forms import WPFWindow, alert, select_views
+                               ElementId)
+# pyRevit
+from pyrevit.forms import WPFWindow, alert
 
-#____________________________________________________________________ .NET IMPORTS
+# Custom imports
+from Snippets._selection import get_selected_views
+
+
+# .NET Imports
 from clr import AddReference
 AddReference("System")
 from System.Collections.Generic import List
 from System.Diagnostics.Process import Start
-from System.Windows.Window import DragMove
-from System.Windows.Input import MouseButtonState
+from System.Windows.Window      import DragMove
+from System.Windows.Input       import MouseButtonState
 
 
-
+# ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
+# ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
+#  ╚╝ ╩ ╩╩╚═╩╩ ╩╚═╝╩═╝╚═╝╚═╝ VARIABLES
+# ==================================================
 uidoc = __revit__.ActiveUIDocument
 doc = __revit__.ActiveUIDocument.Document
 
-#____________________________________________________________________ CLASSES
-
+# ╔═╗╦  ╔═╗╔═╗╔═╗╔═╗╔═╗
+# ║  ║  ╠═╣╚═╗╚═╗║╣ ╚═╗
+# ╚═╝╩═╝╩ ╩╚═╝╚═╝╚═╝╚═╝ CLASSES
+# ==================================================
 class MyWindow(WPFWindow):
     """The dialog box that controls the whole script."""
 
@@ -66,7 +76,10 @@ class MyWindow(WPFWindow):
     def __init__(self, xaml_file_name):
         self.form = WPFWindow.__init__(self, xaml_file_name)
         self.main_title.Text = __title__
-        self.ShowDialog()
+        self.selected_views = get_selected_views(uidoc, exit_if_none=True, title=__title__)
+
+        if self.selected_views:
+            self.ShowDialog()
 
 
     # METHODS
@@ -110,33 +123,6 @@ class MyWindow(WPFWindow):
 
 #____________________________________________________________________ PROPERTIES
 
-    @property
-    def selected_views(self):
-        """Property that retrieves selected views or promt user to select some from the dialog box."""
-        selected_views = []
-        selected_schedules_legends = []
-
-        # VIEWS SELECTED IN UI
-        for element_id in uidoc.Selection.GetElementIds():
-            element = doc.GetElement(element_id)
-
-            # FILTER SELECTION: VIEWS
-            if type(element) in self.VIEW_TYPES:
-                selected_views.append(element)
-
-            # # FILTER SELECTION: SCHEDULES
-            # if type(element) in [ViewSchedule]:
-            #     selected_schedules_legends.append(element)
-
-        # SELECT VIEWS IF NONE SELECTED IN UI
-        if not selected_views or selected_schedules_legends:
-            selected_views = forms.select_views(title="Select views to duplicate.",
-                                                button_name="Duplicate selected views", width=1000) #FIXME replace with custom view selection box later...
-            if not selected_views:
-                forms.alert("No views were selected.\nPlease, try again.", exitscript=True, title=__title__)
-        return selected_views
-
-
     # GUI INPUTS
     @property
     def count(self):
@@ -175,8 +161,9 @@ class MyWindow(WPFWindow):
         self.Close()
         self.duplicate_selected_views(ViewDuplicateOption.AsDependent)
 
-#____________________________________________________________________ MAIN
+# ╔╦╗╔═╗╦╔╗╔
+# ║║║╠═╣║║║║
+# ╩ ╩╩ ╩╩╝╚╝ MAIN
+# ==================================================
 if __name__ == '__main__':
     MyWindow("Script.xaml")
-
-

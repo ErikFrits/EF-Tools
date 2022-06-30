@@ -25,18 +25,33 @@ _____________________________________________________________________
 Author:     Erik Frits
 Support on: patreon.com/ErikFrits"""
 
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IMPORTS
-from Snippets._context_manager import ef_Transaction
+# ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
+# ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
+# ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
+# ==================================================
 import sys
 from Autodesk.Revit.DB import  (View3D ,FilteredWorksetCollector, WorksetKind, WorksetVisibility,ViewFamilyType, FilteredElementCollector,
                                 Transaction, SubTransaction, BuiltInParameter, BuiltInCategory)
+# pyRevit
+from pyrevit import forms
 
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VARIABLES
+# Custom
+from Snippets._context_manager import ef_Transaction
+
+# ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
+# ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
+#  ╚╝ ╩ ╩╩╚═╩╩ ╩╚═╝╩═╝╚═╝╚═╝ VARIABLES
+# ==================================================
 doc            = __revit__.ActiveUIDocument.Document
+uidoc = __revit__.ActiveUIDocument
+
 all_views      = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Views).ToElements()
 all_view_names = [view.Name for view in all_views]
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FUNCTIONS
+view           = None
+# ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
+# ╠╣ ║ ║║║║║   ║ ║║ ║║║║╚═╗
+# ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝╚═╝ FUNCTIONS
+# ==================================================
 def get_view_type_3D():
     """Function to get ViewType - 3D View"""
     all_view_types = FilteredElementCollector(doc).OfClass(ViewFamilyType).ToElements()
@@ -44,7 +59,10 @@ def get_view_type_3D():
         if '3D' in view_type.get_Parameter(BuiltInParameter.ALL_MODEL_TYPE_NAME).AsString():
             return view_type
 
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN
+# ╔╦╗╔═╗╦╔╗╔
+# ║║║╠═╣║║║║
+# ╩ ╩╩ ╩╩╝╚╝ MAIN
+# ==================================================
 view_type_3D = get_view_type_3D()
 
 if __name__ == '__main__':
@@ -52,6 +70,7 @@ if __name__ == '__main__':
         #>>>>>>>>>>>>>>>>>>>> GET WORKSETS
         all_worksets = FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset).ToWorksets() #ToWorksets #ToWorksets()
         if not all_worksets:
+            forms.alert('No Worksets found in the current project.')
             print("No Worksets found in the current project.")
             sys.exit()
 
@@ -74,3 +93,6 @@ if __name__ == '__main__':
                     view.SetWorksetVisibility(ws.Id, WorksetVisibility.Visible)
                 else:
                     view.SetWorksetVisibility(ws.Id, WorksetVisibility.Hidden)
+
+    if view:
+        uidoc.ActiveView = view
