@@ -33,6 +33,10 @@ Last update:
 - [11.02.2022] - 1.1 added Revit 2022 Support.
 - [31.01.2022] - 1.0 RELEASE
 _____________________________________________________________________
+To-Do:
+- Open latest Legend
+- Report new Legends with linkify?
+_____________________________________________________________________
 Author: Erik Frits"""
 
 # ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
@@ -264,6 +268,7 @@ class ef_Filter:
 # MAIN FUNCTION
 class CreateFilters(my_WPF):
     views = List_all_views_and_templates
+    legend_view = None #Used to open view of last generated legend.
 
     def __init__(self):
         # GUI
@@ -313,6 +318,8 @@ class CreateFilters(my_WPF):
             for i in range(50):
                 try:    new_legend_view.Name = name
                 except: name += "*"
+
+        self.legend_view = new_legend_view
         return new_legend_view
 
 
@@ -563,6 +570,8 @@ class CreateFilters(my_WPF):
 if __name__ == '__main__':
     with ef_Transaction(doc, __title__, debug=True):
         x = CreateFilters()
+    if x.legend_view:
+        uidoc.ActiveView = x.legend_view
 
 
 # TESTING
