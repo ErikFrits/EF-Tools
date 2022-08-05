@@ -5,3 +5,4 @@ layout:
   - FindReplace_RoomNames
   - FindReplace_Materials
   - LevelsElevation
+  - FindReplace -Filters
