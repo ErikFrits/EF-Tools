@@ -38,14 +38,15 @@ import sys
 from pyrevit import forms
 from Autodesk.Revit.DB import (FilteredElementCollector, ElementCategoryFilter,
                                BuiltInCategory, BuiltInParameter,
-                               Element, FloorType, TransactionGroup,
-                               CurveArray,SpatialElementBoundaryOptions)
+                               Element, FloorType, TransactionGroup, Floor,
+                               CurveArray,SpatialElementBoundaryOptions, CurveLoop)
 
 #>>>>>>>>>> .NET IMPORTS
 import clr
 clr.AddReference("System")
 clr.AddReference("System.Windows.Forms")
 from System.Windows.Forms import DialogResult, MessageBox, MessageBoxButtons
+from System.Collections.Generic import List
 
 #Custom
 from Snippets._context_manager  import ef_Transaction, try_except
@@ -56,13 +57,20 @@ from GUI.forms                  import select_from_dict
 # ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
 #  ╚╝ ╩ ╩╩╚═╩╩ ╩╚═╝╩═╝╚═╝╚═╝ VARIABLES
 #==================================================
-uidoc   = __revit__.ActiveUIDocument
-app     = __revit__.Application
-doc     = __revit__.ActiveUIDocument.Document
+uidoc    = __revit__.ActiveUIDocument
+app      = __revit__.Application
+doc      = __revit__.ActiveUIDocument.Document
+rvt_year = int(app.VersionNumber)
 
 active_view_id      = doc.ActiveView.Id
 active_view         = doc.GetElement(active_view_id)
 active_view_level   = active_view.GenLevel
+
+# #TODO TEMP
+# if rvt_year > 2022:
+#     forms.alert('This tool is not supported in Revit 2023 yet. It will be fixed soon.', title=__title__,
+#                 exitscript=True)  # FIXME
+
 
 # ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
 # ╠╣ ║ ║║║║║   ║ ║║ ║║║║╚═╗
@@ -109,26 +117,37 @@ def room_to_floor(room, floor_type):
     if not room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble():
         return None
 
-    # >>>>>>>>>> ROOM BOUNDARIES
-    room_boundaries = room.GetBoundarySegments(SpatialElementBoundaryOptions())
-    floor_shape = room_boundaries[0]
-    openings = list(room_boundaries)[1:] if len(room_boundaries) > 1 else []
-    curveLoopList = CurveArray()
-    for seg in floor_shape:
-        curveLoopList.Append(seg.GetCurve())
-
     # >>>>>>>>>> CREATE FLOOR
     with ef_Transaction(doc, 'Create Floor', debug=True):
-        new_floor = doc.Create.NewFloor(curveLoopList, floor_type, active_view_level, False)
+        # >>>>>>>>>> ROOM BOUNDARIES
+        room_boundaries = room.GetBoundarySegments(SpatialElementBoundaryOptions())
+        floor_shape = room_boundaries[0]
+        openings = list(room_boundaries)[1:] if len(room_boundaries) > 1 else []
 
-    # >>>>>>>>>> CREATE FLOOR OPENINGS
-    if openings:
-        with ef_Transaction(doc, "Create Openings"):
-            for opening in openings:
-                opening_curve = CurveArray()
-                for seg in opening:
-                    opening_curve.Append(seg.GetCurve())
-                floor_opening = doc.Create.NewOpening(new_floor, opening_curve, True)
+        if rvt_year < 2023:
+            curve_array = CurveArray()
+            for seg in floor_shape:
+                curve_array.Append(seg.GetCurve())
+            new_floor = doc.Create.NewFloor(curve_array, floor_type, active_view_level, False)
+
+            # >>>>>>>>>> CREATE FLOOR OPENINGS SEPERATELY BEFORE RVT 2023
+            if openings:
+                with ef_Transaction(doc, "Create Openings"):
+                    for opening in openings:
+                        opening_curve = CurveArray()
+                        for seg in opening:
+                            opening_curve.Append(seg.GetCurve())
+                        floor_opening = doc.Create.NewOpening(new_floor, opening_curve, True)
+
+        if rvt_year >= 2023:
+            List_curve_loop = List[CurveLoop]()
+            for room_outline in room_boundaries:
+                curve_loop = CurveLoop()
+                for seg in room_outline:
+                    curve_loop.Append(seg.GetCurve())
+                List_curve_loop.Add(curve_loop)
+            new_floor = Floor.Create(doc, List_curve_loop, floor_type.Id, active_view_level.Id) #FIXME
+
     return new_floor
 #
 def create_floors(selected_rooms, selected_floor_type):
