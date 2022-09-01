@@ -50,6 +50,5 @@ if __name__ == '__main__':
             new_selection.append(elem.Id)
 
     # CHANGE SELECTION
-    if new_selection:
-        uidoc.Selection.SetElementIds(List[ElementId](new_selection))
+    uidoc.Selection.SetElementIds(List[ElementId](new_selection))
 
