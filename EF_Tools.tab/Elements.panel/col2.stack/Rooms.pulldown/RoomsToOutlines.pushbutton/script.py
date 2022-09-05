@@ -3,7 +3,6 @@ __title__     = "Rooms to Outline"
 __author__    = "Erik Frits"
 __highlight__ = 'updated'
 __version__   = 'Version = 1.2'
-__context__   = 'active-floor-plan'
 __helpurl__   = 'https://www.youtube.com/watch?v=3thf8IvJVpY'
 __doc__       = """Version = 1.2
 Date    = 29.07.2021
