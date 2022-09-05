@@ -280,6 +280,7 @@ class ReplaceMaterials(my_WPF):
         self.get_elements()
         self.get_selected_materials()
         self.replace_materials()
+        self.count = 0
 
         print('In Total: Material was replaced in {} Parameters.'.format(self.count))
 
