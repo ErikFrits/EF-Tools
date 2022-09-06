@@ -208,10 +208,10 @@ class ReplaceMaterials(my_WPF):
         """Function to change material in Types with CompoundStructure
         such as: WallType, FloorType, RoofType, CeilingType"""
         Exclude = ['Curtain Wall', 'Sloped Glazing', 'Basic Ceiling']
-        if elem_type.FamilyName in Exclude:
-            return
-
         try:
+            if elem_type.FamilyName in Exclude:
+                return
+
             # GET LAYERS
             structure = elem_type.GetCompoundStructure()
 
@@ -242,14 +242,17 @@ class ReplaceMaterials(my_WPF):
         groupped = False if elem.GroupId == ElementId(-1) else True
 
         for p in elem.Parameters:
-            if groupped and not p.Definition.VariesAcrossGroups:
-                continue
+            try:
+                if groupped and not p.Definition.VariesAcrossGroups:
+                    continue
 
-            if p.Definition.ParameterType == ParameterType.Material:
-                if p.AsElementId() == self.mat_find_id:
-                    if not p.IsReadOnly:
-                        p.Set(self.mat_replace_id)
-                        self.count += 1
+                if p.Definition.ParameterType == ParameterType.Material:
+                    if p.AsElementId() == self.mat_find_id:
+                        if not p.IsReadOnly:
+                            p.Set(self.mat_replace_id)
+                            self.count += 1
+            except:
+                pass
 
     def replace_materials(self):
         """Function to Find and Replace Materials in selected categories."""
