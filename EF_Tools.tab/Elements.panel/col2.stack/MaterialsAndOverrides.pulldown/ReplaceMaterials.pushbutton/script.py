@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __title__ = "Replace Materials"
-__version__ = 'Version = 1.0'
-__doc__ = """Version = 1.0
+__version__ = 'Version = 1.1'
+__doc__ = """Version = 1.1
 Date    = 31.08.2022
 _____________________________________________________________________
 Description:
