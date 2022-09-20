@@ -6,11 +6,13 @@
     mc:Ignorable="d"
     Title="Select From Dict"
     Height="550" Width="400"
+    MinWidth="400"
+    MinHeight="550" MaxHeight="550"
     WindowStartupLocation="CenterScreen"
     HorizontalAlignment="Center"
     ShowInTaskbar="True"
     WindowStyle="None"
-    ResizeMode="NoResize"
+    ResizeMode="CanResizeWithGrip" AllowsTransparency="True"
     Background="#181735">
 
 
