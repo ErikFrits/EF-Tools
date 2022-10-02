@@ -1,40 +1,38 @@
 # -*- coding: utf-8 -*-
-__title__ = "Select Similar: Category (in View)"
+__title__ = "SelectSimilar: Family (in View)"
 __author__ = "Erik Frits"
 __doc__ = """Version = 1.0
-Date    = 12.07.2021
+Date    = 22.08.2022
 _____________________________________________________________________
 Description:
+Select all instances in the View of the same Family.
 
-This tool will select all elements in view that
-have the same category as currently selected elements.
 _____________________________________________________________________
 How-to:
 
--> Slect a few instances, which categories you would like to select.
--> Run the script
+- Select a single element
+- Get All instances of the same family in View
 _____________________________________________________________________
 Last update:
+- [02.09.2022] - 1.0 RELEASE
+_____________________________________________________________________"""
 
-- [12.07.2021] - 1.0 RELEASE
-_____________________________________________________________________
-To-do:
-
-- Test the tool with different elements.
-_____________________________________________________________________
-"""
 # ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
 # ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
 #  ╚╝ ╩ ╩╩╚═╩╩ ╩╚═╝╩═╝╚═╝╚═╝
 # ==================================================
+doc   = __revit__.ActiveUIDocument.Document
 uidoc = __revit__.ActiveUIDocument
+app   = __revit__.Application
+rvt_year = int(app.VersionNumber)
 
 # ╔╦╗╔═╗╦╔╗╔
 # ║║║╠═╣║║║║
 # ╩ ╩╩ ╩╩╝╚╝ MAIN
 # ==================================================
-from Selection import select_similar_category
-select_similar_category.select(uidoc=uidoc, mode='view')
-# Same script is used for 2 buttons.
-# - Select Similar: Category (in View)
-# - Select Similar: Category (in Model)
+if __name__ == '__main__':
+    from Selection.select_similar_family import select_similar_by_family
+    select_similar_by_family(uidoc, mode='view')
+    # Same script is used for 2 buttons.
+    # - Select Similar: Family (in View)
+    # - Select Similar: Family (in Model)

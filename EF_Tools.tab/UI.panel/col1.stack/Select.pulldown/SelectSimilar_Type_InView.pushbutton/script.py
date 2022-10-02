@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__title__ = "Super Select: all in the model (SA)"
+__title__ = "SelectSimilar: Type (in View) -SS"
 __author__ = "Erik Frits"
 __helpurl__ = "https://erikfrits.com/blog/super-select-multiple-elements-in-viewmodel/"
 __doc__ = """Version = 1.2
@@ -7,8 +7,9 @@ Date    = 08.02.2021
 _____________________________________________________________________
 Description:
 
-This is an improved version of Built-In tools named: 
-'Select All Instances: In Model'        [SA]
+This is an improved version of Built-In tool named: 
+'Select All Instances: Visible in View' [SS] 
+
 
 You can now select multiple similar instances in the 
 model/view with multiple selected elements. This tool also
@@ -37,7 +38,8 @@ Last update:
 - [08.02.2021] - Imports reduced
 _____________________________________________________________________
 To-do:
-- 
+- [Add Rule] Stair threads numbers
+- Check Scopebox, Reference plane, Reference line, annotations like spot elevations...
 _____________________________________________________________________
 If you select an element and it changes your selection to many other
 unwanted types, please let me know the Category of the elmenet, 
@@ -45,10 +47,10 @@ it might need an individual filtering rule.
 _____________________________________________________________________
 """
 #____________________________________________________________________ MAIN
-# Same script is used for 2 buttons.
+# Same script used for 2 buttons
 # - Super Select : all in the model (SA)
 # - Super Select : all in the view  (SS)
 
 # lib/Selection/super_select.py
 from Selection import super_select
-super_select.select(mode='model')
+super_select.select(mode='view')

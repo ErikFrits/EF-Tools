@@ -1,39 +1,40 @@
 # -*- coding: utf-8 -*-
-__title__ = "Select Similar: Family (in Model)"
+__title__ = "SelectSimilar: Category (in Model)"
 __author__ = "Erik Frits"
 __doc__ = """Version = 1.0
-Date    = 22.08.2022
+Date    = 12.07.2021
 _____________________________________________________________________
 Description:
-Select all instances in the Model of the same Family.
 
-
+This tool will select all elements in model that
+have the same category as currently selected elements.
 _____________________________________________________________________
 How-to:
 
-- Select a single element
-- Get All instances of the same family in Model
+-> Slect a few instances, which categories you would like to select.
+-> Run the script
 _____________________________________________________________________
 Last update:
-- [02.09.2022] - 1.0 RELEASE
-_____________________________________________________________________"""
 
+- [12.07.2021] - 1.0 RELEASE
+_____________________________________________________________________
+To-do:
+
+- Test the tool with different elements.
+_____________________________________________________________________
+"""
 # ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
 # ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
 #  ╚╝ ╩ ╩╩╚═╩╩ ╩╚═╝╩═╝╚═╝╚═╝
 # ==================================================
-doc   = __revit__.ActiveUIDocument.Document
 uidoc = __revit__.ActiveUIDocument
-app   = __revit__.Application
-rvt_year = int(app.VersionNumber)
 
 # ╔╦╗╔═╗╦╔╗╔
 # ║║║╠═╣║║║║
 # ╩ ╩╩ ╩╩╝╚╝ MAIN
 # ==================================================
-if __name__ == '__main__':
-    from Selection.select_similar_family import select_similar_by_family
-    select_similar_by_family(uidoc, mode='model')
-    # Same script is used for 2 buttons.
-    # - Select Similar: Family (in View)
-    # - Select Similar: Family (in Model)
+from Selection import select_similar_category
+select_similar_category.select(uidoc=uidoc, mode='model')
+# Same script is used for 2 buttons.
+# - Select Similar: Category (in View)
+# - Select Similar: Category (in Model)
