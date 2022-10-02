@@ -204,6 +204,9 @@ class IsolateWarnings(my_WPF):
             override_settings.SetSurfaceForegroundPatternId(solid_pattern.Id)
             override_settings.SetSurfaceForegroundPatternColor(color)
 
+            override_settings.SetCutForegroundPatternId(solid_pattern.Id)
+            override_settings.SetCutForegroundPatternColor(color)
+
         # TRANSPARENCY
         if trans != 0:
             override_settings.SetSurfaceTransparency(trans)
