@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-__title__ = "WIP: Place views on new sheets"   # Name of the button displayed in Revit
+__title__ = "Place Views on Sheets"   # Name of the button displayed in Revit
 __author__ = "Erik Frits"
 # __context__ = 'Views'
 __doc__ = """Version = 0.2
@@ -9,7 +9,7 @@ _____________________________________________________________________
 Description:
 >>> THIS TOOL IS STIL WORK IN PROGRESS <<<
 
-Place selected views to newly created sheets.
+Place selected views to new sheets.
 _____________________________________________________________________
 How-to:
 
