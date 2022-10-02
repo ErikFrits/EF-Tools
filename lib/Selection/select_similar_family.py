@@ -41,37 +41,40 @@ def select_similar_by_family(uidoc, mode):
     doc = uidoc.Document
     selected_elements = uidoc.Selection.GetElementIds()
 
-    # Check that Only single item is selected!
-    if len(selected_elements) != 1:
-        from pyrevit import forms
-        forms.alert('You need to select only 1 element.', title=__title__, exitscript=True)
+    try:
+        # Check that Only single item is selected!
+        if len(selected_elements) != 1:
+            from pyrevit import forms
+            forms.alert('You need to select only 1 element.', title=__title__, exitscript=True)
 
-    selected_element = doc.GetElement(selected_elements[0])
+        selected_element = doc.GetElement(selected_elements[0])
 
-    # CREATE FILTER RULE
-    elem_type_id = selected_element.get_Parameter(BuiltInParameter.ELEM_TYPE_PARAM).AsElementId()
-    elem_type = doc.GetElement(elem_type_id)
-    elem_family_name = elem_type.FamilyName
-    f_parameter = ParameterValueProvider(ElementId(BuiltInParameter.ALL_MODEL_FAMILY_NAME))
-    f_parameter_value = elem_family_name
+        # CREATE FILTER RULE
+        elem_type_id = selected_element.get_Parameter(BuiltInParameter.ELEM_TYPE_PARAM).AsElementId()
+        elem_type = doc.GetElement(elem_type_id)
+        elem_family_name = elem_type.FamilyName
+        f_parameter = ParameterValueProvider(ElementId(BuiltInParameter.ALL_MODEL_FAMILY_NAME))
+        f_parameter_value = elem_family_name
 
-    if rvt_year < 2023:
-        f_rule = FilterStringRule(f_parameter, FilterStringEquals(), f_parameter_value,True)
-    else:
-        f_rule = FilterStringRule(f_parameter, FilterStringEquals(), f_parameter_value)
+        if rvt_year < 2023:
+            f_rule = FilterStringRule(f_parameter, FilterStringEquals(), f_parameter_value,True)
+        else:
+            f_rule = FilterStringRule(f_parameter, FilterStringEquals(), f_parameter_value)
 
-    # CREATE FILTER
-    filter_family_name = ElementParameterFilter(f_rule)
+        # CREATE FILTER
+        filter_family_name = ElementParameterFilter(f_rule)
 
-    # GET ELEMENTS
-    elements_by_f_name = []
-    if mode   == 'model':
-        elements_by_f_name = FilteredElementCollector(doc)\
-                .WherePasses(filter_family_name).WhereElementIsNotElementType().ToElementIds()
-    elif mode == 'view':
-        elements_by_f_name = FilteredElementCollector(doc, doc.ActiveView.Id)\
-                .WherePasses(filter_family_name).WhereElementIsNotElementType().ToElementIds()
+        # GET ELEMENTS
+        elements_by_f_name = []
+        if mode   == 'model':
+            elements_by_f_name = FilteredElementCollector(doc)\
+                    .WherePasses(filter_family_name).WhereElementIsNotElementType().ToElementIds()
+        elif mode == 'view':
+            elements_by_f_name = FilteredElementCollector(doc, doc.ActiveView.Id)\
+                    .WherePasses(filter_family_name).WhereElementIsNotElementType().ToElementIds()
 
-    # SET SELECTION
-    if elements_by_f_name:
-        uidoc.Selection.SetElementIds(List[ElementId](elements_by_f_name))
+        # SET SELECTION
+        if elements_by_f_name:
+            uidoc.Selection.SetElementIds(List[ElementId](elements_by_f_name))
+    except:
+        print('{} is not supported with this tool.'.format(type(selected_element)))

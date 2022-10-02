@@ -84,14 +84,6 @@ class SelectFromDict(my_WPF):
             list_of_items.Add(ListItem(type_name, floor_type))
         return list_of_items
 
-    def update_list_items(self, new_list):
-        # if new_list:
-        #     self.main_ListBox.ItemsSource = new_list
-        #     return
-        #
-        # self.main_ListBox.ItemsSource = self.items
-        self.main_ListBox.ItemsSource = new_list
-
 
 
     #>>>>>>>>>> INHERIT WPF RESOURCES
@@ -111,7 +103,8 @@ class SelectFromDict(my_WPF):
 
         #RESTORE ORIGINAL LIST
         if not filter_keyword:
-            self.update_list_items(self.items)
+            self.main_ListBox.ItemsSource = self.items
+
             return
 
         # FILTER ITEMS
@@ -120,7 +113,8 @@ class SelectFromDict(my_WPF):
                 filtered_list_of_items.Add(item)
 
         # UPDATE LIST OF ITEMS
-        self.update_list_items(filtered_list_of_items)
+        self.main_ListBox.ItemsSource = filtered_list_of_items
+
 
     def UIe_ItemChecked(self, sender, e):
         # SINGLE SELECTIOn

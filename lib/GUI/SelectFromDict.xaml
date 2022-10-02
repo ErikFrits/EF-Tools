@@ -12,7 +12,6 @@
     HorizontalAlignment="Center"
     ShowInTaskbar="True"
     WindowStyle="None"
-    ResizeMode="CanResizeWithGrip" AllowsTransparency="True"
     Background="#181735">
 
 
@@ -128,7 +127,7 @@
                          Background="{StaticResource header_background}"
                          SelectionMode="Single"
                          ScrollViewer.VerticalScrollBarVisibility="Visible"
-                         ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                          BorderBrush="{StaticResource border_magenta}"
                          >
 

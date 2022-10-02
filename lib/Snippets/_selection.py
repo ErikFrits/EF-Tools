@@ -139,7 +139,7 @@ def select_title_block(given_uidoc = uidoc, exitscript = True):
         unique_title_blocks["{} - {}".format(family_name, type_name)] = tb.Id
 
     #>>>>>>>>>> MAKE SURE IT'S SELECTED
-    selected_title_block = select_from_dict(unique_title_blocks)
+    selected_title_block = select_from_dict(unique_title_blocks, SelectMultiple=False)
 
     # VERIFY SOMETHING IS SELECTED
     if not selected_title_block and exitscript:

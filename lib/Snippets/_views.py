@@ -18,7 +18,9 @@ from Autodesk.Revit.DB import ( Transaction,
                                 FilteredElementCollector,
                                 BuiltInParameter,
                                 BuiltInCategory,
-                                ElementId)
+                                ElementId,
+                                ViewFamily,
+                                ViewFamilyType)
 
 # ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
 # ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
@@ -55,12 +57,30 @@ def get_sheet_from_view(view):
     #>>>>>>>>>> GET SHEET
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Sheets).WhereElementIsNotElementType().WherePasses(my_filter).FirstElement()
 
+# CREATE VIEW
+def create_3D_view(uidoc, name=''):
+    """Function to Create a 3D view.
+    :param uidoc: UI Document of a project where View should be created
+    :param name:  New View Name. '*' will be added in the end if name is not unique.
+    :return:      Create 3D View"""
 
-if __name__ == '__main__':
-    #>>>>>>>>>> ACTIVE VIEW
-    active_view = doc.ActiveView
-    sheet       = get_sheet_from_view(active_view)
+    # GET 3D VIEW TYPE
+    all_view_types = FilteredElementCollector(uidoc.Document).OfClass(ViewFamilyType).ToElements()
+    all_3D_Types = [i for i in all_view_types if i.ViewFamily == ViewFamily.ThreeDimensional]
+    view_type_3D = all_3D_Types[0]
 
-    #>>>>>>>>>> PRINT RESULTS
-    if sheet:   print('Sheet Found: {} - {}'.format(sheet.SheetNumber, sheet.Name))
-    else:       print('No sheet associated with the given view: {}'.format(sheet.Name))
+    # CREATE VIEW
+    view = View3D.CreateIsometric(uidoc.Document, view_type_3D.Id)
+
+    # RENAME VIEW
+    for i in range(50):
+        try:
+            view.Name = name
+            break
+        except:
+            name += '*'
+
+    return view
+
+
+
