@@ -24,6 +24,7 @@ Last update:
 _____________________________________________________________________
 To-Do:
 - ComboBox Filtering 
+- Painted Surfaces (Replace/Remove?)
 _____________________________________________________________________
 Author: Erik Frits"""
 

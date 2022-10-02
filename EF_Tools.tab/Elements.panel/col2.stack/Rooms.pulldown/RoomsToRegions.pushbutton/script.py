@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 __title__     = "Rooms to Regions"
 __author__    = "Erik Frits"
-__highlight__ = 'updated'
 __version__   = 'Version = 1.2'
 __helpurl__   = 'https://www.youtube.com/watch?v=3thf8IvJVpY'
 __doc__ = """Version = 1.2

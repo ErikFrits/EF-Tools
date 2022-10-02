@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 __title__     = "Rooms to Floors"
 __author__    = "Erik Frits"
-__highlight__ = 'updated'
 __version__   = 'Version = 1.2'
 __doc__       = """Version = 1.2
 Date    = 29.07.2021
@@ -28,6 +27,9 @@ Last update:
 - [29.07.2021] - Refactored
 - [29.07.2021] - Bug Solved: Floors with openings 
 - [29.07.2021] - Select all rooms if none selected
+_____________________________________________________________________
+TO-DO:
+- UI Control: Offset from level
 _____________________________________________________________________
 Author: Erik Frits"""
 # ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
