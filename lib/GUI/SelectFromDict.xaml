@@ -12,6 +12,7 @@
     HorizontalAlignment="Center"
     ShowInTaskbar="True"
     WindowStyle="None"
+    AllowsTransparency="True"
     Background="#181735">
 
 
