@@ -18,11 +18,9 @@ Author: Erik Frits"""
 # ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
 # ==================================================
 from Autodesk.Revit.DB import *
-from collections import defaultdict
 
 # .NET Imports
 import os, clr
-clr.AddReference("System.Windows.Forms")
 clr.AddReference("System")
 from System.Collections.Generic import List
 
