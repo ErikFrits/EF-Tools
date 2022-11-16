@@ -152,13 +152,17 @@ class SelectFromDict(my_WPF):
 
     def button_select(self, sender, e):
         """Button to finilize selection"""
+        # Reset Filter
+        self.textbox_filter.Text = ''
+        self.Close()
+
+
 
         selected_items = []
         for item in self.main_ListBox.ItemsSource:
             if item.IsChecked:
                 selected_items.append(item.element)
         self.selected_items = selected_items
-        self.Close()
 
 
 
