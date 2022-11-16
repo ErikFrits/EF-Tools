@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__title__   = "ViewFilters Legend"
+__title__   = "ViewFilters: Create Legend"
 __author__  = "Erik Frits"
 __version__ = "Version: 1.1"
 __doc__ = """Version = 1.1
