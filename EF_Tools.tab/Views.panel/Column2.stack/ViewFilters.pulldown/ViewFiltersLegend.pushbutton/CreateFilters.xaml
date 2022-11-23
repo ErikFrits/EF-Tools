@@ -709,13 +709,14 @@
                 </ListBox.Resources>
 
 
-
-
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox  Background="#EE82EE" Foreground="{StaticResource text_white}" Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
+                        <CheckBox  Background="#EE82EE" Foreground="{StaticResource text_white}" IsChecked="{Binding IsChecked}" >
+                            <TextBlock Text="{Binding Name}"/>
+                        </CheckBox>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+
             </ListBox>
 
 
