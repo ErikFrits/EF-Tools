@@ -1,36 +1,33 @@
 # -*- coding: utf-8 -*-
 __title__ = "Find and Replace in Sheets"  # Name of the button displayed in Revit
 __author__ = "Erik Frits"
-__doc__ = """Version = 1.0
+__version__ = 'Version: 1.1'
+__doc__ = """Version: 1.1
 Date    = 28.07.2020
 _____________________________________________________________________
 Description:
 
-Rename selected sheet with Find/Replace/Prefix/Suffix options.
+Rename multiple sheets at once with Find/Replace/Suffix/Prefix logic.
+You can select sheets in Project Browser or if nothing selected
+you will get a menu to select your sheets.
 _____________________________________________________________________
 How-to:
 
--> Select sheets in ProjectBrowser
+-> Select sheets in ProjectBrowser (optional)
 -> Click the button
 -> Set your criterias
 -> Rename
 _____________________________________________________________________
-Prerequisite:
-
-You have to select sheets in ProjectBrowser.
-_____________________________________________________________________
 Last update:
-- 
+- [15.12.2022] - 1.1 RELEASE
+- [28.07.2020] - 1.0 RELEASE
 _____________________________________________________________________
-To-do:
-- 
-_____________________________________________________________________
-"""
+Author: Erik Frits"""
 
 # ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
 # ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
 # ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
-# ====================================================================================================
+# ==================================================================
 from Autodesk.Revit.DB import *
 from Autodesk.Revit.Exceptions import ArgumentException
 
@@ -50,18 +47,18 @@ from System.Windows.Input       import MouseButtonState
 # ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
 # ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
 #  ╚╝ ╩ ╩╩╚═╩╩ ╩╚═╝╩═╝╚═╝╚═╝ VARIABLES
-# ==================================================
+# ==================================================================
 uidoc   = __revit__.ActiveUIDocument
 doc     = __revit__.ActiveUIDocument.Document
 
 selected_sheets = get_selected_sheets(given_uidoc=uidoc, title=__title__,
                                       label='Select Sheet to Rename',
-                                      exit_if_none=True)
+                                      exit_if_none=True, version=__version__)
 
 # ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
 # ╠╣ ║ ║║║║║   ║ ║║ ║║║║╚═╗
 # ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝╚═╝ FUNCTIONS
-# ==================================================
+# ==================================================================
 def update_project_browser():
     """Function to close and reopen ProjectBrowser so changes to Sheetnumber would become visible."""
     from Autodesk.Revit.UI import DockablePanes, DockablePane
@@ -70,8 +67,10 @@ def update_project_browser():
     project_browser.Hide()
     project_browser.Show()
 
-
-###__________________________________________________________________________________________________APPLICATION______________###
+# ╔═╗╦  ╔═╗╔═╗╔═╗╔═╗╔═╗
+# ║  ║  ╠═╣╚═╗╚═╗║╣ ╚═╗
+# ╚═╝╩═╝╩ ╩╚═╝╚═╝╚═╝╚═╝ CLASSES
+# ==================================================================
 
 class MyWindow(forms.WPFWindow):
     """GUI for ViewSheet renaming tool."""
@@ -81,7 +80,7 @@ class MyWindow(forms.WPFWindow):
 
 
     def rename(self):
-        t = Transaction(doc, "py:Viewname find and replace")
+        t = Transaction(doc, __title__)
         t.Start()
         self.rename_sheet_name()
         self.rename_sheet_number()
@@ -176,12 +175,11 @@ class MyWindow(forms.WPFWindow):
 
     def button_run(self, sender, e):
         """Button action: Rename view with given """
-        self.Close()
         self.rename()
 
 # ╔╦╗╔═╗╦╔╗╔
 # ║║║╠═╣║║║║
 # ╩ ╩╩ ╩╩╝╚╝ MAIN
-# ==================================================
+# ==================================================================
 if __name__ == '__main__':
     MyWindow("Script.xaml").ShowDialog()
