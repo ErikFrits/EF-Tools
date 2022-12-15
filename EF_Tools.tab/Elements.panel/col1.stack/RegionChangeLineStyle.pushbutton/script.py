@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
 __title__ = "Regions: Change Linestyle"   # Name of the button displayed in Revit
 __author__ = "Erik Frits"
-__version__ = 'Version = 1.2'
-__doc__ = """Version = 1.2
+__version__ = 'Version = 1.3'
+__doc__ = """Version = 1.3
 Date    = 18.07.2021
 _____________________________________________________________________
 Description:
 
-Apply LineStyle from the list to borders 
-of the selected FilledRegions.
-_____________________________________________________________________
-ToDo:
-- Update Select from Dict.
-- Invisible line not working in German RVT
+Apply selected LineStyle to borders of the selected FilledRegions.
 _____________________________________________________________________
 How-to:
 
@@ -21,6 +16,7 @@ How-to:
 -> Select LineStyle to apply
 _____________________________________________________________________
 Last update:
+- [15.12.2022] - 1.3 RELEASE
 - [24.10.2020] - 1.2 RELEASE
 - [17.11.2021] - 1.1 RELEASE
 - [17.11.2021] - Custom GUI added.
@@ -84,100 +80,9 @@ valid_line_styles_ids = region.GetValidLineStyleIdsForFilledRegion(doc)
 valid_line_styles = [doc.GetElement(i) for i in valid_line_styles_ids]
 dict_valid_line_styles = {i.Name: i for i in valid_line_styles}
 
-selected_line_style = select_from_dict(dict_valid_line_styles, title=__title__, label='Select LineStyle', SelectMultiple=False, version=__version__)
+selected_line_style = select_from_dict(dict_valid_line_styles, title=__title__, label='Select LineStyle', SelectMultiple=False, version=__version__)[0]
 
 with ef_Transaction(doc, __title__):
     for region in selected_filled_regions:
         with try_except():
             region.SetLineStyleId(selected_line_style.Id)
-#
-#
-# class MainGUI(forms.WPFWindow):
-#     def __init__(self):
-#         """Main class for GUI to creating floors from selected Rooms."""
-#         self.selected_filled_regions = [element for element in get_selected_elements(uidoc) if type(element) == FilledRegion]
-#         if not self.selected_filled_regions:
-#             forms.alert("There were no FilledRegion selected. \nPlease Try again.", __title__, exitscript=True)
-#
-#         self.form = forms.WPFWindow.__init__(self, "Script.xaml")
-#         self.ListBox_FloorTypes.ItemsSource = self.generate_list_items()
-#         self.main_title.Text = __title__
-#         self.ShowDialog()
-#
-#     def change_region_linestyles(self):
-#         """Function to change LineStyles of selected regions."""
-#         # >>>>>>>>>> APPLY SELECTED LINESTYLE
-#         with ef_Transaction(doc, __title__):
-#             for region in self.selected_filled_regions:
-#                 with try_except():
-#                     region.SetLineStyleId(self.selected_line_style.Id)
-#
-#     def generate_list_items(self):
-#         """Function to create a List<Class> to pass to ListBox in GUI"""
-#         # >>>>>>>>>> GET VALID LINESTYLES
-#         region                      = self.selected_filled_regions[0]
-#         valid_line_styles_ids       = region.GetValidLineStyleIdsForFilledRegion(doc)
-#         valid_line_styles           = [doc.GetElement(i) for i in valid_line_styles_ids]
-#         self.dict_valid_line_styles = {i.Name: i for i in valid_line_styles}
-#
-#         list_of_items = List[type(ListItem())]()
-#
-#         first = True
-#         for line_style_name, line_style in sorted(self.dict_valid_line_styles.items()):
-#             checked = True if first else False
-#             first = False
-#             list_of_items.Add(ListItem(line_style_name, checked, line_style))
-#
-#         return list_of_items
-#
-#     # ╔═╗╦═╗╔═╗╔═╗╔═╗╦═╗╔╦╗╦╔═╗╔═╗
-#     # ╠═╝╠╦╝║ ║╠═╝║╣ ╠╦╝ ║ ║║╣ ╚═╗
-#     # ╩  ╩╚═╚═╝╩  ╚═╝╩╚═ ╩ ╩╚═╝╚═╝ PROPERTIES
-#     # ==================================================
-#     @property
-#     def ListBox(self):
-#         return self.ListBox_FloorTypes
-#
-#     # ╔═╗╦  ╦╔═╗╔╗╔╔╦╗  ╦ ╦╔═╗╔╗╔╔╦╗╦  ╔═╗╦═╗╔═╗
-#     # ║╣ ╚╗╔╝║╣ ║║║ ║   ╠═╣╠═╣║║║ ║║║  ║╣ ╠╦╝╚═╗
-#     # ╚═╝ ╚╝ ╚═╝╝╚╝ ╩   ╩ ╩╩ ╩╝╚╝═╩╝╩═╝╚═╝╩╚═╚═╝ GUI EVENT HANDLERS:
-#     # ==================================================
-#
-#     def button_close(self,sender,e):
-#         """Stop application by clicking on a <Close> button in the top right corner."""
-#         self.Close()
-#
-#     def Hyperlink_RequestNavigate(self, sender, e):
-#         """Forwarding for a Hyperlink"""
-#         Start(e.Uri.AbsoluteUri)
-#
-#     def header_drag(self,sender,e):
-#         """Drag window by holding LeftButton on the header."""
-#         if e.LeftButton == MouseButtonState.Pressed:
-#             DragMove(self)
-#
-#     def button_run(self,sender,e):
-#         """Main run button.
-#         Closes the dialog box and starts duplicating selected sheets."""
-#         self.Close()
-#
-#         # GET SELECTED MAIN SHEET
-#         selected_line_style = None
-#         items = self.ListBox_FloorTypes.Items
-#         for item in items:
-#             if item.IsChecked:
-#                 selected_line_style = item.Name
-#                 break
-#
-#         self.selected_line_style = self.dict_valid_line_styles[selected_line_style]
-#
-#         # CREATE FLOORS
-#         self.change_region_linestyles()
-#
-#
-# # ╔╦╗╔═╗╦╔╗╔
-# # ║║║╠═╣║║║║
-# # ╩ ╩╩ ╩╩╝╚╝MAIN
-# #==================================================
-# if __name__ == '__main__':
-#     MainGUI()
