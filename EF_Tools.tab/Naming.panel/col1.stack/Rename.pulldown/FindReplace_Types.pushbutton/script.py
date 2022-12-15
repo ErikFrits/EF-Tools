@@ -39,12 +39,6 @@ _____________________________________________________________________
 # ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
 # ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
 #====================================================================================================
-
-
-from Autodesk.Revit.DB.Structure    import AnalyticalLinkType
-from Autodesk.Revit.DB.Electrical   import ConduitType, CableTrayType
-from Autodesk.Revit.DB.Plumbing     import PipingSystemType, PipeType, FlexPipeType
-from Autodesk.Revit.DB.Mechanical   import  Space
 from Autodesk.Revit.DB.Architecture import Room, TopographySurface
 
 from Autodesk.Revit.DB import *
