@@ -70,7 +70,7 @@ def get_selected_rooms(given_uidoc = uidoc, exit_if_none = False):
 
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET VIEWS
-def get_selected_views(given_uidoc = uidoc, exit_if_none = False, title = '__title__'):
+def get_selected_views(given_uidoc = uidoc, exit_if_none = False, title = '__title__', version = 'Version: _'):
     """Function to get selected views. If none selected give a menu for a user to select views.
     ALL_VIEW_TYPES = [ViewPlan, ViewSection, View3D , ViewSchedule, View, ViewDrafting]
     LastUpdates:
@@ -85,10 +85,10 @@ def get_selected_views(given_uidoc = uidoc, exit_if_none = False, title = '__tit
     selected_views = [given_uidoc.Document.GetElement(view_id) for view_id in UI_selected if type(doc.GetElement(view_id)) in ALL_VIEW_TYPES]
 
     # IF NONE SELECTED - OPEN A DIALOGBOX TO CHOOSE FROM.
-    if not selected_views and exit_if_none:
+    if not selected_views:
         all_views = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Views).WhereElementIsNotElementType().ToElements()
         dict_views = {view.Name:view for view in all_views}
-        selected_views = select_from_dict(dict_views, title=title, label = 'Select Views', button_name='Select')
+        selected_views = select_from_dict(dict_views, title=title, label = 'Select Views', button_name='Select', version=version)
 
     # EXIT IF STILL NONE SELECTED
     if not selected_views and exit_if_none:

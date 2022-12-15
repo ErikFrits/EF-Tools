@@ -175,7 +175,7 @@ def select_from_dict(elements_dict,
                      title          = '__title__',
                      label          = "Select Elements:" ,
                      button_name    = 'Select',
-                     version        = 'version= 1.0',
+                     version        = 'Version: 1.0',
                      SelectMultiple = True):
     #type:(any, str,str,str,str,bool) -> list
     """Function to present a DialogBox to a user to select elements from the list based on the dict keys.
