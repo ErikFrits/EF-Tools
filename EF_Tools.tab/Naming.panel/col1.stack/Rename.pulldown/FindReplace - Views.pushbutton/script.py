@@ -14,7 +14,7 @@ you will get a menu to select your views.
 _____________________________________________________________________
 How-to:
 
-- Select views in ProjectBrowser or Select from Menu
+- Select views in ProjectBrowser (optional)
 - Run the script
 - Type Find/Replace/Prefix/Suffix as needed.
 _____________________________________________________________________
@@ -24,7 +24,8 @@ Last update:
 - [10.05.2021] - ViewSchedule, ViewDrafting added.
 - [10.05.2021] - GUI Updated
 _____________________________________________________________________
-"""
+Author: Erik Frits"""
+
 # ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
 # ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
 # ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
