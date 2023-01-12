@@ -13,13 +13,18 @@
     ShowInTaskbar="True"
     WindowStyle="None"
     AllowsTransparency="True"
-    Background="#181735">
-
-
-
+    Background="#080326">
 
     <!--MAIN-->
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                <GradientStop Color= "#33FC467B" Offset="0" />
+                <GradientStop Color="#333F5EFB" Offset="1" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+
         <Grid.RowDefinitions>
 
             <RowDefinition Height="25"/>
@@ -87,16 +92,16 @@
 
         <!--FILTER START-->
         <DockPanel Grid.Row="1">
-            <Label  Content="Filter:"
-                    VerticalAlignment="Top" Height="23"
+            <Label  Content="🔍"
+                    VerticalAlignment="Top" Height="26"
                     Foreground="{StaticResource text_magenta}"
-                    Margin="10,5,10,5"/>
+                    Margin="5,5,5,5"/>
 
             <TextBox x:Name="textbox_filter"
                     Text=""
                      Height="22" VerticalAlignment="Top"
                      Foreground="{StaticResource text_magenta}" Background="{StaticResource header_background}"
-                     Margin="10,8,10,5" FontSize="14"
+                     Margin="0,8,10,5" FontSize="14"
                      BorderBrush="{StaticResource border_magenta}"
                      TextChanged="text_filter_updated">
 
@@ -220,8 +225,7 @@
         <!--LISTBOX END-->
 
         <!--FOOTER START-->
-        <Grid   Grid.Row="3"
-                Background="{StaticResource header_background}">
+        <Grid Grid.Row="3" Background="{StaticResource header_background}">
             <!--FOOTER GRID-->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -229,33 +233,39 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <!--VERSION-->
-            <TextBlock x:Name="footer_version"
-                        Text="Version: 1.0"
-                        Grid.Column="1"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
-                        Foreground="{StaticResource text_gray}"
-                />
-
-            <!--PATREON-->
-            <TextBlock  Grid.Column="2"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Right"
-                        Margin="0,0,10,0">
-                    <Hyperlink
-                        RequestNavigate="Hyperlink_RequestNavigate"
-                        NavigateUri="https://www.patreon.com/ErikFrits"
-                        FontWeight="Medium"
-                        Foreground="{StaticResource button_bg_hover}">
-                        Donate
-                    </Hyperlink>
+            <!--IMAGE-->
+            <TextBlock>
+                <Hyperlink  NavigateUri="https://www.learnrevitapi.com" RequestNavigate="Hyperlink_RequestNavigate">
+                               <Image  Height="20"   Margin="1"  HorizontalAlignment="Left"   VerticalAlignment="Top"
+                                   Source="https://www.learnrevitapi.com/static/img_new/logo/logo_learnrevitapi.png" />
+                </Hyperlink>
             </TextBlock>
 
 
+
+            <!--VERSION-->
+            <TextBlock x:Name="footer_version"
+              Text="Version: 1.0"
+              Grid.Column="1"
+              VerticalAlignment="Center"
+              HorizontalAlignment="Center"
+              Foreground="{StaticResource text_gray}"
+    />
+
+            <!--Ko-Fi-->
+            <TextBlock  Grid.Column="2"
+              VerticalAlignment="Center"
+              HorizontalAlignment="Right"
+              Margin="0,0,10,0">
+              <Hyperlink
+                  RequestNavigate="Hyperlink_RequestNavigate"
+                  NavigateUri="https://www.ko-fi.com/ErikFrits"
+                  FontWeight="Medium"
+                  Foreground="{StaticResource button_bg_hover}">
+                  Support EF-Tools
+              </Hyperlink>
+            </TextBlock>
         </Grid>
         <!--FOOTER END-->
-
-
     </Grid>
 </Window>

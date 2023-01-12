@@ -8,12 +8,13 @@ import sys
 
 from Autodesk.Revit.DB.Architecture import Room
 from Autodesk.Revit.UI.Selection import ISelectionFilter, ObjectType
-from Autodesk.Revit.DB import (FilteredElementCollector,
-                               BuiltInCategory,
-                               BuiltInParameter,
-                               ViewSheet,
-                               Element,
-                               FilledRegionType)
+from Autodesk.Revit.DB import *
+# from Autodesk.Revit.DB import (FilteredElementCollector,
+#                                BuiltInCategory,
+#                                BuiltInParameter,
+#                                ViewSheet,
+#                                Element,
+#                                FilledRegionType)
 
 # pyRevit IMPORTS
 from pyrevit.forms import SelectFromList
@@ -39,7 +40,6 @@ doc = __revit__.ActiveUIDocument.Document
 # e.g. get_selected_elements(uidoc, filter=[Room,Area]
 def get_selected_elements(given_uidoc = uidoc):
     """Property that retrieves selected views or promt user to select some from the dialog box."""
-    selected_elements = []
 
     #>>>>>>>>>> VIEWS SELECTED IN UI
     for element_id in given_uidoc.Selection.GetElementIds():
@@ -171,19 +171,28 @@ def select_floor_type(given_uidoc = uidoc):
 
 
 #>>>>>>>>> LIMIT SELECTION
+# ╦  ╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗╦╔═╗╔╗╔  ╔═╗╦╦ ╔╦╗╔═╗╦═╗
+# ║  ╚═╗║╣ ║  ║╣ ║   ║ ║║ ║║║║  ╠╣ ║║  ║ ║╣ ╠╦╝
+# ╩  ╚═╝╚═╝╩═╝╚═╝╚═╝ ╩ ╩╚═╝╝╚╝  ╚  ╩╩═╝╩ ╚═╝╩╚═
 class CustomISelectionFilter(ISelectionFilter):
     """Filter user selection to certain element."""
-    def __init__(self, nom_categorie):
-        self.nom_categorie = nom_categorie
-
+    def __init__(self, cats):
+        self.cats = cats
     def AllowElement(self, e):
-        if str(e.Category.Id) == str(self.nom_categorie):
+        if str(e.Category.Id) == str(self.cats):
         #if e.Category.Name == "Walls"
             return True
-        else:
-            return False
-    def AllowReference(self, ref, point):
-        return True
+        return False
+
+class ISelectionFilter_Classes(ISelectionFilter):
+    def __init__(self, allowed_types):
+        """ ISelectionFilter made to filter with types
+        :param allowed_types: list of allowed Types"""
+        self.allowed_types = allowed_types
+
+    def AllowElement(self, element):
+        if type(element) in self.allowed_types:
+            return True
 
 
 # ╔═╗╦╔═╗╦╔═  ╔═╗╦  ╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
@@ -194,7 +203,7 @@ class CustomISelectionFilter(ISelectionFilter):
 def pick_wall(given_uidoc = uidoc):
     """Function to promt user to select a wall element in Revit UI."""
     wall_ref = given_uidoc.Selection.PickObject(ObjectType.Element, CustomISelectionFilter("-2000011"), "Select a Wall")    # -2000011 <- Id of OST_Walls
-    wall = given_uidoc.Document.GetElement(wall_ref)
+    wall     = given_uidoc.Document.GetElement(wall_ref)
     return wall
 
 def pick_curve(given_uidoc = uidoc):
