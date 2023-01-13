@@ -1,24 +1,22 @@
 # -*- coding: utf-8 -*-
-
 # ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
 # ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
 # ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝
 #==================================================
-import sys
+import sys, clr
+import traceback
 
+from Autodesk.Revit.UI.Selection    import ISelectionFilter, ObjectType, Selection
 from Autodesk.Revit.DB.Architecture import Room
-from Autodesk.Revit.UI.Selection import ISelectionFilter, ObjectType
 from Autodesk.Revit.DB import *
-# from Autodesk.Revit.DB import (FilteredElementCollector,
-#                                BuiltInCategory,
-#                                BuiltInParameter,
-#                                ViewSheet,
-#                                Element,
-#                                FilledRegionType)
 
 # pyRevit IMPORTS
 from pyrevit.forms import SelectFromList
 from pyrevit import forms
+
+#.NET
+clr.AddReference('System')
+from System.Collections.Generic import List
 
 # CUSTOM IMPORTS
 from Snippets._variables import ALL_VIEW_TYPES
@@ -28,46 +26,54 @@ from GUI.forms           import select_from_dict
 # ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
 #  ╚╝ ╩ ╩╩╚═╩╩ ╩╚═╝╩═╝╚═╝╚═╝
 #==================================================
-uidoc = __revit__.ActiveUIDocument
-doc = __revit__.ActiveUIDocument.Document
-
+uidoc     = __revit__.ActiveUIDocument
+doc       = __revit__.ActiveUIDocument.Document
+selection = uidoc.Selection                          # type: Selection
 
 # ╔═╗╔═╗╔╦╗  ╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗╔═╗╔╦╗
 # ║ ╦║╣  ║   ╚═╗║╣ ║  ║╣ ║   ║ ║╣  ║║
 # ╚═╝╚═╝ ╩   ╚═╝╚═╝╩═╝╚═╝╚═╝ ╩ ╚═╝═╩╝
 #==================================================
-#TODO Create parmaeter 'filter' to pass to a list of Types to filter selection.
-# e.g. get_selected_elements(uidoc, filter=[Room,Area]
-def get_selected_elements(given_uidoc = uidoc):
+def get_selected_elements(uidoc = uidoc, exitscript=True):
     """Property that retrieves selected views or promt user to select some from the dialog box."""
-
-    #>>>>>>>>>> VIEWS SELECTED IN UI
-    for element_id in given_uidoc.Selection.GetElementIds():
-        element = given_uidoc.Document.GetElement(element_id)
-        selected_elements.append(element)
+    doc               = uidoc.Document
+    selected_elements = [doc.GetElement(e_id) for e_id in selection.GetElementIds()]
 
     if not selected_elements:
-        forms.alert("No elements  were selected.\nPlease, try again.", exitscript=True)
+        forms.alert("No elements  were selected.\nPlease, try again.", exitscript=exitscript)
+
     return selected_elements
 
-
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET ROOMS
-#TODO OBSOLETE. UPDATE FUNCTION ABOVE TO BE ABLE TO FILTER ELEMENTS AND REPLACE WHERE IT IS USED.
-def get_selected_rooms(given_uidoc = uidoc, exit_if_none = False):
-    """Function to get selected views.
-    :return: list of selected views."""
-    #>>>>>>>>>> GET SELECTED ELEMENTS
-    UI_selected = given_uidoc.Selection.GetElementIds()
 
-    #>>>>>>>>>> FILTER SELECTION
-    selected_rooms = [given_uidoc.Document.GetElement(view_id) for view_id in UI_selected if type(given_uidoc.Document.GetElement(view_id)) == Room]
+def get_selected_rooms(uidoc=uidoc, exitscript = True):
+    """Function to Pick Rooms.
+    Previously selected rooms will be pre-selected."""
+    doc               = uidoc.Document
+    selected_elements = [doc.GetElement(e_id) for e_id in selection.GetElementIds()]
+    selected_rooms    = [e for e in selected_elements if type(e) == Room]
+    ref_rooms         = [Reference(r) for r in selected_rooms]
+    ref_preselection  = List[Reference](ref_rooms)
 
-    #>>>>>>>>>> EXIT IF NONE SELECTED
-    if not selected_rooms and exit_if_none:
-        forms.alert("No views were selected. Please try again.", exitscript=True)
+    # Pick Walls (exterior walls are preselected)
+    ISF_Rooms         = ISelectionFilter_Classes([Room,])
 
+    try:
+        with forms.WarningBar(title='Select Rooms and click "Finish"'):
+            ref_selected_rooms = selection.PickObjects(ObjectType.Element,
+                                                       ISF_Rooms,
+                                                       'Select Rooms',
+                                                       ref_preselection)
+
+        selected_rooms  = [doc.GetElement(ref) for ref in ref_selected_rooms]
+        if not selected_rooms:
+            error_msg = 'No Rooms were selected.\nPlease Try Again'
+            forms.alert(error_msg, title='Failed Room Selection.', exitscript=exitscript)
+    except:
+        if exitscript:
+            print(traceback.format_exc())
+            sys.exit()
     return selected_rooms
-
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET VIEWS
 def get_selected_views(given_uidoc = uidoc, exit_if_none = False, title = '__title__', version = 'Version: _'):
@@ -212,3 +218,5 @@ def pick_curve(given_uidoc = uidoc):
     selected_curve = given_uidoc.Document.GetElement(curve_ref)
     curve = selected_curve.GeometryCurve
     return curve
+
+
