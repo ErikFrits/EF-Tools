@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-__title__ = "Rooms To Ceiling"
-__version__   = 'Version = 1.0'
+__title__        = "Rooms To Ceiling"
+__version__      = 'Version = 1.0'
 __min_revit_ver__= 2022
 __doc__ = """Version = 1.0
 Date    = 07.01.2023
 _____________________________________________________________________
 Description:
-Create Ceilings from selected Rooms.
 
+Create Ceilings from selected Rooms. 
+New Ceilings will be selected once created.
 _____________________________________________________________________
 How-to:
 
@@ -15,7 +16,7 @@ How-to:
 -> Run the script
 -> Modify/Confirm Room Selection
 -> Select CeilingType
--> Create Ceilings
+-> New Ceilings will be selected
 _____________________________________________________________________
 Last update:
 - [07.01.2023] - 1.0 RELEASE
@@ -26,21 +27,17 @@ Author: Erik Frits"""
 # ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
 # ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
 #==================================================
+from Autodesk.Revit.UI.Selection    import Selection
 from Autodesk.Revit.DB              import *
-from Autodesk.Revit.DB.Architecture import Room
-from Autodesk.Revit.UI.Selection    import ISelectionFilter, ObjectType, Selection
 from pyrevit import forms
 
 #Custom
-from Snippets._selection            import get_selected_elements, ISelectionFilter_Classes
+from Snippets._selection            import get_selected_rooms
 from Snippets._context_manager      import ef_Transaction
-from GUI.forms                      import select_from_dict
 from GUI.Tools.CreateFromRooms      import CreateFromRooms
-from Snippets._convert              import convert_internal_units
-
 
 #.NET
-import clr, traceback, sys
+import clr, traceback
 clr.AddReference("System")
 from System.Collections.Generic import List
 
@@ -57,46 +54,19 @@ active_level = doc.ActiveView.GenLevel
 # ╠╣ ║ ║║║║║   ║ ║║ ║║║║╚═╗
 # ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝╚═╝ FUNCTIONS
 #==================================================
-def get_selected_rooms(exitscript = True):
-    """Function to Pick Rooms.
-    Previously selected rooms will be pre-selected."""
-    selected_elements = [doc.GetElement(e_id) for e_id in selection.GetElementIds()]
-    selected_rooms    = [e for e in selected_elements if type(e) == Room]
-    ref_rooms         = [Reference(r) for r in selected_rooms]
-    ref_preselection  = List[Reference](ref_rooms)
-
-    error_msg = 'No Rooms were selected.\nPlease Try Again'
-    # Pick Walls (exterior walls are preselected)
-    ISF_Rooms          = ISelectionFilter_Classes([Room,])
-
-    try:
-        with forms.WarningBar(title='Select Rooms and click "Finish"'):
-            ref_selected_rooms = selection.PickObjects(ObjectType.Element,
-                                                       ISF_Rooms,
-                                                       'Select Rooms',
-                                                       ref_preselection)
-
-        selected_rooms  = [doc.GetElement(ref) for ref in ref_selected_rooms]
-        if not selected_rooms:
-            forms.alert(error_msg, title=__title__, exitscript=exitscript)
-    except:
-        sys.exit()
-        # forms.alert(error_msg, title=__title__, exitscript=True)
-
-    return selected_rooms
 
 def create_ceilings(rooms, ceil_type, offset):
     """Function to create Ceilings from Rooms."""
-    # >>>>>>>>>> TRANSACTION + LOOP THROUGH ROOMS
+    # TRANSACTION + LOOP THROUGH ROOMS
     ceilings = []
     with ef_Transaction(doc, __title__, debug=True):
         for room in rooms:
 
-            # >>>>>>>>>> IGNORE NON-BOUNDING ROOMS
+            # IGNORE NON-BOUNDING ROOMS
             if not room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble():
                 return None
 
-            # >>>>>>>>>> ROOM BOUNDARIES -> List[CurveLoop]()
+            # ROOM BOUNDARIES -> List[CurveLoop]()
             room_boundaries = room.GetBoundarySegments(SpatialElementBoundaryOptions())
             curveLoopList   = List[CurveLoop]()
 
@@ -107,7 +77,7 @@ def create_ceilings(rooms, ceil_type, offset):
                     room_curve_loop.Append(curve)
                 curveLoopList.Add(room_curve_loop)
 
-            # >>>>>>>>>> CREATE CEILINGS
+            #  CREATE CEILINGS
             if curveLoopList:
                 try:
                     ceiling = Ceiling.Create(doc, curveLoopList, ceil_type.Id, active_level.Id)
@@ -136,8 +106,7 @@ def get_user_input():
 # ╩ ╩╩ ╩╩╝╚╝ MAIN
 #==================================================
 if __name__ == '__main__':
-    selected_rooms  = get_selected_rooms()
-
+    selected_rooms     = get_selected_rooms()
     GUI                = get_user_input()
     selected_ceil_type = GUI.selected_type
     offset             = GUI.offset

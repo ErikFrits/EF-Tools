@@ -56,7 +56,8 @@ def get_selected_rooms(uidoc=uidoc, exitscript = True):
     ref_preselection  = List[Reference](ref_rooms)
 
     # Pick Walls (exterior walls are preselected)
-    ISF_Rooms         = ISelectionFilter_Classes([Room,])
+    ISF_Rooms      = ISelectionFilter_Classes([Room,])
+    selected_rooms = []
 
     try:
         with forms.WarningBar(title='Select Rooms and click "Finish"'):
@@ -66,14 +67,16 @@ def get_selected_rooms(uidoc=uidoc, exitscript = True):
                                                        ref_preselection)
 
         selected_rooms  = [doc.GetElement(ref) for ref in ref_selected_rooms]
-        if not selected_rooms:
-            error_msg = 'No Rooms were selected.\nPlease Try Again'
-            forms.alert(error_msg, title='Failed Room Selection.', exitscript=exitscript)
     except:
-        if exitscript:
-            print(traceback.format_exc())
-            sys.exit()
+        pass
+
+    if not selected_rooms:
+        error_msg = 'No Rooms were selected.\nPlease Try Again'
+        forms.alert(error_msg, title='Room Selection has Failed.', exitscript=exitscript)
+
     return selected_rooms
+
+
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET VIEWS
 def get_selected_views(given_uidoc = uidoc, exit_if_none = False, title = '__title__', version = 'Version: _'):

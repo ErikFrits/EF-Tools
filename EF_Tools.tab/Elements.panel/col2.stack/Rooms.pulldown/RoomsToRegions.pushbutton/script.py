@@ -1,28 +1,29 @@
 # -*- coding: utf-8 -*-
 __title__     = "Rooms to Regions"
 __author__    = "Erik Frits"
-__version__   = 'Version = 1.2'
+__version__   = 'Version = 1.3'
 __helpurl__   = 'https://www.youtube.com/watch?v=3thf8IvJVpY'
-__doc__ = """Version = 1.2
+__doc__ = """Version = 1.3
 Date    = 08.02.2021
 _____________________________________________________________________
 Description:
 
-Create FilledRegions with selected Rooms.
-If none selected it will promt user with a Yes/No dialog box
-to select all visible rooms in an active view.
+Create FilledRegions from selected Rooms. 
+New FilledRegions will be selected once created.
+It will also write Room's name into Comments.
 
-- As a bonus it will write Room's name into FilledRegion Comment
 _____________________________________________________________________
 How-to:
 
--> Open FloorPlan
--> Select Rooms(it will filter other elements out)
+-> Pre-Select Rooms(optional)
 -> Run the script
--> If no rooms selected it ask to select all rooms in an ActiveView.
+-> Modify/Confirm Room Selection
 -> Select RegionType
+-> New Regions will be selected
 _____________________________________________________________________
 Last update:
+- [13.01.2023] - 1.3 RELEASE
+- [13.01.2023] - Improved Room Selection and UI
 - [09.05.2022] - 1.2 RELEASE
 - [08.05.2022] - Updated GUI(Checkboxes + Filtering) + Refactoring
 - [26.07.2021] - 1.0 RELEASE
@@ -35,15 +36,13 @@ Author: Erik Frits"""
 # ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
 # ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
 #==================================================
-import sys
-from pyrevit import  forms
 from Autodesk.Revit.DB import *
+from pyrevit import  forms
 
-#>>>>>>>>>> .NET IMPORTS
+# .NET IMPORTS
 import clr
 clr.AddReference("System")
-clr.AddReference("System.Windows.Forms")
-from System.Windows.Forms import DialogResult, MessageBox, MessageBoxButtons
+from System.Collections.Generic import List
 
 #Custom
 from Snippets._context_manager  import ef_Transaction
@@ -58,42 +57,21 @@ uidoc   = __revit__.ActiveUIDocument
 app     = __revit__.Application
 doc     = __revit__.ActiveUIDocument.Document
 
-active_view_id      = doc.ActiveView.Id
-active_view         = doc.GetElement(active_view_id)
+active_view         = doc.ActiveView
+active_view_id      = active_view.Id
 active_view_level   = active_view.GenLevel
 
 # ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
 # ╠╣ ║ ║║║║║   ║ ║║ ║║║║╚═╗
 # ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝╚═╝ FUNCTIONS
 #==================================================
-def ask_select_all_rooms():
-    """Function to show Yes/No dialog box to ask user 'Incl primary and dependant views and sheets?'
-    :return: List of all room visible in the currect view. if None - Exit Script"""
-    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PROMT USER YES/NO
-    dialogResult = MessageBox.Show('There were no rooms selected. Would you like to select all rooms visible in the active view?',
-                                    __title__, MessageBoxButtons.YesNo)
-    if (dialogResult == DialogResult.Yes):
-        return FilteredElementCollector(doc, active_view_id).WherePasses(ElementCategoryFilter(BuiltInCategory.OST_Rooms)).ToElements()
-    sys.exit()
-
-def select_rooms():
-    """Function to get rooms in project."""
-    selected_rooms = get_selected_rooms(uidoc, exit_if_none=False)
-    if not selected_rooms:
-        # >>>>>>>>>>Select all rooms visible in the view or exit script.
-        selected_rooms = ask_select_all_rooms()
-
-    if not selected_rooms:
-        forms.alert('No rooms were selected. \nPlease Try Again.', title= __title__, exitscript=True)
-    return selected_rooms
-
 def select_region_type():
     """Function to display GUI and let user select RegionType.
     :return:  Selected RegionType"""
-    all_filled_regions = FilteredElementCollector(doc).OfClass(FilledRegionType)
+    all_filled_regions  = FilteredElementCollector(doc).OfClass(FilledRegionType)
     dict_filled_regions = {Element.Name.GetValue(fr): fr for fr in all_filled_regions}
 
-    selected_elements = select_from_dict(dict_filled_regions,
+    selected_elements   = select_from_dict(dict_filled_regions,
                                          title = __title__, label='Select RegionType',
                                          button_name='Select', version=__version__,
                                          SelectMultiple=False)
@@ -103,17 +81,18 @@ def select_region_type():
 
 def create_regions(rooms, region_type):
     """Function to loop through selected rooms and create Regions from them."""
-    # >>>>>>>>>> TRANSACTION + LOOP THROUGH ROOMS
+    # TRANSACTION + LOOP THROUGH ROOMS
+    all_regions = []
     with ef_Transaction(doc, __title__, debug=True):
         for room in rooms:
 
-            # >>>>>>>>>> IGNORE NON-BOUNDING ROOMS
+            # IGNORE NON-BOUNDING ROOMS
             if not room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble():
                 return None
 
-            # >>>>>>>>>> ROOM BOUNDARIES -> CurveLoopList
+            # ROOM BOUNDARIES -> CurveLoopList
             room_boundaries = room.GetBoundarySegments(SpatialElementBoundaryOptions())
-            curveLoopList = []
+            curveLoopList   = List[CurveLoop]()
 
             for roomBoundary in room_boundaries:
                 room_curve_loop = CurveLoop()
@@ -122,19 +101,21 @@ def create_regions(rooms, region_type):
                     room_curve_loop.Append(curve)
                 curveLoopList.Add(room_curve_loop)
 
-            # >>>>>>>>>> CREATE REGION
+            # CREATE REGION
             if curveLoopList:
                 filled_region = FilledRegion.Create(doc, region_type.Id, active_view_id, curveLoopList)
-
-                #>>>>>>>>>> SET COMMENT AS ROOM NAME
+                all_regions.append(filled_region)
+                # SET COMMENT AS ROOM NAME
                 room_name = room.get_Parameter(BuiltInParameter.ROOM_NAME).AsString()
                 filled_region.get_Parameter(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS).Set(room_name)
+    return all_regions
 
 # ╔╦╗╔═╗╦╔╗╔
 # ║║║╠═╣║║║║
 # ╩ ╩╩ ╩╩╝╚╝MAIN
 #==================================================
 if __name__ == '__main__':
-    selected_rooms       = select_rooms()
+    selected_rooms       = get_selected_rooms(uidoc, exitscript=True)
     selected_region_type = select_region_type()
-    create_regions(selected_rooms, selected_region_type)
+    new_regions          = create_regions(selected_rooms, selected_region_type)
+    uidoc.Selection.SetElementIds(List[ElementId]([c.Id for c in new_regions]))

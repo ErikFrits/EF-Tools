@@ -1,24 +1,26 @@
 # -*- coding: utf-8 -*-
 __title__     = "Rooms to Floors"
 __author__    = "Erik Frits"
-__version__   = 'Version = 1.2'
-__doc__       = """Version = 1.2
+__version__   = 'Version = 1.3'
+__doc__       = """Version = 1.3
 Date    = 29.07.2021
 _____________________________________________________________________
 Description:
 
-Create Floors from selected Rooms.
-If no rooms selected it will promt user with a Yes/No dialog box 
-to select all visible Floors in an active view.
+Create Floors from selected Rooms. 
+New Floors will be selected once created.
 _____________________________________________________________________
 How-to:
 
--> Select rooms
+-> Pre-Select Rooms (*optional)
 -> Run the script
--> If no rooms selected it will ask to select all rooms in an active view.
+-> Modify/Confirm Room Selection
 -> Select FloorType
+-> New Floors will be selected
 _____________________________________________________________________
 Last update:
+- [13.01.2023] - 1.3 RELEASE
+- [13.01.2023] - Improved Room Selection and UI
 - [08.05.2022] - 1.2 RELEASE
 - [08.05.2022] - Updated GUI(Checkboxes + Filtering) + Refactoring
 - [16.11.2021] - 1.1 RELEASE
@@ -28,26 +30,17 @@ Last update:
 - [29.07.2021] - Bug Solved: Floors with openings 
 - [29.07.2021] - Select all rooms if none selected
 _____________________________________________________________________
-TO-DO:
-- UI Control: Offset from level
-_____________________________________________________________________
 Author: Erik Frits"""
 # ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
 # ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
 # ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
 #==================================================
-import sys
+from Autodesk.Revit.DB import *
 from pyrevit import forms
-from Autodesk.Revit.DB import (FilteredElementCollector, ElementCategoryFilter,
-                               BuiltInCategory, BuiltInParameter,
-                               Element, FloorType, TransactionGroup, Floor,
-                               CurveArray,SpatialElementBoundaryOptions, CurveLoop)
 
-#>>>>>>>>>> .NET IMPORTS
+# .NET IMPORTS
 import clr
 clr.AddReference("System")
-clr.AddReference("System.Windows.Forms")
-from System.Windows.Forms import DialogResult, MessageBox, MessageBoxButtons
 from System.Collections.Generic import List
 
 #Custom
@@ -68,37 +61,11 @@ active_view_id      = doc.ActiveView.Id
 active_view         = doc.GetElement(active_view_id)
 active_view_level   = active_view.GenLevel
 
-# #TODO TEMP
-# if rvt_year > 2022:
-#     forms.alert('This tool is not supported in Revit 2023 yet. It will be fixed soon.', title=__title__,
-#                 exitscript=True)  # FIXME
-
 
 # ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
 # ╠╣ ║ ║║║║║   ║ ║║ ║║║║╚═╗
 # ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝╚═╝ FUNCTIONS
 #==================================================
-def ask_select_all_floors():
-    """Function to show Yes/No dialog box to ask user 'Incl primary and dependant views and sheets?'
-    :return: List of all room visible in the currect view. if None - Exit Script"""
-    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PROMT USER YES/NO
-    dialogResult = MessageBox.Show('There were no rooms selected. Would you like to select all rooms visible in the active view?',
-                                    __title__, MessageBoxButtons.YesNo)
-    if (dialogResult == DialogResult.Yes):
-        return FilteredElementCollector(doc, active_view_id).WherePasses(ElementCategoryFilter(BuiltInCategory.OST_Rooms)).ToElements()
-    sys.exit()
-
-def select_rooms():
-    """Function to get rooms in project."""
-    selected_rooms = get_selected_rooms(uidoc, exit_if_none=False)
-    if not selected_rooms:
-        # >>>>>>>>>>Select all rooms visible in the view or exit script.
-        selected_rooms = ask_select_all_floors()
-
-    if not selected_rooms:
-        forms.alert('No rooms were selected. \nPlease Try Again.', title= __title__, exitscript=True)
-    return selected_rooms
-
 def select_floor_type():
     """Function to display GUI and let user select Floor Type.
     :return:  Selected FloorType """
@@ -112,16 +79,16 @@ def select_floor_type():
     if selected_elements:
         return selected_elements[0]
     forms.alert("No FloorType was selected. \nPlease, select a FloorType and Try Again.", title=__title__, exitscript=True)
-#
+
 
 def room_to_floor(room, floor_type):
     # Make sure that Room is bounding.
     if not room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble():
         return None
 
-    # >>>>>>>>>> CREATE FLOOR
+    #  CREATE FLOOR
     with ef_Transaction(doc, 'Create Floor', debug=True):
-        # >>>>>>>>>> ROOM BOUNDARIES
+        #  ROOM BOUNDARIES
         room_boundaries = room.GetBoundarySegments(SpatialElementBoundaryOptions())
         floor_shape = room_boundaries[0]
         openings = list(room_boundaries)[1:] if len(room_boundaries) > 1 else []
@@ -132,7 +99,7 @@ def room_to_floor(room, floor_type):
                 curve_array.Append(seg.GetCurve())
             new_floor = doc.Create.NewFloor(curve_array, floor_type, active_view_level, False)
 
-            # >>>>>>>>>> CREATE FLOOR OPENINGS SEPERATELY BEFORE RVT 2023
+            #  CREATE FLOOR OPENINGS SEPERATELY BEFORE RVT 2023
             if openings:
                 with ef_Transaction(doc, "Create Openings"):
                     for opening in openings:
@@ -151,23 +118,28 @@ def room_to_floor(room, floor_type):
             new_floor = Floor.Create(doc, List_curve_loop, floor_type.Id, active_view_level.Id) #FIXME
 
     return new_floor
-#
+
+
 def create_floors(selected_rooms, selected_floor_type):
     """Function to loop through selected rooms and create floors from them."""
-    # >>>>>>>>>> LOOP THROUGH ROOMS
+    new_floors = []
     with TransactionGroup(doc, __title__) as tg:
         tg.Start()
         for r in selected_rooms:
             with try_except(debug=True):
-                room_to_floor(room = r, floor_type=selected_floor_type)
+                new_floor = room_to_floor(room = r, floor_type=selected_floor_type)
+                new_floors.append(new_floor)
         tg.Assimilate()
+    return new_floors
 
 # ╔╦╗╔═╗╦╔╗╔
 # ║║║╠═╣║║║║
 # ╩ ╩╩ ╩╩╝╚╝MAIN
 #==================================================
 if __name__ == '__main__':
-    selected_rooms      = select_rooms()
+    selected_rooms      = get_selected_rooms(uidoc, exitscript=True)
     selected_floor_type = select_floor_type()
-    create_floors(selected_rooms, selected_floor_type)
+    new_floors = create_floors(selected_rooms, selected_floor_type)
 
+    # Select New Floors
+    uidoc.Selection.SetElementIds(List[ElementId]([c.Id for c in new_floors]))
