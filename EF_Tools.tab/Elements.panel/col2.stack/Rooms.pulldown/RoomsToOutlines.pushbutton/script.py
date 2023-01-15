@@ -125,4 +125,5 @@ if __name__ == '__main__':
     new_outlines        = create_outlines(selected_rooms, selected_line_style)
 
     # Select New Outlines
-    uidoc.Selection.SetElementIds(List[ElementId]([c.Id for c in new_outlines]))
+    uidoc.Selection.SetElementIds(List[ElementId]([c.Id for c in new_outlines if c.IsValidObject]))
+

@@ -85,29 +85,32 @@ def create_regions(rooms, region_type):
     all_regions = []
     with ef_Transaction(doc, __title__, debug=True):
         for room in rooms:
+            try:
+                # IGNORE NON-BOUNDING ROOMS
+                if not room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble():
+                    return None
 
-            # IGNORE NON-BOUNDING ROOMS
-            if not room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble():
-                return None
+                # ROOM BOUNDARIES -> CurveLoopList
+                room_boundaries = room.GetBoundarySegments(SpatialElementBoundaryOptions())
+                curveLoopList   = List[CurveLoop]()
 
-            # ROOM BOUNDARIES -> CurveLoopList
-            room_boundaries = room.GetBoundarySegments(SpatialElementBoundaryOptions())
-            curveLoopList   = List[CurveLoop]()
+                for roomBoundary in room_boundaries:
+                    room_curve_loop = CurveLoop()
+                    for boundarySegment in roomBoundary:
+                        curve = boundarySegment.GetCurve()
+                        room_curve_loop.Append(curve)
+                    curveLoopList.Add(room_curve_loop)
 
-            for roomBoundary in room_boundaries:
-                room_curve_loop = CurveLoop()
-                for boundarySegment in roomBoundary:
-                    curve = boundarySegment.GetCurve()
-                    room_curve_loop.Append(curve)
-                curveLoopList.Add(room_curve_loop)
+                # CREATE REGION
+                if curveLoopList:
+                    filled_region = FilledRegion.Create(doc, region_type.Id, active_view_id, curveLoopList)
+                    all_regions.append(filled_region)
 
-            # CREATE REGION
-            if curveLoopList:
-                filled_region = FilledRegion.Create(doc, region_type.Id, active_view_id, curveLoopList)
-                all_regions.append(filled_region)
-                # SET COMMENT AS ROOM NAME
-                room_name = room.get_Parameter(BuiltInParameter.ROOM_NAME).AsString()
-                filled_region.get_Parameter(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS).Set(room_name)
+                    # SET COMMENT AS ROOM NAME
+                    room_name = room.get_Parameter(BuiltInParameter.ROOM_NAME).AsString()
+                    filled_region.get_Parameter(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS).Set(room_name)
+            except:
+                pass
     return all_regions
 
 # ╔╦╗╔═╗╦╔╗╔
@@ -118,4 +121,4 @@ if __name__ == '__main__':
     selected_rooms       = get_selected_rooms(uidoc, exitscript=True)
     selected_region_type = select_region_type()
     new_regions          = create_regions(selected_rooms, selected_region_type)
-    uidoc.Selection.SetElementIds(List[ElementId]([c.Id for c in new_regions]))
+    uidoc.Selection.SetElementIds(List[ElementId]([c.Id for c in new_regions if c.IsValidObject]))

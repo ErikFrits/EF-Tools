@@ -685,7 +685,7 @@
                         <!--REGION WIDTH-->
                         <DockPanel>
                             <TextBlock  Text="Offset from level (cm):"    Width="130"/>
-                            <TextBox    Text="200" Width="200" x:Name="UI_offset" PreviewTextInput="NumberValidationTextBox"/>
+                            <TextBox    Text="0" Width="200" x:Name="UI_offset" PreviewTextInput="NumberValidationTextBox"/>
                         </DockPanel>
 
 

@@ -59,34 +59,34 @@ def create_ceilings(rooms, ceil_type, offset):
     """Function to create Ceilings from Rooms."""
     # TRANSACTION + LOOP THROUGH ROOMS
     ceilings = []
-    with ef_Transaction(doc, __title__, debug=True):
+    with ef_Transaction(doc, __title__, debug=False):
         for room in rooms:
+            try:
+                # IGNORE NON-BOUNDING ROOMS
+                if not room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble():
+                    return None
 
-            # IGNORE NON-BOUNDING ROOMS
-            if not room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble():
-                return None
+                # ROOM BOUNDARIES -> List[CurveLoop]()
+                room_boundaries = room.GetBoundarySegments(SpatialElementBoundaryOptions())
+                curveLoopList   = List[CurveLoop]()
 
-            # ROOM BOUNDARIES -> List[CurveLoop]()
-            room_boundaries = room.GetBoundarySegments(SpatialElementBoundaryOptions())
-            curveLoopList   = List[CurveLoop]()
+                for roomBoundary in room_boundaries:
+                    room_curve_loop = CurveLoop()
+                    for boundarySegment in roomBoundary:
+                        curve = boundarySegment.GetCurve()
+                        room_curve_loop.Append(curve)
+                    curveLoopList.Add(room_curve_loop)
 
-            for roomBoundary in room_boundaries:
-                room_curve_loop = CurveLoop()
-                for boundarySegment in roomBoundary:
-                    curve = boundarySegment.GetCurve()
-                    room_curve_loop.Append(curve)
-                curveLoopList.Add(room_curve_loop)
-
-            #  CREATE CEILINGS
-            if curveLoopList:
-                try:
+                #  CREATE CEILINGS
+                if curveLoopList:
                     ceiling = Ceiling.Create(doc, curveLoopList, ceil_type.Id, active_level.Id)
                     ceilings.append(ceiling)
                     # SET OFFSET
                     param = ceiling.get_Parameter(BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM)
                     param.Set(offset)
-                except:
-                    print(traceback.format_exc())
+
+            except:
+                pass
     return ceilings
 
 
@@ -117,4 +117,4 @@ if __name__ == '__main__':
     new_ceilings = create_ceilings(selected_rooms, selected_ceil_type, offset)
 
     # Select New Ceilings
-    uidoc.Selection.SetElementIds(List[ElementId]([c.Id for c in new_ceilings]))
+    uidoc.Selection.SetElementIds(List[ElementId]([c.Id for c in new_ceilings if c.IsValidObject]))
