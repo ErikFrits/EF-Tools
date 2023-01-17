@@ -14,7 +14,8 @@ How-to:
 
 -> Click on the button
 -> Select Source View/ViewTemplate
--> Add/Override Filters
+-> Select Filters
+-> Select Destination Views/ViewTemplates
 _____________________________________________________________________
 Last update:
 [17.01.2023] - 1.1 Release
@@ -23,7 +24,7 @@ before RVT 21
 [22.09.2022] - 1.0 Release
 _____________________________________________________________________
 To-Do:
-- 
+- Add View/ViewTemplate different in the second menu.
 _____________________________________________________________________
 Author: Erik Frits"""
 
