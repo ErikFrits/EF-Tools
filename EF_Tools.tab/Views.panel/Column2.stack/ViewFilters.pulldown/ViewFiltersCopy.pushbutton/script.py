@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 __title__ = "ViewFilters: Copy to Another View"
 __author__ = "Erik Frits"
-__version__ = "Version: 1.0"
-__doc__ = """Version = 1.0
+__version__ = "Version: 1.1"
+__doc__ = """Version = 1.1
 Date    = 15.11.2022
 _____________________________________________________________________
 Description:
 
 Copy Filters from another View/ViewTemplate with an option
 to add them or override(replace current with new ones only)
-
 _____________________________________________________________________
 How-to:
 
@@ -18,7 +17,10 @@ How-to:
 -> Add/Override Filters
 _____________________________________________________________________
 Last update:
-[22.09.2022] - Dev
+[17.01.2023] - 1.1 Release
+[17.01.2023] - Bug: ViewPlan.GetOrderedFilters() isn't available 
+before RVT 21
+[22.09.2022] - 1.0 Release
 _____________________________________________________________________
 To-Do:
 - 
@@ -48,9 +50,6 @@ from System.Collections.Generic import List
 from System.Windows.Controls import ComboBoxItem
 import wpf
 
-
-
-
 # ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
 # ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
 #  ╚╝ ╩ ╩╩╚═╩╩ ╩╚═╝╩═╝╚═╝╚═╝ VARIABLES
@@ -58,8 +57,9 @@ import wpf
 PATH_SCRIPT = os.path.dirname(__file__)
 
 uidoc = __revit__.ActiveUIDocument
-app = __revit__.Application
-doc = __revit__.ActiveUIDocument.Document
+app   = __revit__.Application
+doc   = __revit__.ActiveUIDocument.Document
+app_year = int(app.VersionNumber)
 
 active_view = doc.ActiveView
 
@@ -306,7 +306,14 @@ class SelectFilters(my_WPF):
         self.UI_ListBox_Src_Views.ItemsSource = filtered_list_of_items
 
         # Update Filter's ListBox
-        filter_ids   = self.src_view.GetOrderedFilters()
+
+        filter_ids = []
+        if app_year >= 2021:
+            filter_ids = self.src_view.GetOrderedFilters()
+        else:
+            filter_ids = self.src_view.GetFilters()
+
+
         filters      = [doc.GetElement(e_id) for e_id in filter_ids]
         dict_filters = {f.Name: f for f in filters}
         List_filters = create_List(dict_filters)
