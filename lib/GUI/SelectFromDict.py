@@ -46,7 +46,12 @@ class ListItem:
 # ╚═╝╩═╝╩ ╩╚═╝╚═╝╚═╝╚═╝ CLASSES
 #====================================================================================================
 class SelectFromDict(my_WPF):
-    def __init__(self, items, title = '__title', label = "Select Elements:" ,button_name = 'Select', version = 'version= 1.0', SelectMultiple = True):
+    def __init__(self, items,
+                 title = '__title',
+                 label = "Select Elements:" ,
+                 button_name = 'Select',
+                 version = 'version= 1.0',
+                 SelectMultiple = True):
         self.SelectMultiple = SelectMultiple
         self.given_dict_items = {k:v for k,v in items.items() if k}
 
