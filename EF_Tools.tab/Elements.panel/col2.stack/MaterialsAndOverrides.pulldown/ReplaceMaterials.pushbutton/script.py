@@ -23,6 +23,9 @@ Last update:
 -[31.08.2022] - 1.0 RELEASE
 _____________________________________________________________________
 To-Do:
+- Fix Reporting Materials changed 
+- InPlace Elements Materials
+- Only used materials in Find!
 - ComboBox Filtering 
 - Painted Surfaces (Replace/Remove?)
 _____________________________________________________________________
@@ -284,7 +287,6 @@ class ReplaceMaterials(my_WPF):
         self.get_elements()
         self.get_selected_materials()
         self.replace_materials()
-        self.count = 0
 
         print('In Total: Material was replaced in {} Parameters.'.format(self.count))
 
