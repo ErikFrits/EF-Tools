@@ -112,6 +112,9 @@ class CreateFromRooms(my_WPF):
         for item in self.items:
             if filter_keyword.lower() in item.Name.lower():
                 filtered_list_of_items.Add(item)
+            else:
+                if item.IsChecked:
+                    item.IsChecked = False
 
         # UPDATE LIST OF ITEMS
         self.main_ListBox.ItemsSource = filtered_list_of_items
