@@ -34,6 +34,7 @@ Last update:
 - [31.01.2022] - 1.0 RELEASE
 _____________________________________________________________________
 To-Do:
+- Test Legend ViewTemplate(Might cause errors)
 - Open latest Legend
 - Report new Legends with linkify?
 _____________________________________________________________________

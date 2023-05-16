@@ -254,6 +254,11 @@ class IsolateWarnings(my_WPF):
             # CREATE 3D VIEW
             view_name = 'EF_Warnings_{}_{}'.format(date, warn_type)
             view = create_3D_view(uidoc, view_name)
+
+            # Remove Default ViewTemplate from 3D View
+            if view.ViewTemplateId != ElementId(-1):
+                view.ViewTemplateId = ElementId(-1)
+
             view.SetCategoryHidden(ElementId(BuiltInCategory.OST_Levels), True)  # Hide Levels
             view.SetCategoryHidden(ElementId(BuiltInCategory.OST_VolumeOfInterest), True)  # Hide ScopeBoxes
 
