@@ -7,8 +7,10 @@ Date    = 22.05.2023
 _____________________________________________________________________
 Description:
 Renumber parameter values for elements from selected categories 
-using Spline curve for order
+using Spline curve for order.
 
+It will only allow you to select Text Parameters 
+that are not ReadOnly!
 _____________________________________________________________________
 How-to:
 -> Click on Button
@@ -55,6 +57,7 @@ import wpf
 doc   = __revit__.ActiveUIDocument.Document
 uidoc = __revit__.ActiveUIDocument
 app   = __revit__.Application
+rvt_year = int(app.VersionNumber)
 PATH_SCRIPT = os.path.dirname(__file__)
 
 
@@ -122,12 +125,25 @@ class UI(my_WPF):
 # ╚═╝╚═╝ ╩   ╚═╝╩ ╩ ╩ ╚═╝╚═╝╚═╝╩╚═╩╚═╝╚═╝ GET CATEGORIES
 #==================================================
 # Extra Categories
-cat_grids = doc.Settings.Categories.get_Item(BuiltInCategory.OST_Grids)
+
+def check_cat(cat):
+    """Helper function to check Categories.
+    Revit 2021 had an error for category.BuiltInCategory, so I needed try/except."""
+    try:
+        if cat.CategoryType == CategoryType.Model:                  # Filter Model Categories
+
+            if rvt_year >= 2023:
+                if cat.BuiltInCategory != BuiltInCategory.INVALID:  # Filter INVALID Categories
+                    return True
+            return True
+    except:
+        print(traceback.format_exc())
+        return False
 
 # Select Categories
-cats = doc.Settings.Categories
-cats = [cat for cat in cats if cat.BuiltInCategory != BuiltInCategory.INVALID]  # Filter only BuiltInCategories
-cats = [cat for cat in cats if cat.CategoryType == CategoryType.Model]          # Filter Model Categories
+cats      = doc.Settings.Categories
+cats      = [cat for cat in cats if check_cat(cat)]                         # Filter only BuiltInCategories
+cat_grids = doc.Settings.Categories.get_Item(BuiltInCategory.OST_Grids)     # Grids are not Model Categories, so I need to manally add it.
 cats.append(cat_grids)
 
 dict_cats = {cat.Name : cat for cat in cats}
@@ -136,7 +152,7 @@ sel_cats  = select_from_dict(dict_cats, title=__title__, label='Select Categorie
 if not sel_cats:
     forms.alert('No Category Selected. Please Try Again', title=__title__, exitscript=True)
 
-sel_cats  = [cat.BuiltInCategory for cat in sel_cats]
+
 
 # ╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗  ╔═╗╦ ╦╦═╗╦  ╦╔═╗
 # ╚═╗║╣ ║  ║╣ ║   ║   ║  ║ ║╠╦╝╚╗╔╝║╣
@@ -155,9 +171,9 @@ if not selected_curve:
 # ║ ╦║╣  ║   ║╣ ║  ║╣ ║║║║╣ ║║║ ║ ╚═╗
 # ╚═╝╚═╝ ╩   ╚═╝╩═╝╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝ GET ELEMENTS
 #==================================================
-
 # Create MultiCategory Filter
-List_cats        = List[BuiltInCategory](sel_cats)
+sel_cats  = [cat.Id for cat in sel_cats]
+List_cats        = List[ElementId](sel_cats)
 multi_cat_filter = ElementMulticategoryFilter(List_cats)
 
 # Get Elements from ActiveView that matches Selected Categories
@@ -205,7 +221,8 @@ for element in intersected_elements:
         p_name = param.Definition.Name
         if p_name not in writable_params:
             if not param.IsReadOnly:
-                writable_params.append(p_name)
+                if param.StorageType == StorageType.String:
+                    writable_params.append(p_name)
 
 writable_params.sort()
 
