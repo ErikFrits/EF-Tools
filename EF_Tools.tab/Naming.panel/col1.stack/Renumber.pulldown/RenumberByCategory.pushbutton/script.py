@@ -60,7 +60,6 @@ app   = __revit__.Application
 rvt_year = int(app.VersionNumber)
 PATH_SCRIPT = os.path.dirname(__file__)
 
-
 # ╔═╗╦  ╔═╗╔═╗╔═╗
 # ║  ║  ╠═╣╚═╗╚═╗
 # ╚═╝╩═╝╩ ╩╚═╝╚═╝
@@ -130,14 +129,15 @@ def check_cat(cat):
     """Helper function to check Categories.
     Revit 2021 had an error for category.BuiltInCategory, so I needed try/except."""
     try:
-        if cat.CategoryType == CategoryType.Model:                  # Filter Model Categories
+        if rvt_year > 2022:
+            if cat.BuiltInCategory == BuiltInCategory.INVALID:
+                return False
 
-            if rvt_year >= 2023:
-                if cat.BuiltInCategory != BuiltInCategory.INVALID:  # Filter INVALID Categories
-                    return True
+        if cat.CategoryType == CategoryType.Model:                  # Filter Model Categories
             return True
+
     except:
-        print(traceback.format_exc())
+        # print(traceback.format_exc())
         return False
 
 # Select Categories
