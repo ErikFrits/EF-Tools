@@ -111,8 +111,8 @@ class ReplaceMaterials(my_WPF):
             return item
 
         # ADD 'None' TO THE COMBOBOXES
-        self.UI_mat_find.Items.Add(create_item('None', False))
-        self.UI_mat_replace.Items.Add(create_item('None', False))
+        self.UI_mat_find.Items.Add(create_item('<By Category>', False))
+        self.UI_mat_replace.Items.Add(create_item('<By Category>', False))
 
         for n, mat in enumerate(all_materials):
             self.UI_mat_find.Items.Add(create_item(mat.Name, True if n==0 else False))
@@ -125,7 +125,7 @@ class ReplaceMaterials(my_WPF):
             """Function to get selected item from Combobox.Items."""
             for item in items:
                 if item.IsSelected:
-                    if item.Content == 'None' or item.Content == None:
+                    if item.Content == '<By Category>' or item.Content == None:
                         return ElementId(-1)
                     else:
                         return dict_materials[item.Content].Id
@@ -221,11 +221,15 @@ class ReplaceMaterials(my_WPF):
 
             # LOOP THROUGH LAYERS
             for layer in structure.GetLayers():
-                if layer.MaterialId != ElementId(-1):
+                if self.mat_find_id == ElementId(-1):
+                    if layer.MaterialId == ElementId(-1):
+                        structure.SetMaterialId(layer.LayerId, self.mat_replace_id)
+                        elem_type.SetCompoundStructure(structure)
+                        self.count += 1
 
+                elif layer.MaterialId != ElementId(-1):
                     # GET MATERIAL
                     mat = doc.GetElement(layer.MaterialId)
-
                     # CHANGE MATERIAL
                     if mat.Id == self.mat_find_id:
                         structure.SetMaterialId(layer.LayerId, self.mat_replace_id)
@@ -280,9 +284,10 @@ class ReplaceMaterials(my_WPF):
             self.Close()
 
         self.get_selected_materials()
-        if self.mat_find_id == ElementId(-1):
-            forms.alert("You Can't choose 'None' in Find.\nPlease change and Try Again",title=__title__)
-            return
+
+        # if self.mat_find_id == ElementId(-1):
+        #     forms.alert("You Can't choose 'None' in Find.\nPlease change and Try Again",title=__title__)
+        #     return
 
         self.get_elements()
         self.get_selected_materials()
