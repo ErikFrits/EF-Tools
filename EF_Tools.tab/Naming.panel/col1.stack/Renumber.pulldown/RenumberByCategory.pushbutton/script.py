@@ -144,7 +144,9 @@ def check_cat(cat):
 cats      = doc.Settings.Categories
 cats      = [cat for cat in cats if check_cat(cat)]                         # Filter only BuiltInCategories
 cat_grids = doc.Settings.Categories.get_Item(BuiltInCategory.OST_Grids)     # Grids are not Model Categories, so I need to manally add it.
+cat_view_ports = doc.Settings.Categories.get_Item(BuiltInCategory.OST_Viewports) # Include Viewports as well
 cats.append(cat_grids)
+cats.append(cat_view_ports)
 
 dict_cats = {cat.Name : cat for cat in cats}
 sel_cats  = select_from_dict(dict_cats, title=__title__, label='Select Categories' )
