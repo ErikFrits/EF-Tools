@@ -146,7 +146,7 @@ def room_to_floor(room, floor_type, offset):
 
 
 
-        if rvt_year >= 2023:
+        if rvt_year >= 2022:
             with Transaction(doc, 'Create FloorOpening') as t:
                 t.Start()
                 List_curve_loop = List[CurveLoop]()
