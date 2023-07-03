@@ -97,6 +97,8 @@ dict_all_templates              = {v.Name:v for v in all_templates_with_filters}
 # GET ALL LEGEND VIEWS
 all_views = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Views).ToElements()
 all_legends = [view for view in all_views if view.ViewType == ViewType.Legend]
+all_legends = [view for view in all_legends if not view.IsTemplate]
+
 if not all_legends:
     forms.alert("There has to be at least 1 Legend View in the project! "
                 "Please create one and try again.", exitscript=True)
