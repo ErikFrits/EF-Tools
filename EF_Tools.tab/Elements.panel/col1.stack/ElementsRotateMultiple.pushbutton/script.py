@@ -51,14 +51,14 @@ app = __revit__.Application
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FUNCTIONS
 def rotate_element(elem, degrees_to_rotate):
-    #>>>>>>>>>> GET CENTER POINT
+    # Get Center Point
     bounding_box = elem.get_BoundingBox(doc.ActiveView)
     point = (bounding_box.Min + bounding_box.Max) / 2
 
-    #>>>>>>>>>> AXIS LINE
-    axis_line = Line.CreateBound(point, point + XYZ.BasisZ ) #fixme will not rotate 2D in secitons
+    # Create Vertical Axis Line
+    axis_line = Line.CreateBound(point, point + XYZ.BasisZ )
 
-    #>>>>>>>>>> ROTATE
+    # Rotate
     ElementTransformUtils.RotateElement(doc, elem.Id, axis_line, math.radians(degrees_to_rotate))
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GUI

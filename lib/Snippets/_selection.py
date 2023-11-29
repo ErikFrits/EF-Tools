@@ -34,6 +34,7 @@ selection = uidoc.Selection                          # type: Selection
 # ║ ╦║╣  ║   ╚═╗║╣ ║  ║╣ ║   ║ ║╣  ║║
 # ╚═╝╚═╝ ╩   ╚═╝╚═╝╩═╝╚═╝╚═╝ ╩ ╚═╝═╩╝
 #==================================================
+
 def get_selected_elements(uidoc = uidoc, exitscript=True):
     """Property that retrieves selected views or promt user to select some from the dialog box."""
     doc       = uidoc.Document
@@ -135,6 +136,39 @@ def get_selected_sheets(given_uidoc = uidoc, exit_if_none = False, title='__titl
     if not selected_sheets and exit_if_none:
         forms.alert("No sheets were selected. Please try again.", exitscript=True)
     return selected_sheets
+
+def get_selected_walls(uidoc, exitscript = True):
+    """Function to Pick Walls. Currently selected walls will be pre-selected."""
+    doc       = uidoc.Document
+    selection = uidoc.Selection  # type: Selection
+
+    selected_elements = [doc.GetElement(e_id) for e_id in selection.GetElementIds()]
+    selected_walls    = [e for e in selected_elements if type(e) == Wall]
+
+
+    ref_walls         = [Reference(r) for r in selected_walls]
+    ref_preselection  = List[Reference](ref_walls)
+
+    # Pick Walls (exterior walls are preselected)
+    ISF_Rooms      = ISelectionFilter_Classes([Wall,])
+    selected_walls = []
+
+    try:
+        with forms.WarningBar(title='Select Walls.'):
+            ref_selected_walls = selection.PickObjects(ObjectType.Element,
+                                                       ISF_Rooms,
+                                                       'Select Rooms',
+                                                       ref_preselection)
+
+        selected_walls  = [doc.GetElement(ref) for ref in ref_selected_walls]
+    except:
+        pass
+
+    if not selected_walls:
+        error_msg = 'No Walls were selected.\nPlease Try Again'
+        forms.alert(error_msg, title='Wall Selection has Failed.', exitscript=exitscript)
+
+    return selected_walls
 
 # ╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗
 # ╚═╗║╣ ║  ║╣ ║   ║
