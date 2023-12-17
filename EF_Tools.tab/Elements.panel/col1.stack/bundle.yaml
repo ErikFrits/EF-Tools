@@ -1,5 +1,5 @@
 layout:
   - ElementsRotateMultiple
-  - RegionChangeLineStyle
+  - FilledRegions
   - Walls
   

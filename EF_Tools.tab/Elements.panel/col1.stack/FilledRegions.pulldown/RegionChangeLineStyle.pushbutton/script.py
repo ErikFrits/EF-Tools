@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-__title__ = "Regions: Change Linestyle"   # Name of the button displayed in Revit
+__title__ = "Change Linestyle"   # Name of the button displayed in Revit
 __author__ = "Erik Frits"
-__version__ = 'Version = 1.4'
-__doc__ = """Version = 1.4
+__version__ = 'Version = 1.5'
+__doc__ = """Version = 1.5
 Date    = 18.07.2021
 _____________________________________________________________________
 Description:
@@ -16,6 +16,8 @@ How-to:
 -> Select LineStyle to apply
 _____________________________________________________________________
 Last update:
+- [17.12.2023] - 1.5 RELEASE
+    - Improved Selection + Refactored
 - [07.02.2023] - 1.4 RELEASE
     - Bug: Error when working with multiple Projects
     - Bug: Error when no LineStyle was selected  
@@ -31,11 +33,12 @@ Author: Erik Frits"""
 # ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
 # ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
 #==================================================
-from pyrevit import forms
 from Autodesk.Revit.DB import  *
+from Autodesk.Revit.UI.Selection import *
+from pyrevit import forms
 
 #>>>>>>>>>> CUSTOM IMPORTS
-from Snippets._selection import get_selected_elements
+from Snippets._selection       import get_selected_elements
 from Snippets._context_manager import ef_Transaction, try_except
 
 
@@ -45,6 +48,7 @@ from Snippets._context_manager import ef_Transaction, try_except
 #==================================================
 uidoc   = __revit__.ActiveUIDocument
 doc   = __revit__.ActiveUIDocument.Document
+selection = uidoc.Selection #type: Selection
 
 # ╔═╗╦  ╔═╗╔═╗╔═╗╔═╗╔═╗
 # ║  ║  ╠═╣╚═╗╚═╗║╣ ╚═╗
@@ -58,32 +62,63 @@ class ListItem:
         self.IsChecked  = IsChecked
         self.element    = element
 
+
+class ISelectionFilter_Regions(ISelectionFilter):
+    def AllowElement(self, element):
+        if type(element) == FilledRegion:
+            return True
+
+
+
 # ╔╦╗╔═╗╦╔╗╔    ╔═╗╦ ╦╦
 # ║║║╠═╣║║║║    ║ ╦║ ║║
 # ╩ ╩╩ ╩╩╝╚╝    ╚═╝╚═╝╩ MAIN + GUI
 # ==================================================
-from GUI.forms import select_from_dict
+#📦 Define Placeholders
+selected_regions = None
 
-# HET SELECTED FILLED REGIONS
-selected_filled_regions = [element for element in get_selected_elements(uidoc) if type(element) == FilledRegion]
-if not selected_filled_regions:
-    forms.alert("There were no FilledRegion selected. \nPlease Try again.", __title__, exitscript=True)
+#1️⃣ Get Selected FilledRegions
+selected_regions = [element for element in get_selected_elements(uidoc,exitscript=False) if type(element) == FilledRegion]
 
-# GET LINE STYLES
-region = selected_filled_regions[0]
-valid_line_styles_ids = region.GetValidLineStyleIdsForFilledRegion(doc)
-valid_line_styles = [doc.GetElement(i) for i in valid_line_styles_ids]
+#2️⃣ Prompt PickObject if None were Selected
+if not selected_regions:
+    with forms.WarningBar(title='Pick Filled Regions:'):
+        try:
+            ref_picked_objects = selection.PickObjects(ObjectType.Element, ISelectionFilter_Regions())
+            selected_regions   = [doc.GetElement(ref) for ref in ref_picked_objects]
+        except:
+            pass
+
+#✅ Ensure Selected
+if not selected_regions:
+    forms.alert("FileldRegions weren't selected. Please Try Again.", exitscript=True)
+
+
+# 3. Get ALl Line Styles
+region                 = selected_regions[0]
+valid_line_styles_ids  = region.GetValidLineStyleIdsForFilledRegion(doc)
+valid_line_styles      = [doc.GetElement(i) for i in valid_line_styles_ids]
 dict_valid_line_styles = {i.Name: i for i in valid_line_styles}
 
-# ASK FOR USER INPUT (select LineStyle)
-selected_line_style = select_from_dict(dict_valid_line_styles, title=__title__, label='Select LineStyle', SelectMultiple=False, version=__version__)
-if selected_line_style and type(selected_line_style) == list:
-    selected_line_style = selected_line_style[0]
-else:
+
+# 4. User Input - Select LineStyle
+from GUI.forms import select_from_dict
+selected_line_style = select_from_dict(dict_valid_line_styles,
+                                       title=__title__,
+                                       label='Select LineStyle',
+                                       SelectMultiple=False,
+                                       version=__version__)
+
+if not selected_line_style:
     forms.alert('No LineStyle was selected. Please try Again', title=__title__ ,exitscript=True)
 
-# CHANGE LINESTYLE
+if type(selected_line_style) == list:
+    selected_line_style = selected_line_style[0] # select_from_dict always returns a list...
+
+
+
+#🎯 Change LineStyles
 with ef_Transaction(doc, __title__):
-    for region in selected_filled_regions:
+    for region in selected_regions:
         with try_except():
             region.SetLineStyleId(selected_line_style.Id)

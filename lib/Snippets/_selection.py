@@ -42,7 +42,7 @@ def get_selected_elements(uidoc = uidoc, exitscript=True):
 
     try:
         selected_elements = [doc.GetElement(e_id) for e_id in selection.GetElementIds()]
-        if not selected_elements:
+        if not selected_elements and exitscript:
             forms.alert("No elements  were selected.\nPlease, try again.", exitscript=exitscript)
     except:
         return
