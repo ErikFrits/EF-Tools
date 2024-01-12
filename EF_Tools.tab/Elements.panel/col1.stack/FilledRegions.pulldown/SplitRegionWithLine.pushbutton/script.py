@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 __title__   = "Split Regions with Line"
-__doc__ = """Version = 1.0
+__doc__ = """Version = 1.1
 Date    = 17.12.2023
 _____________________________________________________________________
 Description:
@@ -15,6 +15,7 @@ How-to:
 -> Select DetailLine
 _____________________________________________________________________
 Last update:
+- [12.01.2024] - 1.1 Minor Selection Bug Fixed
 - [17.12.2023] - 1.0 RELEASE
 _____________________________________________________________________
 To-Do?:
@@ -97,16 +98,14 @@ class ISelectionFilter_DetailLine(ISelectionFilter):
 # ╩ ╩╩ ╩╩╝╚╝
 #==================================================
 #📦 Define Placeholders
-selected_line, selected_regions = None, None
+selected_line    = None
+selected_regions = None
 
 #1️⃣ Get FilledRegions
 with forms.WarningBar(title='Pick Filled Region:'):
     try:
         ref_picked_objects = selection.PickObjects(ObjectType.Element, ISelectionFilter_Regions())
         selected_regions   = [doc.GetElement(ref) for ref in ref_picked_objects]
-
-        if not selected_regions:
-            forms.alert("FileldRegions weren't selected. Please Try Again.",exitscript=True)
     except:
         pass
 
@@ -116,10 +115,15 @@ with forms.WarningBar(title='Pick Detail Line:'):
     try:
         ref_picked_object   = selection.PickObject(ObjectType.Element, ISelectionFilter_DetailLine())
         selected_line       = doc.GetElement(ref_picked_object)
-        if not selected_line:
-            forms.alert("Detail Line wasn't selected. Please Try Again.",exitscript=True)
     except:
         pass
+
+# Check if elements were selected
+if not selected_regions:
+    forms.alert("FileldRegions weren't selected. Please Try Again.",exitscript=True)
+
+if not selected_line:
+    forms.alert("Detail Line wasn't selected. Please Try Again.", exitscript=True)
 
 
 #3️⃣ Create Plane from Line (By 3 Points)
