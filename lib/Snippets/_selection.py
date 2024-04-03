@@ -35,6 +35,8 @@ selection = uidoc.Selection                          # type: Selection
 # ╚═╝╚═╝ ╩   ╚═╝╚═╝╩═╝╚═╝╚═╝ ╩ ╚═╝═╩╝
 #==================================================
 
+
+
 def get_selected_elements(uidoc = uidoc, exitscript=True):
     """Property that retrieves selected views or promt user to select some from the dialog box."""
     doc       = uidoc.Document
@@ -48,6 +50,10 @@ def get_selected_elements(uidoc = uidoc, exitscript=True):
         return
 
     return selected_elements
+
+
+#
+
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GET ROOMS
 
@@ -244,6 +250,20 @@ class ISelectionFilter_Classes(ISelectionFilter):
             return True
 
 
+
+class ISelectionFilter_Categories(ISelectionFilter):
+    def __init__(self, allowed_cats):
+        """ ISelectionFilter made to filter with types
+        :param allowed_types: list of allowed Types"""
+        self.allowed_cat_ids = [ElementId(bic) for bic in allowed_cats]
+        # P.S. Use Category.Id because Category.BuiltInCategory is not available in older versions
+    def AllowElement(self, element):
+        if element.Category.Id in self. allowed_cat_ids:
+            return True
+
+
+
+
 # ╔═╗╦╔═╗╦╔═  ╔═╗╦  ╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
 # ╠═╝║║  ╠╩╗  ║╣ ║  ║╣ ║║║║╣ ║║║ ║ ╚═╗
 # ╩  ╩╚═╝╩ ╩  ╚═╝╩═╝╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝
@@ -261,5 +281,79 @@ def pick_curve(given_uidoc = uidoc):
     selected_curve = given_uidoc.Document.GetElement(curve_ref)
     curve = selected_curve.GeometryCurve
     return curve
+
+
+
+
+
+
+
+
+def pick_by_category(list_categories):
+    """Picks elements of specified categories from a selection.
+    Args:
+        list_types (list): A list of BuiltInCategories to filter selections by.
+        exit_if_none (bool, optional): Whether to exit if no elements are selected. Defaults to True.
+
+    Returns:
+        list: A list of selected elements that match the specified class types."""
+
+    #✅ Ensure list_types is a list
+    if not isinstance(list_categories, list):
+        list_categories = [list_categories]
+
+
+    #👉 Pick Elements
+    selected_elems = []
+    try:
+        ISF = ISelectionFilter_Categories(list_categories)
+
+        with forms.WarningBar(title='Select Elements and click "Finish"'):
+            ref_selected_elems = selection.PickObjects(ObjectType.Element,ISF)
+        selected_elems = [doc.GetElement(ref) for ref in ref_selected_elems]
+    except: pass
+
+    #❌ Exitscript if nothing selected
+    if not selected_elems and exit_if_none:
+        error_msg = 'No Elements were selected.\nPlease Try Again'
+        forms.alert(error_msg, title='Selection has Failed.', exitscript=True)
+
+    return selected_elems
+
+
+
+def pick_by_class(list_types, exit_if_none = True):
+    """Picks elements of specified classes from a selection.
+    Args:
+        list_types (list): A list of class types to filter selections by.
+        exit_if_none (bool, optional): Whether to exit if no elements are selected. Defaults to True.
+
+    Returns:
+        list: A list of selected elements that match the specified class types."""
+    #✅ Ensure list_types is a list
+    if not isinstance(list_types, list):
+        list_types = [list_types]
+
+    #👉 Pick Elements
+    selected_elems = []
+    try:
+        ISF = ISelectionFilter_Classes(list_types)
+
+        with forms.WarningBar(title='Select Elements and click "Finish"'):
+            ref_selected_elems = selection.PickObjects(ObjectType.Element,ISF)
+        selected_elems = [doc.GetElement(ref) for ref in ref_selected_elems]
+    except: pass
+
+    #❌ Exitscript if nothing selected
+    if not selected_elems and exit_if_none:
+        error_msg = 'No Elements were selected.\nPlease Try Again'
+        forms.alert(error_msg, title='Selection has Failed.', exitscript=True)
+
+    return selected_elems
+
+
+
+
+
 
 
