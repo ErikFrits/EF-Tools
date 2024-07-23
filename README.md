@@ -6,11 +6,9 @@ Developed by **Erik Frits**
 🛠 𝐄𝐅-𝐓𝐨𝐨𝐥𝐬 is a FREE pyRevit extension that contains over 50+ tools that should solve your issues and improve your workflows.   
 And once more: it's 𝐅𝐑𝐄𝐄. So you should take full advantage of this!
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R2D2W2M)
-
 ---
 ### 📦 Revit Versions 📦
-These tools are mainly developed in Revit 2019-2023.
+These tools are mainly developed for Revit 2019-2023.
 
 ---
 #### 💠 Installation 💠 
@@ -32,7 +30,7 @@ Contact me directly or just open an Issue on GitHub so I can have a look and sol
 ---
 
 ## Contact me:
-📨  contact@erikfrits.com  
+📨  support@LearnRevitAPI.com  
 🤵  https://www.linkedin.com/in/erik-frits    
 ▶   https://www.youtube.com/c/ErikFrits  
 
