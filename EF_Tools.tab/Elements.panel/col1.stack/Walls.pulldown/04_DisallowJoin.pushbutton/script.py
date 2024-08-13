@@ -53,7 +53,7 @@ with Transaction(doc, 'Disallow Join') as t:
         el.Pinned = False
 
         # Disallow Join (Structural Framing)
-        if el.Category.BuiltInCategory == BuiltInCategory.OST_StructuralFraming:
+        if el.Category.Id == ElementId(BuiltInCategory.OST_StructuralFraming):
             try:
                 StructuralFramingUtils.DisallowJoinAtEnd(el, 0)
                 StructuralFramingUtils.DisallowJoinAtEnd(el, 1)
