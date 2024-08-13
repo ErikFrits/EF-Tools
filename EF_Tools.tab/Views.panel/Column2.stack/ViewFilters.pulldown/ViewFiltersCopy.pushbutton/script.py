@@ -67,8 +67,8 @@ active_view = doc.ActiveView
 # VIEWS
 all_views = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Views).ToElements()
 
-all_views_with_filters      = [v for v in all_views if v.GetFilters() and not v.IsTemplate]
-all_templates_with_filters  = [v for v in all_views if v.GetFilters() and v.IsTemplate]
+all_views_with_filters      = [v for v in all_views if v.GetOrderedFilters() and not v.IsTemplate]
+all_templates_with_filters  = [v for v in all_views if v.GetOrderedFilters() and v.IsTemplate]
 all_with_filters            = all_views_with_filters + all_templates_with_filters
 
 if not all_with_filters:
@@ -125,8 +125,8 @@ def get_dict_views(mode='all'):
 
 # Create Dict of Views
 dict_all_views   = get_dict_views()
-dict_views_f     = {k:v for k,v in dict_all_views.items() if not v.IsTemplate and v.GetFilters() }
-dict_templates_f = {k:v for k,v in dict_all_views.items() if     v.IsTemplate and v.GetFilters() }
+dict_views_f     = {k:v for k,v in dict_all_views.items() if not v.IsTemplate and v.GetOrderedFilters() }
+dict_templates_f = {k:v for k,v in dict_all_views.items() if     v.IsTemplate and v.GetOrderedFilters() }
 
 dict_views_and_templates_f = dict_views_f.copy()
 dict_views_and_templates_f.update(dict_templates_f)
