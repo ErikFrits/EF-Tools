@@ -1,0 +1,754 @@
+<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="MainWindow" Height="700" Width="1000"
+    WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+    WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+
+        <!--COLORS-->
+        <SolidColorBrush x:Key="accent"    Color="#ff9a2e"/>
+        <SolidColorBrush x:Key="hover"     Color="#ff7a2e"/>
+        <SolidColorBrush x:Key="white"     Color="#f2f2f2"/>
+        <SolidColorBrush x:Key="gray"      Color="#999999"/>
+        <SolidColorBrush x:Key="bg1"       Color="#1c1c1c"/>
+        <SolidColorBrush x:Key="bg2"       Color="#2b2b2b"/>
+        <SolidColorBrush x:Key="bg_header" Color="#2c2c2c"/>
+
+
+        <!--SCROLLBAR THUMB-->
+        <Style x:Key="ScrollBarThumbVertical" TargetType="{x:Type Thumb}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <!--<Setter Property="Margin" Value="3"/>-->
+
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border x:Name="rectangle"
+                            BorderThickness="1"
+                            BorderBrush="{StaticResource accent}"
+                            Height="{TemplateBinding Height}"
+                            SnapsToDevicePixels="True"
+                            Width="{TemplateBinding Width}"
+                            CornerRadius="5">
+
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                                    <GradientStop Color="#88ff9a2e" Offset="0.8" />
+                                    <GradientStop Color="#992b2b2b" Offset="0" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+
+                        </Border>
+                        <ControlTemplate.Triggers>
+
+
+
+
+
+                            <Trigger Property="IsDragging" Value="true">
+
+                                <Setter Property="Background" TargetName="rectangle">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                                            <GradientStop Color="#CCFF9A2E" Offset="0.8" />
+                                            <GradientStop Color="#CC2B2B2B" Offset="0" />
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--SCROLLBAR-->
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="{StaticResource bg2}"/>
+            <Setter Property="Foreground" Value="{StaticResource bg1}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource accent}"/>
+            <Setter Property="Opacity" Value="0.9"/>
+            <Setter Property="Margin" Value="3"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid x:Name="Bg"
+                                              SnapsToDevicePixels="true">
+                            <Border BorderBrush     = "{TemplateBinding BorderBrush}"
+                                                    BorderThickness = "{TemplateBinding BorderThickness}"
+                                                    Background      = "{TemplateBinding Background}"
+
+                                                    Grid.Row        = "1"
+                                                    CornerRadius="5"/>
+
+                            <Track x:Name="PART_Track"
+
+                                                   IsDirectionReversed="true"
+                                                   IsEnabled="{TemplateBinding IsMouseOver}"
+                                                   Grid.Row="1">
+
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource ScrollBarThumbVertical}" Margin="0"/>
+                                </Track.Thumb>
+                            </Track>
+
+                        </Grid>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- BUTTON STYLE-->
+        <Style x:Key="CloseButton" TargetType="Button">
+            <!--[BUTTON] STYLES-->
+            <Setter Property="TextElement.FontFamily" Value="Arial"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <!--[BUTTON] TEMPLATE-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="BorderElement"
+                                CornerRadius="8"
+                                Background="#1c1c1c"
+                                BorderBrush="#FF9A2E"
+                                BorderThickness="1">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Trigger for IsMouseOver -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BorderElement" Property="Background" Value="#FF9A2E"/>
+                                <Setter TargetName="BorderElement" Property="BorderBrush" Value="#FF9A2E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+
+        <!--COMBOBOX STYLE-->
+        <Style TargetType="ComboBox">
+            <Setter Property="Foreground" Value="#f2f2f2"/>
+            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="BorderBrush" Value="#444444"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="5,2"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <!-- ComboBox Border -->
+                            <Border x:Name="MainBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="5">
+                                <Grid>
+                                    <!-- Text Content -->
+                                    <ContentPresenter Margin="5,0,30,0"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"/>
+                                    <!-- Toggle Button -->
+                                    <ToggleButton Name="DropDownButton"
+                                          Focusable="False"
+                                          IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Background="Transparent"
+                                          BorderBrush="Transparent"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Center"
+                                          Width="25"
+                                          Height="25"
+                                          Margin="0,0,5,0"
+                                          ClickMode="Press">
+                                        <Path x:Name="ArrowIcon"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Data="M 0 0 L 4 4 L 8 0 Z"
+                                      Fill="#f2f2f2"
+                                      Width="10"
+                                      Height="6"/>
+                                        <ToggleButton.Style>
+                                            <Style TargetType="ToggleButton">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="ToggleButton">
+                                                            <Border x:Name="ToggleBorder"
+                                                            Background="Transparent"
+                                                            CornerRadius="5"
+                                                            Width="25"
+                                                            Height="25">
+                                                                <Path x:Name="Arrow"
+                                                              Data="M 0 0 L 4 4 L 8 0 Z"
+                                                              Fill="#f2f2f2"
+                                                              Width="10"
+                                                              Height="6"
+                                                              HorizontalAlignment="Center"
+                                                              VerticalAlignment="Center"/>
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <!-- Hover Effect -->
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="ToggleBorder" Property="Background">
+                                                                        <Setter.Value>
+                                                                            <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                                                                                <GradientStop Color="#88ff9a2e" Offset="0.8" />
+                                                                                <GradientStop Color="#992b2b2b" Offset="0" />
+                                                                            </LinearGradientBrush>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+
+                                                                </Trigger>
+
+                                                                <!-- Checked Effect -->
+                                                                <Trigger Property="IsChecked" Value="True">
+
+
+                                                                    <Setter TargetName="Arrow" Property="Fill" Value="{StaticResource accent}"/>
+                                                                </Trigger>
+
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ToggleButton.Style>
+                                    </ToggleButton>
+                                </Grid>
+                            </Border>
+
+                            <!-- Popup for Items -->
+                            <Popup Name="Popup"
+                           Placement="Bottom"
+                           IsOpen="{TemplateBinding IsDropDownOpen}"
+                           AllowsTransparency="True"
+                           Focusable="False"
+                           PopupAnimation="Slide">
+                                <Border Background="#444444"
+                                BorderBrush="{StaticResource accent}"
+                                BorderThickness="1"
+                                CornerRadius="5">
+                                    <ScrollViewer Margin="0"
+                                          SnapsToDevicePixels="True"
+                                          Focusable="False">
+                                        <StackPanel IsItemsHost="True"
+                                            KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <!-- Hover Effect -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="{StaticResource accent}"/>
+                            </Trigger>
+                            <!-- Focus Effect -->
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="{StaticResource hover}"/>
+                            </Trigger>
+                            <!-- Open Popup Effect -->
+                            <Trigger SourceName="DropDownButton" Property="IsChecked" Value="True">
+                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="{StaticResource accent}"/>
+                                <Setter Property="Background" TargetName="MainBorder" Value="#2b2b2b"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#f2f2f2"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border x:Name="ItemBorder"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="5"
+                        SnapsToDevicePixels="True">
+                            <ContentPresenter Margin="10,0"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Left"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Hover Effect -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <!--<Setter TargetName="ItemBorder" Property="Background" Value="#555555"/>-->
+
+
+                                <Setter TargetName="ItemBorder" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                                            <GradientStop Color="#33FF9A2E" Offset="0.5" />
+                                            <GradientStop Color="#332B2B2B" Offset="0" />
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+
+                                <!--<Setter TargetName="ItemBorder" Property="BorderBrush" Value="{StaticResource accent}"/>-->
+
+                            </Trigger>
+
+
+                            <!-- Selected Effect -->
+                            <Trigger Property="IsSelected" Value="True">
+
+                                <Setter TargetName="ItemBorder" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                                            <GradientStop Color="#88ff9a2e" Offset="0.8" />
+                                            <GradientStop Color="#992b2b2b" Offset="0" />
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="#2b2b2b"/>
+            <Setter Property="BorderBrush" Value="#ff9a2e"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
+
+
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="10"/>
+                </Style>
+            </Style.Resources>
+        </Style>
+
+        <!-- Define the style for TextBlock -->
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Poppins"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#C9C9C9"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+
+        <!--TEXTBOX-->
+        <Style TargetType="TextBox">
+            <Setter Property="Foreground" Value="{StaticResource white}"/>
+            <Setter Property="Background" Value="{StaticResource bg2}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource accent}"/>
+            <Setter Property="BorderThickness" Value="0.5"/>
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="4"/>
+                </Style>
+            </Style.Resources>
+        </Style>
+
+
+
+
+        <Style x:Key="YouTubeButtonStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF9a2e"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#FF9a2E"
+                                      Direction="0"
+                                      ShadowDepth="0"
+                                      BlurRadius="50"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="TextBlock.Foreground" Value="White"/>
+            <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+            <Setter Property="TextBlock.HorizontalAlignment" Value="Center"/>
+            <Setter Property="TextBlock.VerticalAlignment" Value="Center"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+
+
+    </Window.Resources>
+
+    <!--MAIN-->
+    <Border CornerRadius="20"
+            Background="#1C1C1C"
+            BorderBrush="#ff9a2e"
+            BorderThickness="5"
+            Padding="5">
+
+        <Grid>
+            <!-- Background Color -->
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                    <GradientStop Color="#1c1c1c" Offset="0" />
+                    <GradientStop Color="#222222" Offset="1" />
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <!-- MAIN ROW DEFINITIONS-->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <!-- Header-->
+                <RowDefinition Height="1*"/>
+                <!-- Main-->
+                <RowDefinition Height="50"/>
+                <!-- Submit Button-->
+                <RowDefinition Height="30"/>
+                <!-- Footer-->
+            </Grid.RowDefinitions>
+
+            <!--HEADER START-->
+
+            <Grid MouseDown="UIe_header_drag" Background="Transparent" Grid.Row="0" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="70"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Title -->
+                <Image x:Name="UI_ef_logo"
+                        Margin="5,0,0,0"
+                           HorizontalAlignment="Left"/>
+
+
+
+
+                <!-- Title -->
+                <TextBlock Text="EF-Sheet Generator"
+                               FontWeight="Bold"
+                          Grid.Column="1"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Foreground="#F2F2F2" />
+
+
+                <!-- Close Button -->
+                <!--CLOSE-->
+                <Button Content="Close"
+                            Style="{StaticResource CloseButton}"
+                            Grid.Column="2"
+                            Width="60" Height="20"
+                            Margin="0,0,10,0"
+                            FontSize="10"
+                            Click="UIe_header_btn_close"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"
+                            Background="Transparent" Foreground="White" BorderBrush="Transparent"/>
+
+
+            </Grid>
+
+
+
+
+
+
+
+            <!-- MAIN CONTENT START -->
+            <Grid Grid.Row="1" Margin="10,10,10,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- ListBox for views -->
+                <Border Background="#444444" Padding="10" CornerRadius="10">
+
+                    <StackPanel >
+
+                        <!-- Search Box for ListBox-->
+                        <DockPanel Margin="5">
+                            <Label Content="🔍Filter:"  Height="25" Foreground="#f2f2f2"/>
+                            <TextBox x:Name="UI_search" TextChanged="UIe_search_changed" />
+                        </DockPanel>
+
+                        <ListBox x:Name="UI_viewsListBox"
+                                 Margin="5" Height="420"
+                                 Background="#2b2b2b" Foreground="White"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 PreviewMouseLeftButtonDown="UIe_viewsListBox_PreviewMouseLeftButtonDown"
+                                 Drop="UIe_viewsListBox_Drop" AllowDrop="True" >
+
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="ContextMenu">
+                                        <Setter.Value>
+                                            <ContextMenu>
+                                                <MenuItem Header="Duplicate" Click="UIe_DuplicateView"/>
+                                                <MenuItem Header="Duplicate As Detailed" Click="UIe_DuplicateView"/>
+                                                <MenuItem Header="Duplicate As Dependent" Click="UIe_DuplicateView"/>
+
+                                            </ContextMenu>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+
+                            <ListBox.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="10"/>
+                                </Style>
+                            </ListBox.Resources>
+
+                        </ListBox>
+
+                        <DockPanel Margin="0,10,0,0">
+                            <TextBlock Text="TitleBlock" Margin="5,0,10,0" VerticalAlignment="Center" Foreground="{StaticResource accent}" FontWeight="Bold"/>
+                            <ComboBox x:Name="UI_combo_title_blocks" Margin="0,0,5,0" />
+
+
+                        </DockPanel>
+
+
+                    </StackPanel>
+
+                </Border>
+
+                <!--ScrollView for BorderSheetCards-->
+                <ScrollViewer Grid.Column="1" Margin="10,0,10,0">
+                    <UniformGrid  x:Name="UI_sheet_grid"  Columns="2" VerticalAlignment="Top" >
+
+                        <!--STACK 1-->
+                        <Border Tag="border_card" CornerRadius="10"  Background="#444444" Margin="0,0,10,10">
+                            <StackPanel>
+
+                                <DockPanel Margin="5">
+
+                                    <TextBox Text="SheetNumber"  Width="135" Margin="0,0,5,0" />
+                                    <TextBox Text="SheetName"    Width="135" />
+                                </DockPanel>
+
+
+
+                                <Border CornerRadius="10" Background="#2b2b2b"  Margin="10" >
+                                    <StackPanel Height="185" Margin="10" Background="#2b2b2b"
+                                                 AllowDrop="True" Drop="UIe_stackPanel_Drop"
+                                                 PreviewMouseLeftButtonDown="UIe_stackPanel_PreviewMouseLeftButtonDown"/>
+                                </Border>
+
+
+                            </StackPanel>
+                        </Border >
+
+
+
+                        <Border Tag="border_add" CornerRadius="10" Background="#7F444444" Margin="0,0,10,10">
+                            <Grid>
+                                <!-- Ellipse with hover and pressed effects -->
+                                <Ellipse x:Name="HoverEllipse"
+                                             Panel.ZIndex="1"
+                                             Fill="#BF444444"
+                                             Width="100"
+                                             Height="100"
+                                             RenderTransformOrigin="0.5,0.5"
+                                             IsHitTestVisible="True"
+                                             MouseDown="UIe_add_sheet_card"
+                                             Cursor="Hand">
+                                    <Ellipse.RenderTransform>
+                                        <ScaleTransform x:Name="EllipseScaleTransform" ScaleX="1" ScaleY="1"/>
+                                    </Ellipse.RenderTransform>
+                                    <!-- Hover and pressed effects with animations -->
+                                    <Ellipse.Triggers>
+                                        <!-- Hover Enter -->
+                                        <EventTrigger RoutedEvent="MouseEnter">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <!-- Scale ellipse -->
+                                                    <DoubleAnimation Storyboard.TargetName="EllipseScaleTransform"
+                                             Storyboard.TargetProperty="ScaleX"
+                                             To="1.2" Duration="0:0:0.2"/>
+                                                    <DoubleAnimation Storyboard.TargetName="EllipseScaleTransform"
+                                             Storyboard.TargetProperty="ScaleY"
+                                             To="1.2" Duration="0:0:0.2"/>
+                                                    <!-- Change ellipse color -->
+                                                    <ColorAnimation Storyboard.TargetName="HoverEllipse"
+                                            Storyboard.TargetProperty="Fill.Color"
+                                            To="#D9FF9A2E" Duration="0:0:0.2"/>
+                                                    <!-- Scale text -->
+                                                    <DoubleAnimation Storyboard.TargetName="TextScaleTransform"
+                                             Storyboard.TargetProperty="ScaleX"
+                                             To="1.2" Duration="0:0:0.2"/>
+                                                    <DoubleAnimation Storyboard.TargetName="TextScaleTransform"
+                                             Storyboard.TargetProperty="ScaleY"
+                                             To="1.2" Duration="0:0:0.2"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <!-- Hover Leave -->
+                                        <EventTrigger RoutedEvent="MouseLeave">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <!-- Scale ellipse back -->
+                                                    <DoubleAnimation Storyboard.TargetName="EllipseScaleTransform"
+                                             Storyboard.TargetProperty="ScaleX"
+                                             To="1" Duration="0:0:0.2"/>
+                                                    <DoubleAnimation Storyboard.TargetName="EllipseScaleTransform"
+                                             Storyboard.TargetProperty="ScaleY"
+                                             To="1" Duration="0:0:0.2"/>
+                                                    <!-- Revert ellipse color -->
+                                                    <ColorAnimation Storyboard.TargetName="HoverEllipse"
+                                            Storyboard.TargetProperty="Fill.Color"
+                                            To="#BF444444" Duration="0:0:0.2"/>
+                                                    <!-- Scale text back -->
+                                                    <DoubleAnimation Storyboard.TargetName="TextScaleTransform"
+                                             Storyboard.TargetProperty="ScaleX"
+                                             To="1" Duration="0:0:0.2"/>
+                                                    <DoubleAnimation Storyboard.TargetName="TextScaleTransform"
+                                             Storyboard.TargetProperty="ScaleY"
+                                             To="1" Duration="0:0:0.2"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <!-- Press (Mouse Down) -->
+                                        <EventTrigger RoutedEvent="MouseDown">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <!-- Slightly shrink ellipse -->
+                                                    <DoubleAnimation Storyboard.TargetName="EllipseScaleTransform"
+                                             Storyboard.TargetProperty="ScaleX"
+                                             To="1.1" Duration="0:0:0.1"/>
+                                                    <DoubleAnimation Storyboard.TargetName="EllipseScaleTransform"
+                                             Storyboard.TargetProperty="ScaleY"
+                                             To="1.1" Duration="0:0:0.1"/>
+                                                    <!-- Slightly darken ellipse color -->
+                                                    <ColorAnimation Storyboard.TargetName="HoverEllipse"
+                                            Storyboard.TargetProperty="Fill.Color"
+                                            To="#C5444444" Duration="0:0:0.1"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <!-- Release (Mouse Up) -->
+                                        <EventTrigger RoutedEvent="MouseUp">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <!-- Return ellipse to hover size -->
+                                                    <DoubleAnimation Storyboard.TargetName="EllipseScaleTransform"
+                                             Storyboard.TargetProperty="ScaleX"
+                                             To="1.2" Duration="0:0:0.1"/>
+                                                    <DoubleAnimation Storyboard.TargetName="EllipseScaleTransform"
+                                             Storyboard.TargetProperty="ScaleY"
+                                             To="1.2" Duration="0:0:0.1"/>
+                                                    <!-- Revert ellipse to hover color -->
+                                                    <ColorAnimation Storyboard.TargetName="HoverEllipse"
+                                            Storyboard.TargetProperty="Fill.Color"
+                                            To="#D9FF9A2E" Duration="0:0:0.1"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Ellipse.Triggers>
+                                </Ellipse>
+
+                                <!-- Plus sign in the center of the ellipse -->
+                                <TextBlock Text="+"
+                   FontSize="40"
+                   FontWeight="Bold"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   RenderTransformOrigin="0.5,0.5">
+                                    <TextBlock.RenderTransform>
+                                        <ScaleTransform x:Name="TextScaleTransform" ScaleX="1" ScaleY="1"/>
+                                    </TextBlock.RenderTransform>
+                                </TextBlock>
+                            </Grid>
+                        </Border>
+                    </UniformGrid>
+                </ScrollViewer>
+
+            </Grid>
+
+
+
+            <!--Button Area-->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Buttons-->
+                <StackPanel  Grid.Column="1" VerticalAlignment="Center">
+                    <Border Style="{StaticResource YouTubeButtonStyle}" >
+                        <Button Background="Transparent" Content="Generate Sheets"
+                            Click="UIe_btn_run">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Border>
+                </StackPanel>
+
+            </Grid>
+
+
+
+
+            <!--FOOTER START-->
+            <Border BorderBrush="#ff9a2e" BorderThickness="0,1,0,0" Grid.Row="3" Height="30" VerticalAlignment="Bottom" AllowDrop="True" >
+                <!-- Title -->
+                <TextBlock TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" Margin="0,5,0,0">
+                    <Hyperlink Foreground="#ff9a2e"
+                               FontSize="12"
+                               RequestNavigate="UIe_RequestNavigate"
+                               NavigateUri="https://learnrevitapi.com/ef-tools-cta"
+
+                               FontWeight="Medium" >
+                               Ready to Become pyRevit Hacker?
+                    </Hyperlink>
+                </TextBlock>
+            </Border>
+
+
+        </Grid>
+
+
+    </Border>
+</Window>
