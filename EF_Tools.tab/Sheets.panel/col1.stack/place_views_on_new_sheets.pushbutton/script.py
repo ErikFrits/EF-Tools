@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-__title__ = "WIP: Place views on new sheets"   # Name of the button displayed in Revit
+__title__ = "Place Views on Sheets"   # Name of the button displayed in Revit
 __author__ = "Erik Frits"
 # __context__ = 'Views'
 __doc__ = """Version = 0.2
@@ -9,7 +9,7 @@ _____________________________________________________________________
 Description:
 >>> THIS TOOL IS STIL WORK IN PROGRESS <<<
 
-Place selected views to newly created sheets.
+Place selected views to new sheets.
 _____________________________________________________________________
 How-to:
 
@@ -96,9 +96,7 @@ if __name__ == '__main__':
             print('View [{}] - Sheet [{}]'.format(view.Name, view.get_Parameter(BuiltInParameter.VIEWER_SHEET_NUMBER).AsString()))
 
     #>>>>>>>>>> SELECT TITLEBLOCK
-    selected_title_block = select_title_block(uidoc)
-    if not selected_title_block:
-        forms.alert("No TitleBlock selected. Please try again.", exitscript = True)
+    selected_title_block = select_title_block(uidoc, exitscript=True)
 
     #>>>>>>>>>> OPEN GUI
     GUI = MyWindow("Script.xaml")

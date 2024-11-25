@@ -242,9 +242,20 @@ class SheetObject():
             # ╚═╝╩╚═╚═╝╩  ╚═╝╚═╝╩ ╚═       ╚═╝╚═╝╚═╝╩  ╚═╝╚═╝╚═╝╩ ╚═ CROPBOX / SCOPEBOX
             # ==================================================
             if apply_CropScopeBox:
+
+                with ef_Transaction(doc, 'Crop View - True'):
+                    # SET CROP VIEW TO TRUE
+                    crop_param = other_view.get_Parameter(BuiltInParameter.VIEWER_CROP_REGION)
+                    if not crop_param.AsInteger():
+                        try:
+                            crop_param.Set(1)
+                        except:
+                            pass
+
                 with ef_Transaction(doc, "Apply Crop/Scope Box"):
                     # SCOPE BOX
                     try:
+                        # SET SCOPE BOX
                         param_scopebox = other_view.get_Parameter(BuiltInParameter.VIEWER_VOLUME_OF_INTEREST_CROP)
                         param_scopebox.Set(main_scopebox_id)
                     except:
@@ -342,7 +353,7 @@ class AlignViewports(forms.WPFWindow):
 
         def XYZ_to_str(XYZ_obj):
             """Convert XYZ object into readable string for further comparison."""
-            return "{},{},{}".format(XYZ_obj.X, XYZ_obj.Y, XYZ_obj.Z)
+            return "{},{}".format(XYZ_obj.X, XYZ_obj.Y)
 
         if not MainSheet.viewport_viewplan:
             return False
@@ -419,21 +430,18 @@ class AlignViewports(forms.WPFWindow):
     # ====================================================================================================
     def get_selected_sheets(self):
         """Function to get selected elements in Revit UI ."""
-        selected_sheets = [doc.GetElement(element_id) for element_id in uidoc.Selection.GetElementIds() if type(doc.GetElement(element_id)) == ViewSheet]
-
-        # CANCEL IF NO SHEETS SELECTED
-        if not selected_sheets:
-            msg = "No Sheets were selected. \nPlease Try again."
-            forms.alert(msg, title=__title__,  exitscript=False)
+        from Snippets._selection import get_selected_sheets
+        selected_sheets = get_selected_sheets(given_uidoc=uidoc ,title=__title__,
+                                              label='Select Sheet to Align Viewports', exit_if_none=True)
 
         # CANCEL IF NOT ENOUGH SHEETS SELECTED
-        elif len(selected_sheets) < 2:
-            msg ="Not enough sheets were selected. Try again."
-            forms.alert(msg, title=__title__,  exitscript=False)
+        if len(selected_sheets) < 2:
+            msg ="Not enough sheets were selected. Min 2 is required. Please, Try again."
+            forms.alert(msg, title=__title__,  exitscript=True)
 
-        else:
-            selected_sheets = {"{} - {}".format(sheet.SheetNumber, sheet.Name): sheet for sheet in selected_sheets}
-            return selected_sheets
+        # FORMAT AND RETURN
+        selected_sheets = {"{} - {}".format(sheet.SheetNumber, sheet.Name): sheet for sheet in selected_sheets}
+        return selected_sheets
 
     # ==================================================
     def generate_list_items(self):

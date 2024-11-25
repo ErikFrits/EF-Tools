@@ -18,7 +18,6 @@ all_text               = FilteredElementCollector(doc).OfCategory(BuiltInCategor
 
 all_lines               = FilteredElementCollector(doc, doc.ActiveView.Id).WherePasses(ElementClassFilter(CurveElement)).ToElements()
 all_rooms               = FilteredElementCollector(doc).WherePasses(ElementCategoryFilter(BuiltInCategory.OST_Rooms)).ToElements()
-all_worksets            = FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset).ToWorksets()
 all_doors               = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Doors).WhereElementIsNotElementType().ToElements()
 all_windows             = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Windows).WhereElementIsNotElementType().ToElements()
 all_floors              = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsNotElementType().ToElements()
@@ -32,6 +31,7 @@ all_revision_clouds     = FilteredElementCollector(doc).OfCategory(BuiltInCatego
 
 #>>>>>>>>>> VIEWS
 all_views               = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Views).ToElements()
+all_legends             = [view for view in all_views if view.ViewType == ViewType.Legend]
 all_sheets              = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Sheets).WhereElementIsNotElementType().ToElements()
 
 #>>>>>>>>>> TAGS
@@ -40,6 +40,24 @@ view_doors_tags         = FilteredElementCollector(doc).OfCategory(BuiltInCatego
 
 #>>>>>>>>>> DOC
 all_Categories = doc.Settings.Categories
+
+#>>>>>>>>>> SPECIAL
+materials    = FilteredElementCollector(doc).OfClass(Material)
+all_worksets = FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset).ToWorksets()
+
+
+
+
+
+# ElementMulticategoryFilter
+list_of_categories  = List[BuiltInCategory]([BuiltInCategory.OST_Walls, BuiltInCategory.OST_Floors, BuiltInCategory.OST_Roofs])
+multi_cat_filter    = ElementMulticategoryFilter(list_of_categories)
+all_builtin_types   = FilteredElementCollector(doc).WherePasses(multi_cat_filter).ToElements()
+
+
+
+
+
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

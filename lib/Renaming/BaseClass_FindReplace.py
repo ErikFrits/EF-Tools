@@ -23,13 +23,14 @@ import os
 
 class BaseRenaming(forms.WPFWindow):
     """GUI for [Views: Find and Replace]"""
-    def start(self, title):
+    def start(self, title, version="Version: _"):
         xaml_dir_abs_path = os.path.abspath(os.path.dirname(__file__))
         xaml_file_name = os.path.join(xaml_dir_abs_path,"GUI_BaseRename.xaml")
 
         self.form = forms.WPFWindow.__init__(self, xaml_file_name)
-        self.main_title.Text = title
-        self.selected_elements = self.get_selected_elements()
+        self.main_title.Text     = title
+        self.footer_version.Text = version
+        self.selected_elements   = self.get_selected_elements()
 
         if self.selected_elements:
             self.ShowDialog()
@@ -105,4 +106,3 @@ class BaseRenaming(forms.WPFWindow):
     def button_run(self, sender, e):
         """Button action: Rename view with given """
         self.rename_elements()
-        self.Close()

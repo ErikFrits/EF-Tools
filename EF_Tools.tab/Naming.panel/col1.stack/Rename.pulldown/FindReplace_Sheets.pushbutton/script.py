@@ -1,63 +1,64 @@
 # -*- coding: utf-8 -*-
-
 __title__ = "Find and Replace in Sheets"  # Name of the button displayed in Revit
 __author__ = "Erik Frits"
-__doc__ = """Version = 1.0
+__version__ = 'Version: 1.1'
+__doc__ = """Version: 1.1
 Date    = 28.07.2020
 _____________________________________________________________________
 Description:
 
-Rename selected sheet with Find/Replace/Prefix/Suffix options.
+Rename multiple sheets at once with Find/Replace/Suffix/Prefix logic.
+You can select sheets in Project Browser or if nothing selected
+you will get a menu to select your sheets.
 _____________________________________________________________________
 How-to:
 
--> Select sheets in ProjectBrowser
+-> Select sheets in ProjectBrowser (optional)
 -> Click the button
 -> Set your criterias
 -> Rename
 _____________________________________________________________________
-Prerequisite:
-
-You have to select sheets in ProjectBrowser.
-_____________________________________________________________________
 Last update:
-- 
+- [15.12.2022] - 1.1 RELEASE
+- [28.07.2020] - 1.0 RELEASE
 _____________________________________________________________________
-To-do:
-- 
-_____________________________________________________________________
-"""
+Author: Erik Frits"""
 
-
-
-
-
-import sys
-sys.path.append("C:\Users\ef\AppData\Roaming\pyRevit-Master\pyrevitlib")
-import os.path as op
-from pyrevit import revit
-from pyrevit import forms
-from pyrevit.forms import WPFWindow
-from pyrevit import script
-import Autodesk.Revit.DB as DB
+# ╦╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗
+# ║║║║╠═╝║ ║╠╦╝ ║ ╚═╗
+# ╩╩ ╩╩  ╚═╝╩╚═ ╩ ╚═╝ IMPORTS
+# ==================================================================
 from Autodesk.Revit.DB import *
-
-uidoc = __revit__.ActiveUIDocument
-doc = __revit__.ActiveUIDocument.Document
-
-
 from Autodesk.Revit.Exceptions import ArgumentException
 
+#pyRevit
+from pyrevit import forms
+
+# CUSTOM
+from Snippets._selection        import get_selected_sheets
 
 # .NET IMPORTS
 from clr import AddReference
 AddReference("System")
 from System.Diagnostics.Process import Start
-from System.Windows.Window import DragMove
-from System.Windows.Input import MouseButtonState
+from System.Windows.Window      import DragMove
+from System.Windows.Input       import MouseButtonState
 
+# ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
+# ╚╗╔╝╠═╣╠╦╝║╠═╣╠╩╗║  ║╣ ╚═╗
+#  ╚╝ ╩ ╩╩╚═╩╩ ╩╚═╝╩═╝╚═╝╚═╝ VARIABLES
+# ==================================================================
+uidoc   = __revit__.ActiveUIDocument
+doc     = __revit__.ActiveUIDocument.Document
 
+selected_sheets = get_selected_sheets(given_uidoc=uidoc, title=__title__,
+                                      label='Select Sheet to Rename',
+                                      exit_if_none=True, version=__version__)
 
+# ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
+# ╠╣ ║ ║║║║║   ║ ║║ ║║║║╚═╗
+# ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝╚═╝ FUNCTIONS
+# ==================================================================
 def update_project_browser():
     """Function to close and reopen ProjectBrowser so changes to Sheetnumber would become visible."""
     from Autodesk.Revit.UI import DockablePanes, DockablePane
@@ -66,8 +67,10 @@ def update_project_browser():
     project_browser.Hide()
     project_browser.Show()
 
-
-###__________________________________________________________________________________________________APPLICATION______________###
+# ╔═╗╦  ╔═╗╔═╗╔═╗╔═╗╔═╗
+# ║  ║  ╠═╣╚═╗╚═╗║╣ ╚═╗
+# ╚═╝╩═╝╩ ╩╚═╝╚═╝╚═╝╚═╝ CLASSES
+# ==================================================================
 
 class MyWindow(forms.WPFWindow):
     """GUI for ViewSheet renaming tool."""
@@ -76,11 +79,8 @@ class MyWindow(forms.WPFWindow):
         self.main_title.Text = __title__
 
 
-
-
-
     def rename(self):
-        t = Transaction(doc, "py:Viewname find and replace")
+        t = Transaction(doc, __title__)
         t.Start()
         self.rename_sheet_name()
         self.rename_sheet_number()
@@ -91,7 +91,7 @@ class MyWindow(forms.WPFWindow):
     def rename_sheet_name(self):
         """Function to rename SheetName if it is different to current one."""
 
-        for sheet in self.selected_sheets:
+        for sheet in selected_sheets:
             sheet_name_new = self.sheet_name_prefix + sheet.Name.replace(self.sheet_name_find, self.sheet_name_replace) + self.sheet_name_suffix
             fail_count = 0
 
@@ -108,53 +108,23 @@ class MyWindow(forms.WPFWindow):
                     sheet_name_new += "_"
 
 
-
     def rename_sheet_number(self):
-
-        for sheet in self.selected_sheets:
+        for sheet in selected_sheets:
             sheet_number_new = self.sheet_number_prefix + sheet.SheetNumber.replace(self.sheet_number_find, self.sheet_number_replace) + self.sheet_number_suffix
-
             fail_count = 0
             while fail_count < 5:
                 fail_count += 1
-
                 try:
                     if sheet.SheetNumber != sheet_number_new:
                         sheet.SheetNumber = sheet_number_new
                         break
                 except ArgumentException:
                     sheet_number_new += "*"
-
                 except:
                     sheet_number_new += "_"
 
 
-
-
-
-
-
-    # sheet.ViewName = sheet.ViewName
-
-    @property
-    def selected_sheets(self):
-        """Property that retrieves selected views or promt user to select some from the dialog box."""
-
-        # FILTER SHEETS FROM SELECTION
-        selected_sheets = [doc.GetElement(element_id) for element_id in uidoc.Selection.GetElementIds() if type(doc.GetElement(element_id)) == ViewSheet]
-
-        # SELECT SHEETS IF NONE SELECTED IN UI
-        if not selected_sheets :
-            selected_sheets  = forms.select_sheets(title="Select sheets to rename.",
-                                                button_name="Rename selected sheets",
-                                                width=1000)  # FIXME replace with custom view selection box later...
-            if not selected_sheets:
-                forms.alert("No views were selected.\nPlease, try again.", exitscript=True, title=__title__)
-        return selected_sheets
-
-
     ### GUI PROPERTIES
-
     # SHEETNUMBER PROPERTIES
     @property
     def sheet_number_find(self):
@@ -171,9 +141,6 @@ class MyWindow(forms.WPFWindow):
     @property
     def sheet_number_suffix(self):
         return self.input_sheet_number_suffix.Text
-
-
-
 
     # SHEETNAME PROPERTIES
     @property
@@ -192,11 +159,6 @@ class MyWindow(forms.WPFWindow):
     def sheet_name_suffix(self):
         return self.input_sheet_name_suffix.Text
 
-
-
-
-
-
     # GUI EVENT HANDLERS:
     def button_close(self,sender,e):
         """Stop application by clicking on a <Close> button in the top right corner."""
@@ -213,9 +175,11 @@ class MyWindow(forms.WPFWindow):
 
     def button_run(self, sender, e):
         """Button action: Rename view with given """
-
-        self.Close()
         self.rename()
 
+# ╔╦╗╔═╗╦╔╗╔
+# ║║║╠═╣║║║║
+# ╩ ╩╩ ╩╩╝╚╝ MAIN
+# ==================================================================
 if __name__ == '__main__':
     MyWindow("Script.xaml").ShowDialog()

@@ -1,7 +1,5 @@
-from Autodesk.Revit.DB import (FilteredElementCollector,
-                               ElementId,
-                               ViewSheet,
-                               BuiltInCategory)
+from Autodesk.Revit.DB import *
+from Autodesk.Revit.UI import UIDocument
 default_uidoc = __revit__.ActiveUIDocument
 default_doc = default_uidoc.Document
 
@@ -22,6 +20,7 @@ def get_titleblock_on_sheet(sheet, uidoc=default_uidoc):
     """Function to get TitleBlock from given ViewSheet.
     It will not return any TitleBlocks if there are more than 1 on ViewSheet.
     :returns TitleBlock"""
+    #TODO THIS FUNCTION IS OBSOLETE
     doc = uidoc.Document
 
     all_TitleBlocks = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_TitleBlocks).WhereElementIsNotElementType().ToElements()
@@ -39,3 +38,26 @@ def get_titleblock_on_sheet(sheet, uidoc=default_uidoc):
 
     else:
         return title_blocks_on_sheet[0]
+
+
+def get_titleblocks_from_sheet(sheet, uidoc):
+    #type:(ViewSheet, UIDocument) -> list
+    """Function to get TitleBlocks from the given ViewSheet.
+    :param sheet: ViewSheet that has TitleBlock/
+    :param uidoc: UIDocument of the Project
+    :return:      list of TitleBlocks that are placed on the given Sheet."""
+    # CREATE A RULE
+    rule_value = sheet.SheetNumber
+    param_sheet_number = ElementId(BuiltInParameter.SHEET_NUMBER)
+    f_pvp = ParameterValueProvider(param_sheet_number)
+    evaluator = FilterStringEquals()
+    f_rule = FilterStringRule(f_pvp, evaluator, rule_value, True)
+
+    # CREATE A FILTER
+    tb_filter = ElementParameterFilter(f_rule)
+
+    tb = FilteredElementCollector(uidoc.Document).OfCategory(BuiltInCategory.OST_TitleBlocks) \
+        .WhereElementIsNotElementType().WherePasses(tb_filter).ToElements()
+
+    return list(tb)
+

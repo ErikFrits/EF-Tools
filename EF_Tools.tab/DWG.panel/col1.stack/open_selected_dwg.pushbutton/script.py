@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__title__ = "DWG: open selected"
+__title__ = "DWG: Open/Reload"
 __author__ = "Erik Frits"
 __helpurl__ = "https://www.erikfrits.com/blog/open-selected-dwg/"
 __doc__ = """Version = 1.1

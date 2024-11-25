@@ -2,4 +2,5 @@
 Thumbs.*
 EF_Tools.tab/test.panel
 *.xlsx
-
+lib/Test
+EF_Tools.tab/UI.panel/col1.stack/ShortenRibbonNames.pushbutton/toggle_state.json

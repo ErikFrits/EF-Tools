@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__title__   = "Save/Relink DWGs"
+__title__   = "DWG: Save/Relink"
 __author__  = "Erik Frits"
 __doc__ = """Version = 1.1
 Date    = 31.07.2021
@@ -123,6 +123,8 @@ class SaveDWGs:
                         CADfiles_dict[dwg_name] = dwg_new_path
                 except:
                     print("***Exception occured while saving DWG***")
+                    import traceback
+                    print(traceback.format_exc())
                     continue
             return CADfiles_dict
         else:

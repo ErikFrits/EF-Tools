@@ -64,6 +64,9 @@ import pyrevit
 from pyrevit import revit
 from pyrevit import forms
 
+# Custom
+from Snippets._selection import get_selected_sheets
+
 # .NET IMPORTS
 import clr
 from pyrevit.forms import WPFWindow
@@ -98,7 +101,10 @@ class MyWindow(forms.WPFWindow):
     # ====================================================================================================
 
     def __init__(self, xaml_file_name):
-        self.selected_sheets = self.get_selected_sheets()
+        self.selected_sheets = get_selected_sheets(uidoc,
+                                                   title=__title__,
+                                                   label = 'Select Sheet to Duplicate',
+                                                   exit_if_none= False)
         if self.selected_sheets:
             self.form = forms.WPFWindow.__init__(self, xaml_file_name)
             self.main_title.Text = __title__

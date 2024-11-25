@@ -1,0 +1,8 @@
+layout:
+  - FindReplace - Views
+  - FindReplace_Sheets
+  - FindReplace_Types
+  - FindReplace_RoomNames
+  - FindReplace_Materials
+  - LevelsElevation
+  - FindReplace -Filters
