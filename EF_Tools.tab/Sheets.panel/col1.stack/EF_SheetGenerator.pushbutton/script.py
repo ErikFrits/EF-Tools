@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __title__ = "EF Sheet Generator"
 __helpurl__ = "https://www.youtube.com/watch?v=SxcxeErbLgc"
-__doc__ = """Version = 1.0
+__doc__ = """Version = 2.0
 Date: 24.11.2024
 Author: Erik Frits
 _____________________________________________________________________
@@ -19,6 +19,11 @@ SheetGenerator Form:
 
 Report Form:
 -> Click on Cards in Report to open Sheets/Views 
+_____________________________________________________________________
+To-Do:
+- Create SheetCards with Excel Import / DataGrid Copy.
+- Adjust View Scale
+
 _____________________________________________________________________
 Ready to become pyRevit Hacker yourself? 
 Check LearnRevitAPI.com"""

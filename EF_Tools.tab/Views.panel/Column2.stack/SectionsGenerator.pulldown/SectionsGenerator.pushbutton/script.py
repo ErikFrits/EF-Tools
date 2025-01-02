@@ -337,12 +337,12 @@ with ProgressBar(cancellable=True) as pb:
 
             #5️⃣ Create Section Generator
             gen             = SectionGenerator(doc,
-                                               origin       = E.origin,
+                                               oh        = E.depth,
+                                               deptrigin       = E.origin,
                                                vector       = E.vector,
                                                width        = E.width,
                                                height       = E.height,
                                                offset       = E.offset,
-                                               depth        = E.depth,
                                                depth_offset = E.depth_offset)
 
             el_type   = doc.GetElement(el.GetTypeId())
