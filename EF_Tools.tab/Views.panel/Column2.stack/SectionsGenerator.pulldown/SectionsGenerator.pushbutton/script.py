@@ -16,8 +16,9 @@ from Autodesk.Revit.UI.Selection import ISelectionFilter, ObjectType
 from Autodesk.Revit.DB import *
 import traceback
 
+
 # pyRevit Imports
-from pyrevit import script, forms
+from pyrevit import script, forms, EXEC_PARAMS
 
 # Custom EF Imports
 from Snippets._vectors import rotate_vector
@@ -137,7 +138,9 @@ class ElementProperties():
                 rotation_rad = self.el.Location.Rotation            # type: float
                 self.vector  = rotate_vector(self.vector, rotation_rad)  # type : XYZ
             except:
-                pass
+                if EXEC_PARAMS.debug_mode:
+                    import traceback
+                    print(traceback.format_exc())
 
             return
 
@@ -176,7 +179,9 @@ class ElementProperties():
                     if self.el.FacingFlipped:
                         self.vector = -self.vector
                 except:
-                    pass
+                    if EXEC_PARAMS.debug_mode:
+                        import traceback
+                        print(traceback.format_exc())
 
 
                 self.origin = (BB.Max + BB.Min) / 2     # type: XYZ
@@ -203,7 +208,9 @@ class ElementProperties():
                 rotation_rad = self.el.Location.Rotation            # type: float
                 self.vector  = rotate_vector(self.vector, rotation_rad)  # type : XYZ
             except:
-                pass
+                if EXEC_PARAMS.debug_mode:
+                    import traceback
+                    print(traceback.format_exc())
             return
 
 
@@ -283,7 +290,10 @@ try:
 
     selected_elems         = [doc.GetElement(ref) for ref in ref_selected_elems]
 except:
-    pass
+    if EXEC_PARAMS.debug_mode:
+        import traceback
+
+        print(traceback.format_exc())
 
 
 #----------------------------------------------------------------------
@@ -337,12 +347,12 @@ with ProgressBar(cancellable=True) as pb:
 
             #5️⃣ Create Section Generator
             gen             = SectionGenerator(doc,
-                                               oh        = E.depth,
-                                               deptrigin       = E.origin,
+                                               origin       = E.origin,
                                                vector       = E.vector,
                                                width        = E.width,
                                                height       = E.height,
                                                offset       = E.offset,
+                                               depth        = E.depth,
                                                depth_offset = E.depth_offset)
 
             el_type   = doc.GetElement(el.GetTypeId())
@@ -387,7 +397,11 @@ with ProgressBar(cancellable=True) as pb:
             table_data.append(row)
 
         except:
-            output.log_error(traceback.format_exc())
+            # output.log_error(traceback.format_exc())
+            if EXEC_PARAMS.debug_mode:
+                import traceback
+
+                print(traceback.format_exc())
 
 t.Commit() #🔒
 
@@ -399,7 +413,11 @@ try:
                        title="New Sections",
                        columns=["Category","TypeName","Element", "Sheet", "Elevation", "Cross", "Plan"])
 except:
-    output.log_error(traceback.format_exc())
+    if EXEC_PARAMS.debug_mode:
+        import traceback
+
+        print(traceback.format_exc())
+    # output.log_error(traceback.format_exc())
 
 
 
