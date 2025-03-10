@@ -1,0 +1,131 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Sample Form"
+        Height="400" Width="300">
+    <StackPanel Margin="10" Orientation="Vertical">
+
+        <!-- Text Inputs with TextBlocks -->
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Input 1:" VerticalAlignment="Center" Width="70"/>
+            <TextBox Width="200" Height="25"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Input 2:" VerticalAlignment="Center" Width="70"/>
+            <TextBox Width="200" Height="25"/>
+        </StackPanel>
+
+        <!-- Checkboxes -->
+        <DockPanel Margin="0,0,0,10" HorizontalAlignment="Center">
+            <CheckBox Content="Option 1" Margin="0,0,10,0"/>
+            <CheckBox Content="Option 2" Margin="0,0,10,0"/>
+            <CheckBox Content="Option 3" Margin="0,0,0,0"/>
+        </DockPanel>
+
+        <!-- ListBox -->
+        <ListBox Margin="0,0,0,10" Height="100">
+            <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 1" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+            <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 2" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+            <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 3" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+                        <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 1" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+            <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 2" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+            <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 3" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+                        <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 1" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+            <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 2" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+            <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 3" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+                        <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 1" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+            <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 2" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+            <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 3" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+                        <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 1" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+            <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 2" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+            <ListBoxItem>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox/>
+                    <TextBlock Text="Item 3" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </ListBoxItem>
+        </ListBox>
+
+        <!-- Radio Buttons -->
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <RadioButton Content="Option A" GroupName="RadioGroup" Margin="0,0,10,0"/>
+            <RadioButton Content="Option B" GroupName="RadioGroup"/>
+        </StackPanel>
+
+        <!-- Separator -->
+        <Separator Margin="0,0,0,10"/>
+
+        <!-- Submit Button -->
+        <Button Content="Submit" HorizontalAlignment="Center" Width="100" Height="30"/>
+
+    </StackPanel>
+</Window>

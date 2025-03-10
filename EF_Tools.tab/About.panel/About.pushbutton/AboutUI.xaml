@@ -1,0 +1,400 @@
+<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="MainWindow" Height="550" Width="650"
+    WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+    WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        
+        <!-- BUTTON STYLE-->
+        <Style TargetType="Button">
+            <!--[BUTTON] STYLES-->
+            <Setter Property="TextElement.FontFamily" Value="Arial"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <!--[BUTTON] TEMPLATE-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="BorderElement"
+                                CornerRadius="8"
+                                Background="#1c1c1c"
+                                BorderBrush="#FF9A2E"
+                                BorderThickness="1">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Trigger for IsMouseOver -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BorderElement" Property="Background" Value="#FF9A2E"/>
+                                <Setter TargetName="BorderElement" Property="BorderBrush" Value="#FF9A2E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <!-- Define the style for TextBlock -->
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Poppins"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#C9C9C9"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+
+
+        </Style>
+
+
+    </Window.Resources>
+    
+    <!--MAIN-->
+    <Border CornerRadius="20" 
+            Background="#1C1C1C" 
+            BorderBrush="#ff9a2e" 
+            BorderThickness="5"
+            Padding="5">
+
+        <Grid>
+            <!-- Background Color -->
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                    <GradientStop Color="#1c1c1c" Offset="0" />
+                    <GradientStop Color="#222222" Offset="1" />
+                </LinearGradientBrush>
+            </Grid.Background>
+            <!-- Background Color -->
+            <!-- Define Clip for rounded corners -->
+            
+
+
+            <!-- ROW DEFINITIONS START-->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <!-- Header Row -->
+                <RowDefinition/>
+                <!-- Main Content Row -->
+                <RowDefinition Height="25"/>
+                <!-- Footer Row -->
+            </Grid.RowDefinitions>
+            <!-- ROW DEFINITIONS END-->
+
+
+
+            <!--HEADER START-->
+            <Grid MouseDown="header_drag" Background="Transparent" Grid.Row="0" Margin="5">
+                <!--HEADER GRID-->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="75"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="75"/>
+                </Grid.ColumnDefinitions>
+
+                
+                
+
+                <!--IMAGE-->
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Hyperlink NavigateUri="https://www.learnrevitapi.com" 
+                               TextDecorations="None"
+                               RequestNavigate="Hyperlink_RequestNavigate">
+                        <Image x:Name="logoImage"
+                               Source="https://framerusercontent.com/images/LRmkkOk8c7TWErBSS6H9jhFklU.png"
+                               Height="50" Width="200"
+                               Stretch="Uniform"
+                               RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
+                                <ScaleTransform x:Name="imageScaleTransform"/>
+                            </Image.RenderTransform>
+                            <Image.Triggers>
+                                <EventTrigger RoutedEvent="Image.MouseEnter">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="imageScaleTransform"
+                                                             Storyboard.TargetProperty="ScaleX"
+                                                             To="0.9" Duration="0:0:0.2"/>
+                                            <DoubleAnimation Storyboard.TargetName="imageScaleTransform"
+                                                             Storyboard.TargetProperty="ScaleY"
+                                                             To="0.9" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="Image.MouseLeave">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="imageScaleTransform"
+                                                             Storyboard.TargetProperty="ScaleX"
+                                                             To="1.0" Duration="0:0:0.2"/>
+                                            <DoubleAnimation Storyboard.TargetName="imageScaleTransform"
+                                                             Storyboard.TargetProperty="ScaleY"
+                                                             To="1.0" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Image.Triggers>
+                        </Image>
+                    </Hyperlink>
+                </TextBlock>
+
+                <!--CLOSE-->
+                <Button Content="Close"
+                        Grid.Column="2"
+                        Width="60" Height="20"
+                        Margin="0,0,10,0"
+                        FontSize="10"
+                        Click="button_close"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Background="Transparent" Foreground="White" BorderBrush="Transparent"/>
+                
+            </Grid>
+            <!--HEADER END-->
+            
+            
+            <StackPanel Margin="10" Grid.Row="1" HorizontalAlignment="Center">
+                <!-- Rounded Card for Title -->
+
+                <DockPanel HorizontalAlignment="Center">
+
+                    <Border Background="#393939" CornerRadius="7" Padding="5" Margin="10" 
+                            BorderBrush="#FF9a2E" BorderThickness="0" RenderTransformOrigin="0.5,0.5">
+
+                        <Border.RenderTransform>
+                            <RotateTransform Angle="3"/>
+                        </Border.RenderTransform>
+
+                        <DockPanel>
+                            <!-- Title Text with Hyperlink -->
+                            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center">
+                            <Hyperlink NavigateUri="https://learnrevitapi.com/pyrevit-starter-kit" 
+                                       TextDecorations="None"
+                                       RequestNavigate="Hyperlink_RequestNavigate">
+                                <TextBlock Text="EF-pyRevit"
+                                           FontSize="28"
+                                           FontWeight="Bold"
+                                           Foreground="#FF9A2E"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left">
+                                    
+                                    
+                                </TextBlock>
+                            </Hyperlink>
+                        </TextBlock>
+
+                            <!-- Image with Animation -->
+                            <Image x:Name="animatedIcon"
+                               Source="https://framerusercontent.com/images/DB0IGuG78BboePQAX2lWXOVpOw.png?scale-down-to=512"
+                               Width="40" Height="40"
+                               Stretch="Uniform"
+                               DockPanel.Dock="Right"
+                               Margin="10,0,10,0"
+                               RenderTransformOrigin="0.5,0.5">
+                                <Image.RenderTransform>
+                                    <TransformGroup>
+                                        <RotateTransform x:Name="rotateTransform"/>
+                                        <ScaleTransform x:Name="scaleTransform"/>
+                                    </TransformGroup>
+                                </Image.RenderTransform>
+                                <Image.Triggers>
+                                    <!-- Rotation and Scaling Animations -->
+                                    <EventTrigger RoutedEvent="Image.Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <!-- Rotation Animation -->
+                                                <DoubleAnimation
+                                                Storyboard.TargetName="rotateTransform"
+                                                Storyboard.TargetProperty="Angle"
+                                                From="0" To="5"
+                                                Duration="0:0:1" 
+                                                AutoReverse="True" 
+                                                RepeatBehavior="Forever"/>
+                                                <!-- Scaling Animation -->
+                                                <DoubleAnimation
+                                                Storyboard.TargetName="scaleTransform"
+                                                Storyboard.TargetProperty="ScaleX"
+                                                From="1.0" To="1.1"
+                                                Duration="0:0:1"
+                                                AutoReverse="True"
+                                                RepeatBehavior="Forever"/>
+                                                <DoubleAnimation
+                                                Storyboard.TargetName="scaleTransform"
+                                                Storyboard.TargetProperty="ScaleY"
+                                                From="1.0" To="1.1"
+                                                Duration="0:0:1"
+                                                AutoReverse="True"
+                                                RepeatBehavior="Forever"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Image.Triggers>
+                            </Image>
+                        </DockPanel>
+                    </Border>
+
+
+
+                    <!-- Title Text with Hyperlink -->
+                    <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center">
+                            <Hyperlink NavigateUri="https://learnrevitapi.com/pyrevit-starter-kit" 
+                                       TextDecorations="None"
+                                       RequestNavigate="Hyperlink_RequestNavigate">
+                                <TextBlock Text="Starter Kit"
+                                           FontSize="28"
+                                           FontWeight="Bold"
+                                           Foreground="#F2F2F2"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"/>
+                            </Hyperlink>
+                        </TextBlock>
+                </DockPanel>
+                
+
+                <!-- Additional Information -->
+                <Border Background="#222222" CornerRadius="10" Padding="10" Margin="10" Width="500">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#FFCE7A" 
+                          Direction="0" 
+                          ShadowDepth="0" 
+                          Opacity="1" 
+                          BlurRadius="50" 
+                                          />
+                    </Border.Effect>
+
+                    <StackPanel>
+                        <!-- Description -->
+                        <TextBlock  FontFamily="Poppins"
+                                    Margin="0,0,0,10"><Run FontWeight="Bold" Text="🎉 Congratulations!"/></TextBlock>
+
+                        <TextBlock 
+                                    Margin="0,0,0,10"><Run Text="You've just created your own extension with EF-pyRevit StarterKit. "/><LineBreak/><Run FontWeight="Bold" Text="You are a pyRevit Developer now."/></TextBlock>
+
+                        <TextBlock Text="This kit has plenty of valuable resources, code samples and other things that should help you Learn Revit API with pyRevit. Check them out!" 
+                                    Margin="0,0,0,10"/>
+
+                        <TextBlock Text="I would also appreciate if you could leave a testimonial about this StarterKit." 
+                                    Margin="0,0,0,10"/>
+
+
+                        <!-- Title Text with Hyperlink -->
+                        <TextBlock HorizontalAlignment="Center">
+                            <Hyperlink NavigateUri="https://kudos.learnrevitapi.com/r/pyrevit-starter-kit" 
+                                       RequestNavigate="Hyperlink_RequestNavigate">
+                                <TextBlock Text="Click here to leave a Testimonial!"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Foreground="#FF9A2E"/>
+                            </Hyperlink>
+                        </TextBlock>
+
+                        <TextBlock Text="*Get Rewards for a Video Testimonial" 
+                                    Margin="0,0,0,10" HorizontalAlignment="Center"/>
+
+
+
+
+
+                        <!-- Image with Animation -->
+                        <!-- Image with Animation -->
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
+    <Hyperlink NavigateUri="https://linkedin.com/in/erik-frits" RequestNavigate="Hyperlink_RequestNavigate"
+               TextDecorations="None">
+        <Image x:Name="Avatar"
+               Source="https://framerusercontent.com/images/KZdDf9PjC6FcHr93MrQe44AZa8.png"
+               Height="75" Width="75"
+               Stretch="Uniform">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1" ScaleY="1"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                                         To="1.2" Duration="0:0:0.2"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                                         To="1.2" Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                                                         To="1" Duration="0:0:0.2"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                                                         To="1" Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+    </Hyperlink>
+                        </TextBlock>
+
+
+
+
+
+
+
+                        <!-- Made By -->
+                        <TextBlock 
+                                   FontSize="14" 
+                                   Foreground="#C9C9C9"
+                                   HorizontalAlignment="Center" Text="Made by Erik Frits"/>
+
+                        <!-- Happy Coding with Outer Glow -->
+                        <TextBlock Text="Happy Coding!" FontSize="16" 
+                               FontWeight="Bold" 
+                               Foreground="#FF9A2E" 
+                               Margin="0,0,0,5" 
+                               HorizontalAlignment="Center">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="#FF9A2E" 
+                                  Direction="320" 
+                                  ShadowDepth="0" 
+                                  Opacity="0.8" 
+                                  BlurRadius="10"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+
+
+                    </StackPanel>
+                </Border>
+                <!-- End Additional Information -->
+
+
+                
+                
+                
+                
+                
+                
+            </StackPanel>
+
+            <!--FOOTER START-->
+            <TextBlock  Text="StarterKit Version: 1.0" 
+                            Grid.Column="1"
+                            FontSize="14"        Foreground="#95999D" Opacity="0.6"
+                            TextWrapping="Wrap"   Grid.Row="2"
+                            VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <!--FOOTER END-->
+
+
+
+        </Grid>
+    </Border>
+</Window>

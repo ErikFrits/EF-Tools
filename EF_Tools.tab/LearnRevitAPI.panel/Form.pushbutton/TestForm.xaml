@@ -1,0 +1,47 @@
+<Window Title="EF-Simple Form"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Height="200" Width="300"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+
+
+
+
+    <StackPanel Margin="10">
+
+        <!--First Label and TextBox-->
+        <DockPanel Margin="10">
+            <TextBlock Text="Input A" Margin="0,0,10,0" FontWeight="Bold"/>
+            <TextBox Text="Default Value..." />
+        </DockPanel>
+
+        <!--Second Label and TextBox-->
+        <DockPanel Margin="10">
+            <TextBlock Text="Input B" Margin="0,0,10,0" />
+            <TextBox Text="Default Value..." />
+        </DockPanel>
+
+        <!--Third Label with ComboBox-->
+        <DockPanel Margin="10">
+            <TextBlock Text="Input C" Margin="0,0,10,0" />
+            <ComboBox>
+                <ComboBoxItem Content="Walls"/>
+                <ComboBoxItem Content="Floors"/>
+                <ComboBoxItem Content="Roofs"/>
+                <ComboBoxItem Content="Windows" IsSelected="True"/>
+                <ComboBoxItem Content="Doors"/>
+            </ComboBox>
+        </DockPanel>
+
+        <!--Separator-->
+        <Separator Margin="10,0,10,10"/>
+
+        <!--Submit Button-->
+        <Button Content="Submit!" Width="100"/>
+
+    </StackPanel>
+
+</Window>
+
+
+

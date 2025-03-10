@@ -1,0 +1,171 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--COLORS-->
+    <SolidColorBrush x:Key="accent"    Color="#ff9a2e"/>
+    <SolidColorBrush x:Key="hover"     Color="#ff7a2e"/>
+    <SolidColorBrush x:Key="white"     Color="#f2f2f2"/>
+    <SolidColorBrush x:Key="gray"      Color="#999999"/>
+    <SolidColorBrush x:Key="bg1"       Color="#1c1c1c"/>
+    <SolidColorBrush x:Key="bg2"       Color="#2b2b2b"/>
+    <SolidColorBrush x:Key="bg_header" Color="#2c2c2c"/>
+
+    <!--TEXTBLOCK-->
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource accent}"/>
+        <Setter Property="Margin" Value="0,0,10,0"/>
+    </Style>
+
+
+    <!--TEXTBOX-->
+    <Style TargetType="TextBox">
+        <Setter Property="Foreground" Value="{StaticResource white}"/>
+        <Setter Property="Background" Value="{StaticResource bg2}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource accent}"/>
+        <Setter Property="BorderThickness" Value="0.5"/>
+
+
+        <Style.Resources>
+            <Style TargetType="Border">
+                <Setter Property="CornerRadius" Value="4"/>
+            </Style>
+        </Style.Resources>
+
+
+    </Style>
+
+    <!--CheckBox-->
+    <Style TargetType="CheckBox">
+        <Setter Property="Foreground" Value="{StaticResource gray}"/>
+        <Setter Property="Background" Value="{StaticResource bg1}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource accent}"/>
+        <Setter Property="BorderThickness" Value="0.5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <StackPanel Orientation="Horizontal">
+                        <!-- Border around the tick box -->
+                        <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    Width="16" Height="16"
+                    Margin="0,0,5,0"
+                    CornerRadius="2">
+
+                            <Grid>
+                                <Rectangle x:Name="CheckBackground" Fill="{TemplateBinding Background}" />
+
+                                <!-- Path for the tick symbol -->
+                                <Path x:Name="TickMark"
+                          Data="M 2,8 L 6,12 L 14,4"
+                          Stroke="{StaticResource bg2}"
+                          StrokeThickness="2"
+                          Visibility="Collapsed"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Content presenter for CheckBox text -->
+                        <ContentPresenter VerticalAlignment="Center"
+                              HorizontalAlignment="Left"
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Margin="5,0,0,0"/>
+                    </StackPanel>
+
+                    <!-- Triggers to control background color and tick visibility based on hover and checked states -->
+                    <ControlTemplate.Triggers>
+                        <!-- Trigger to change background when checked -->
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="CheckBackground" Property="Fill" Value="{StaticResource accent}"/>
+                            <Setter TargetName="TickMark" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <!-- Trigger to change background to red on hover -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="CheckBackground" Property="Fill" Value="{StaticResource hover}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--SEPARATOR-->
+    <Style TargetType="Separator">
+        <Setter Property="Background" Value="{StaticResource accent}"/>
+    </Style>
+
+    <!--Button-->
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="#2b2b2b" />
+        <Setter Property="Foreground" Value="{StaticResource hover}" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="5">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <!--HOVER EFFECT-->
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource accent}" />
+                <Setter Property="Foreground" Value="{StaticResource bg2}" />
+            </Trigger>
+
+            <!--PRESS EFFECT-->
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#ff7a2e"/>
+                <Setter Property="Foreground" Value="#111111"/>
+            </Trigger>
+
+        </Style.Triggers>
+
+    </Style>
+
+
+    <!--ListBox-->
+    <Style TargetType="ListBox">
+        <Setter Property="Background" Value="#2b2b2b"/>
+        <Setter Property="BorderBrush" Value="#ff9a2e"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
+
+
+        <Style.Resources>
+            <Style TargetType="Border">
+                <Setter Property="CornerRadius" Value="10"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <!--ListBoxItem-->
+
+    <!--Border-->
+    <Style TargetType="Border" x:Key="EF_GlowBorder">
+        <Setter Property="Background" Value="{StaticResource bg2}" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect
+        Color="#FFCE7A"
+        Direction="0"
+        ShadowDepth="0"
+        Opacity="1"
+        BlurRadius="50" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+</ResourceDictionary>

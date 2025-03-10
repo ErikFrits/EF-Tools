@@ -6,7 +6,7 @@ Date    = 31.08.2020
 _____________________________________________________________________
 Description:
 
-Rotate selected elements with given ammount of degrees.
+Rotate selected elements with given amount of degrees.
 _____________________________________________________________________
 How-to:
 

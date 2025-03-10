@@ -1,0 +1,20 @@
+                    <UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+                        <Border BorderBrush="#ff9a2e" BorderThickness="0,1,0,0">
+                            <!-- Title -->
+                            <TextBlock TextWrapping="Wrap"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center">
+                                        <Hyperlink x:Name="UI_footer_cta"
+                                        Foreground="#ff9a2e"
+                                        FontSize="10"
+                                        FontWeight="Medium" >
+                                        Ready to Become pyRevit Hacker?
+
+                                        </Hyperlink>
+
+                            </TextBlock>
+                        </Border>
+
+                    </UserControl>

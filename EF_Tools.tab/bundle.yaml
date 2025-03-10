@@ -1,4 +1,5 @@
 layout:
+  - About
   - Sheets
   - Views
   - Selection
@@ -8,5 +9,4 @@ layout:
   - Naming
   - Maintenance
   - DWG
-  - Support
-  - test
+  - LearnRevitAPI
