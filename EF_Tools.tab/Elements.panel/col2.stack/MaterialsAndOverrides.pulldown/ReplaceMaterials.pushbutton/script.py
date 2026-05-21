@@ -126,7 +126,7 @@ class ReplaceMaterials(my_WPF):
             for item in items:
                 if item.IsSelected:
                     if item.Content == '<By Category>' or item.Content == None:
-                        return ElementId(-1)
+                        return ElementId.InvalidElementId
                     else:
                         return dict_materials[item.Content].Id
 
@@ -221,13 +221,13 @@ class ReplaceMaterials(my_WPF):
 
             # LOOP THROUGH LAYERS
             for layer in structure.GetLayers():
-                if self.mat_find_id == ElementId(-1):
-                    if layer.MaterialId == ElementId(-1):
+                if self.mat_find_id == ElementId.InvalidElementId:
+                    if layer.MaterialId == ElementId.InvalidElementId:
                         structure.SetMaterialId(layer.LayerId, self.mat_replace_id)
                         elem_type.SetCompoundStructure(structure)
                         self.count += 1
 
-                elif layer.MaterialId != ElementId(-1):
+                elif layer.MaterialId != ElementId.InvalidElementId:
                     # GET MATERIAL
                     mat = doc.GetElement(layer.MaterialId)
                     # CHANGE MATERIAL
@@ -247,7 +247,7 @@ class ReplaceMaterials(my_WPF):
         for Material parameter. If there is a match with mat_find then it will
         replace this material if it's not inside a group and not VariesAcrissGroups."""
         # Check if Element is part of a group and VariesAcross
-        groupped = False if elem.GroupId == ElementId(-1) else True
+        groupped = False if elem.GroupId == ElementId.InvalidElementId else True
 
         for p in elem.Parameters:
             try:
