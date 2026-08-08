@@ -2,8 +2,8 @@
 __title__ = "DWG: Open/Reload"
 __author__ = "Erik Frits"
 __helpurl__ = "https://www.erikfrits.com/blog/open-selected-dwg/"
-__doc__ = """Version = 1.1
-Date    = 12.04.2021
+__doc__ = """Version = 1.2
+Date    = 10.10.2025
 _____________________________________________________________________
 Description:
 Add-in for opening selected DWG with 3 options:
@@ -23,6 +23,8 @@ _____________________________________________________________________
 Last update:
 - [07.09.2021] - V 1.1
 - [07.09.2021] - Reload DWG button added.
+- [10.10.2025] - V 1.2
+- [10.10.2025] - Added Compatibility with Desktop Connector files.
 _____________________________________________________________________
 To-do:
 - add header logo to GUI
@@ -33,6 +35,7 @@ from os import startfile
 from os.path import dirname
 from Autodesk.Revit.DB import ImportInstance, ModelPathUtils, BuiltInParameter, Transaction
 from pyrevit.forms import WPFWindow, alert
+from pyrevit.interop import adc
 from subprocess import Popen
 
 # .NET IMPORTS
@@ -71,13 +74,26 @@ class MyWindow(WPFWindow):
         """Function to get a path of the selected ImportInstance if it is linked."""
         import_instance = self.selected_dwg_ImportInstance
         if import_instance.IsLinked:
-            cad_linktype_id = import_instance.get_Parameter(BuiltInParameter.ELEM_FAMILY_PARAM).AsElementId()
+            cad_linktype_id = import_instance.get_Parameter(
+                            BuiltInParameter.ELEM_FAMILY_PARAM).AsElementId()
             cad_linktype = doc.GetElement(cad_linktype_id)
-            efr = cad_linktype.GetExternalFileReference()
-            dwg_path = ModelPathUtils.ConvertModelPathToUserVisiblePath(efr.GetAbsolutePath())
-            return dwg_path
-        else:
-            alert("Selected DWG instance is not linked.", __title__, exitscript=True)
+            try:
+                efr = cad_linktype.GetExternalFileReference()
+                dwg_path = ModelPathUtils.ConvertModelPathToUserVisiblePath(
+                                                        efr.GetAbsolutePath())
+                return dwg_path
+            except Exception as e:
+                from Autodesk.Revit.DB import ExternalResourceType
+                efr = cad_linktype.GetExternalResourceReferences()
+                for ef in efr:
+                    adc_path = ef.Value.InSessionPath
+                    break
+                dwg_path = adc.get_local_path(adc_path)
+                if dwg_path:
+                    return dwg_path
+                else:
+                    alert("Selected DWG instance is not linked.",
+                           __title__, exitscript=True)
 
     @property
     def selected_dwg_ImportInstance(self):
