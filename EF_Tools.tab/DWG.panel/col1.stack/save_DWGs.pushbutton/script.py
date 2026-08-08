@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 __title__   = "DWG: Save/Relink"
 __author__  = "Erik Frits"
-__doc__ = """Version = 1.1
-Date    = 31.07.2021
+__doc__ = """Version = 1.2
+Date    = 10.10.2025
 _____________________________________________________________________
 Description:
 
@@ -22,6 +22,8 @@ Last update:
 
 - [22.09.2021] - V1.1 RELEASE
 - [22.09.2021] - EventHandler added for TaskDialogBox
+- [10.10.2025] - V1.2 RELEASE
+- [10.10.2025] - Added Compatibility with Desktop Connector files.
 _____________________________________________________________________
 To-do:
 - 
@@ -30,12 +32,13 @@ Author: Erik Frits
 """
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IMPORTS
-import os, sys, clr, shutil
+import os, clr, shutil
 from Autodesk.Revit.DB import (FilteredElementCollector,
                                CADLinkType,
                                ModelPathUtils,
                                Transaction)
 from pyrevit.forms import alert
+from pyrevit.interop import adc
 #>>>>>>>>>> .NET IMPORTS
 clr.AddReference("System")
 clr.AddReference("System.Windows.Forms")
@@ -122,10 +125,28 @@ class SaveDWGs:
                         print("- CAD file saved:" + str(dwg_new_path))
                         CADfiles_dict[dwg_name] = dwg_new_path
                 except:
-                    print("***Exception occured while saving DWG***")
-                    import traceback
-                    print(traceback.format_exc())
-                    continue
+                    try:
+                        from Autodesk.Revit.DB import ExternalResourceType
+                        efr = cad_Link.GetExternalResourceReferences()
+                        for ef in efr:
+                            adc_path = ef.Value.InSessionPath
+                            break
+                        dwg_path = adc.get_local_path(adc_path)
+                        print(dwg_path)
+                        if not dwg_path:
+                            print("*** Could not save CAD file - " \
+                                            "Make Sure to reload the link first***")
+                            continue
+                        dwg_name = dwg_path.split("\\")[-1]
+                        dwg_new_path = os.path.join(path, dwg_name).replace('\\\\', '\\')
+                        if dwg_path == dwg_new_path:
+                            print('New path is the same as old one. ({})'.format(str(dwg_new_path)))
+                        else:
+                            shutil.copyfile(dwg_path, dwg_new_path)
+                            print("- CAD file saved:" + str(dwg_new_path))
+                            CADfiles_dict[dwg_name] = dwg_new_path
+                    except:
+                        continue
             return CADfiles_dict
         else:
             print("- No CAD links found.")
@@ -159,8 +180,19 @@ class SaveDWGs:
                         except:
                             print("*** Could not relink CAD file - {}***".format(dwg_name))
                 except:
-                    print("***Exception occured while Relinking DWG***")
-                    continue
+                    efr = cad_Link.GetExternalResourceReferences()
+                    for ef in efr:
+                        adc_path = ef.Value.InSessionPath
+                        break
+                    dwg_path = adc.get_local_path(adc_path)
+                    dwg_name = dwg_path.split("\\")[-1]
+                    if dwg_name in dict_dwg:
+                        try:
+                            cad_Link.LoadFrom(dict_dwg[dwg_name])
+                            print("- CAD file relinked - {}".format(dwg_name))
+                        except:
+                            print("*** Could not relink CAD file - {}***".format(dwg_name))
+            print("---------------------------------------")
         else:
             print("*** CAD files were not relinked.***")
 
